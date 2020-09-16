@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import './src/answer.dart';
+import 'src/answer.dart';
 
 import 'src/module.dart';
 
