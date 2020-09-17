@@ -61,7 +61,7 @@ class NeteaseRepository {
     });
   }
 
-  Completer<PersistCookieJar> _cookieJar = Completer();
+  final Completer<PersistCookieJar> _cookieJar = Completer();
 
   Future<List<Cookie>> _loadCookies() async {
     final jar = await _cookieJar.future;
@@ -93,7 +93,7 @@ class NeteaseRepository {
   ///登出,删除本地cookie信息
   Future<void> logout() async {
     //删除cookie
-    _cookieJar.future.then((v) => v?.deleteAll());
+    await _cookieJar.future.then((v) => v?.deleteAll());
   }
 
   ///根据用户ID获取歌单

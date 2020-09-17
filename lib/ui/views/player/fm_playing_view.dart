@@ -13,7 +13,11 @@ class FMPlayingView extends StatelessWidget {
       onModelReady: (model) => model.init(),
       builder: (context, model, child) => PlatformScaffold(
         body: Center(
-          child: model.isBusy ? _LoadingAnimation() : Text('has data'),
+          child: model.isBusy
+              ? _LoadingAnimation()
+              : model.musicList.isNotEmpty
+                  ? Text(model.musicList[0].url)
+                  : Text('no data'),
         ),
       ),
     );
