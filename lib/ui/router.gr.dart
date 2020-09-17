@@ -12,6 +12,7 @@ import 'package:flutter/cupertino.dart';
 import '../core/models/post/post.dart';
 import 'views/login/login_view.dart';
 import 'views/main/main_view.dart';
+import 'views/player/fm_playing_view.dart';
 import 'views/startup/start_up_view.dart';
 import 'widgets/stateful/post_details/post_details_view.dart';
 
@@ -20,11 +21,13 @@ class Routes {
   static const String loginView = '/login-view';
   static const String startUpView = '/';
   static const String postDetailsView = '/post-details-view';
+  static const String fMPlayingView = '/f-mplaying-view';
   static const all = <String>{
     mainView,
     loginView,
     startUpView,
     postDetailsView,
+    fMPlayingView,
   };
 }
 
@@ -36,6 +39,7 @@ class Router extends RouterBase {
     RouteDef(Routes.loginView, page: LoginView),
     RouteDef(Routes.startUpView, page: StartUpView),
     RouteDef(Routes.postDetailsView, page: PostDetailsView),
+    RouteDef(Routes.fMPlayingView, page: FMPlayingView),
   ];
   @override
   Map<Type, AutoRouteFactory> get pagesMap => _pagesMap;
@@ -65,6 +69,12 @@ class Router extends RouterBase {
           key: args.key,
           post: args.post,
         ),
+        settings: data,
+      );
+    },
+    FMPlayingView: (data) {
+      return buildAdaptivePageRoute<dynamic>(
+        builder: (context) => FMPlayingView(),
         settings: data,
       );
     },

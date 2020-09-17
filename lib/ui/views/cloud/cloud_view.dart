@@ -76,7 +76,7 @@ class _Posts extends ViewModelWidget<CloudViewModel> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              _ItemNavigator(Icons.radio, '私人FM', () {}),
+              _ItemNavigator(Icons.radio, '私人FM', model.to),
               _ItemNavigator(Icons.today, '每日推荐', () {}),
               _ItemNavigator(Icons.show_chart, '排行榜', () {}),
             ],

@@ -28,6 +28,10 @@ import 'package:provider_start/core/services/snackbar/snack_bar_service.dart';
 import 'package:provider_start/core/services/snackbar/snack_bar_service_impl.dart';
 import 'package:provider_start/core/utils/file_helper.dart';
 
+import 'core/repositories/netease/netease.dart';
+import 'core/services/music/channel_ui.dart';
+import 'core/services/music/player/music_player.dart';
+
 GetIt locator = GetIt.instance;
 
 /// Setup function that is run before the App is run.
@@ -78,6 +82,12 @@ Future<void> setupLocator() async {
 
   // External
   locator.registerLazySingleton<HiveInterface>(() => Hive);
+
+  // player
+  locator.registerLazySingleton<Player>(() => MusicPlayer());
+
+  // music repository
+  locator.registerLazySingleton<NeteaseRepository>(() => NeteaseRepository());
 }
 
 Future<void> _setupSharedPreferences() async {
