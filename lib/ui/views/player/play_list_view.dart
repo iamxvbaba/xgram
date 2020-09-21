@@ -99,7 +99,7 @@ class _LibraryView extends ViewModelWidget<PlayListViewModel> {
             Text(
               'Life Is Good (feat. Drake)',
               style: TextStyle(
-                  fontSize: ScreenUtil().setHeight(28), color: textColor),
+                  fontSize: ScreenUtil().setWidth(42), color: textColor),
             ),
             Text(
               'Future',
