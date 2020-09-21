@@ -50,6 +50,7 @@ dependencies:
   assets_audio_player: ^2.0.10
   # UI Utilities
   flutter_platform_widgets: ^0.60.1
+  flutter_screenutil: ^3.0.1
   
   # UI Widgets
   cupertino_icons: ^0.1.3

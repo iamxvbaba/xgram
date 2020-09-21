@@ -1,6 +1,8 @@
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider_start/ui/views/player/consts.dart';
 import 'package:provider_start/ui/views/player/play_list_view_model.dart';
 import 'package:provider_start/ui/widgets/stateless/loading_animation.dart';
@@ -42,11 +44,18 @@ class _LibraryView extends ViewModelWidget<PlayListViewModel> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 _Button(
+                  radius: ScreenUtil().setHeight(32),
                   icon: Icon(Icons.arrow_back_ios),
+                  onTap: () {},
                 ),
-                Text('Fav. Album'),
+                Text(
+                  'Xhm. Album',
+                  style: TextStyle(fontSize: ScreenUtil().setHeight(30)),
+                ),
                 _Button(
+                  radius: ScreenUtil().setHeight(32),
                   icon: Icon(Icons.more_horiz),
+                  onTap: () {},
                 ),
               ],
             ),
@@ -89,7 +98,8 @@ class _LibraryView extends ViewModelWidget<PlayListViewModel> {
             Expanded(child: Container()),
             Text(
               'Life Is Good (feat. Drake)',
-              style: TextStyle(fontSize: 28, color: textColor),
+              style: TextStyle(
+                  fontSize: ScreenUtil().setHeight(28), color: textColor),
             ),
             Text(
               'Future',
@@ -100,11 +110,13 @@ class _LibraryView extends ViewModelWidget<PlayListViewModel> {
             Stack(
               children: <Widget>[
                 Container(
-                  margin: EdgeInsets.symmetric(horizontal: 32),
+                  margin: EdgeInsets.symmetric(
+                      horizontal: ScreenUtil().setHeight(32)),
                   width: double.infinity,
-                  height: 24,
+                  height: ScreenUtil().setHeight(24),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius:
+                        BorderRadius.circular(ScreenUtil().setHeight(16)),
                     color: backgroundColor,
                     boxShadow: [
                       BoxShadow(color: lightShadowColor, offset: Offset(1, 4)),
@@ -116,11 +128,13 @@ class _LibraryView extends ViewModelWidget<PlayListViewModel> {
                   top: 2,
                   bottom: 2,
                   child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 36),
-                    width: 200,
-                    height: 20,
+                    margin: EdgeInsets.symmetric(
+                        horizontal: ScreenUtil().setHeight(36)),
+                    width: ScreenUtil().setWidth(200),
+                    height: ScreenUtil().setHeight(20),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius:
+                          BorderRadius.circular(ScreenUtil().setWidth(16)),
                       gradient: LinearGradient(
                         colors: [seekBarLightColor, seekBarDarkColor],
                         begin: Alignment.topCenter,
@@ -133,43 +147,52 @@ class _LibraryView extends ViewModelWidget<PlayListViewModel> {
             ),
             Expanded(child: Container()),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32.0),
+              padding:
+                  EdgeInsets.symmetric(horizontal: ScreenUtil().setHeight(40)),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
                     '1:30',
-                    style: TextStyle(fontSize: 20, color: textColor),
+                    style: TextStyle(
+                        fontSize: ScreenUtil().setWidth(36), color: textColor),
                   ),
                   Text(
                     '3:52',
-                    style: TextStyle(fontSize: 20, color: textColor),
+                    style: TextStyle(
+                        fontSize: ScreenUtil().setWidth(36), color: textColor),
                   ),
                 ],
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                _Button(
-                  icon: Icon(Icons.skip_previous),
-                  onTap: () => print('prev'),
-                ),
-                _Button(
-                  icon: Icon(
-                    Icons.play_arrow,
-                    size: 48,
-                    color: seekBarDarkColor,
-                  ),
-                  radius: 48,
-                  onTap: () => print('Play Or Pause'),
-                ),
-                _Button(
-                  icon: Icon(Icons.skip_next),
-                  onTap: () => print('next'),
-                ),
-              ],
-            ),
+            PlayerBuilder.isPlaying(
+                player: model.player,
+                builder: (context, isPlaying) {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      _Button(
+                        radius: ScreenUtil().setHeight(32),
+                        icon: Icon(Icons.skip_previous),
+                        onTap: model.prev,
+                      ),
+                      _Button(
+                        icon: Icon(
+                          isPlaying ? Icons.play_arrow : Icons.stop,
+                          size: ScreenUtil().setHeight(48),
+                          color: seekBarDarkColor,
+                        ),
+                        radius: ScreenUtil().setHeight(48),
+                        onTap: () => model.playPause(),
+                      ),
+                      _Button(
+                        radius: ScreenUtil().setHeight(32),
+                        icon: Icon(Icons.skip_next),
+                        onTap: model.next,
+                      ),
+                    ],
+                  );
+                }),
           ],
         ),
       ),
@@ -182,7 +205,10 @@ class _Button extends StatelessWidget {
   final double radius;
   final GestureTapCallback onTap;
   _Button(
-      {Key key, this.radius = 32, @required this.icon, @required this.onTap})
+      {Key key,
+      @required this.radius,
+      @required this.icon,
+      @required this.onTap})
       : super(key: key);
 
   @override

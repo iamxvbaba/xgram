@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider_start/core/localization/localization.dart';
-import 'package:provider_start/ui/views/cloud/cloud_view.dart';
 import 'package:provider_start/ui/views/main/main_view_model.dart';
+import 'package:provider_start/ui/views/player/play_list_view.dart';
 import 'package:provider_start/ui/views/settings/settings_view.dart';
 import 'package:provider_start/ui/views/home/home_view.dart';
 import 'package:provider_start/ui/widgets/animation/fade_in.dart';
@@ -16,7 +16,7 @@ import 'package:stacked/stacked.dart';
 class MainView extends StatelessWidget {
   final _views = <Widget>[
     FadeIn(child: HomeView()),
-    FadeIn(child: CloudView()),
+    FadeIn(child: PlayListView()),
     FadeIn(child: SettingsView()),
   ];
 
