@@ -65,7 +65,13 @@ class AuthServiceImpl implements AuthService {
   Future<bool> isUserLoggedIn() async {
     // check server for login status
     await Future.delayed(Duration(seconds: 1));
-
+    // 先跳过登录
+    _currentUser ??= User(
+      (u) => u
+        ..id = 1
+        ..email = '944808666@qq.com'
+        ..username = 'Barrack Obama',
+    );
     return _currentUser != null;
   }
 }

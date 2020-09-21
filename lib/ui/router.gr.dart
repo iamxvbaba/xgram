@@ -13,6 +13,7 @@ import '../core/models/post/post.dart';
 import 'views/login/login_view.dart';
 import 'views/main/main_view.dart';
 import 'views/player/fm_playing_view.dart';
+import 'views/player/play_list_view.dart';
 import 'views/startup/start_up_view.dart';
 import 'widgets/stateful/post_details/post_details_view.dart';
 
@@ -22,12 +23,14 @@ class Routes {
   static const String startUpView = '/';
   static const String postDetailsView = '/post-details-view';
   static const String fMPlayingView = '/f-mplaying-view';
+  static const String playListView = '/play-list-view';
   static const all = <String>{
     mainView,
     loginView,
     startUpView,
     postDetailsView,
     fMPlayingView,
+    playListView,
   };
 }
 
@@ -40,6 +43,7 @@ class Router extends RouterBase {
     RouteDef(Routes.startUpView, page: StartUpView),
     RouteDef(Routes.postDetailsView, page: PostDetailsView),
     RouteDef(Routes.fMPlayingView, page: FMPlayingView),
+    RouteDef(Routes.playListView, page: PlayListView),
   ];
   @override
   Map<Type, AutoRouteFactory> get pagesMap => _pagesMap;
@@ -75,6 +79,12 @@ class Router extends RouterBase {
     FMPlayingView: (data) {
       return buildAdaptivePageRoute<dynamic>(
         builder: (context) => FMPlayingView(),
+        settings: data,
+      );
+    },
+    PlayListView: (data) {
+      return buildAdaptivePageRoute<dynamic>(
+        builder: (context) => PlayListView(),
         settings: data,
       );
     },

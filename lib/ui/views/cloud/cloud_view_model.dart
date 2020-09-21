@@ -10,7 +10,7 @@ class CloudViewModel extends BaseViewModel {
   final _navigationService = locator<NavigationService>();
 
   void toFMView() {
-    _log.fine('pushReplacement FMPlayingView');
-    unawaited(_navigationService.pushNamed(Routes.fMPlayingView));
+    _log.fine('pushReplacement PlayListView');
+    unawaited(_navigationService.pushNamed(Routes.playListView));
   }
 }

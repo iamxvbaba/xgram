@@ -1,3 +1,4 @@
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
 import 'package:provider_start/core/data_sources/posts/posts_local_data_source.dart';
@@ -27,10 +28,6 @@ import 'package:provider_start/core/services/navigation/navigation_service_impl.
 import 'package:provider_start/core/services/snackbar/snack_bar_service.dart';
 import 'package:provider_start/core/services/snackbar/snack_bar_service_impl.dart';
 import 'package:provider_start/core/utils/file_helper.dart';
-
-import 'core/repositories/netease/netease.dart';
-import 'core/services/music/channel_ui.dart';
-import 'core/services/music/player/music_player.dart';
 
 GetIt locator = GetIt.instance;
 
@@ -84,10 +81,7 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton<HiveInterface>(() => Hive);
 
   // player
-  locator.registerLazySingleton<Player>(() => MusicPlayer());
-
-  // music repository
-  locator.registerLazySingleton<NeteaseRepository>(() => NeteaseRepository());
+  locator.registerLazySingleton<AssetsAudioPlayer>(() => AssetsAudioPlayer());
 }
 
 Future<void> _setupSharedPreferences() async {

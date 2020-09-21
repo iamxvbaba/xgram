@@ -47,10 +47,7 @@ dependencies:
   hive: ^1.4.2
   get: ^3.4.3
   dio: ^3.0.10
-  dio_cookie_manager: 1.0.0
-  encrypt: ^3.0.0
-  system_clock: ^0.3.1
-  sembast: ^1.13.2
+  assets_audio_player: ^2.0.10
   # UI Utilities
   flutter_platform_widgets: ^0.60.1
   
@@ -89,6 +86,7 @@ flutter:
     - assets/fonts/
     - assets/images/
     - assets/lang/
+    - assets/audios/
 
   fonts:
     - family: Open Sans
