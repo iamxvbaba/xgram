@@ -12,6 +12,9 @@ abstract class UsersLocalDataSource {
   Future<User> fetchUser(int uid);
 
   Future<void> cacheUser(User user);
+
+  Future<List<User>> fetchContact();
+  Future<void> cacheContact(List<User> contact);
 }
 
 class UsersLocalDataSourceImpl implements UsersLocalDataSource {
@@ -21,6 +24,9 @@ class UsersLocalDataSourceImpl implements UsersLocalDataSource {
   bool get _isBoxOpen => _hiveService.isBoxOpen(LocalStorageKeys.users);
   Box<UserH> get _usersBox => _hiveService.box<UserH>(LocalStorageKeys.users);
 
+  bool get _isContactOpen => _hiveService.isBoxOpen('contact');
+  Box<List<UserH>> get _contactBox => _hiveService.box<List<UserH>>('contact');
+
   @override
   Future<void> init() async {
     final path = await _fileHelper.getApplicationDocumentsDirectoryPath();
@@ -29,6 +35,9 @@ class UsersLocalDataSourceImpl implements UsersLocalDataSource {
 
     if (!_isBoxOpen) {
       await _hiveService.openBox<UserH>(LocalStorageKeys.users);
+    }
+    if (!_isContactOpen) {
+      await _hiveService.openBox<List<UserH>>('contact');
     }
   }
 
@@ -46,5 +55,27 @@ class UsersLocalDataSourceImpl implements UsersLocalDataSource {
     }
 
     return User.fromMap(userH.toMap());
+  }
+
+  @override
+  Future<void> cacheContact(List<User> contact) async {
+    var contacts = [];
+    contact.forEach((element) {
+      contacts.add(UserH.fromUser(element));
+    });
+    await _contactBox.put('my_contact', contacts);
+  }
+
+  @override
+  Future<List<User>> fetchContact() async {
+    final userHList = _contactBox.get('my_contact');
+    var users = [];
+    if (userHList == null) {
+      return null;
+    }
+    userHList.forEach((element) {
+      users.add(User.fromMap(element.toMap()));
+    });
+    return users;
   }
 }

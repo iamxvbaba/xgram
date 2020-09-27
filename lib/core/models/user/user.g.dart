@@ -27,6 +27,12 @@ class _$UserSerializer implements StructuredSerializer<User> {
       serializers.serialize(object.email,
           specifiedType: const FullType(String)),
     ];
+    if (object.avatar != null) {
+      result
+        ..add('avatar')
+        ..add(serializers.serialize(object.avatar,
+            specifiedType: const FullType(String)));
+    }
     if (object.name != null) {
       result
         ..add('name')
@@ -71,6 +77,10 @@ class _$UserSerializer implements StructuredSerializer<User> {
           result.email = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
+        case 'avatar':
+          result.avatar = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
         case 'name':
           result.name = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
@@ -98,6 +108,8 @@ class _$User extends User {
   @override
   final String email;
   @override
+  final String avatar;
+  @override
   final String name;
   @override
   final String phone;
@@ -108,7 +120,13 @@ class _$User extends User {
       (new UserBuilder()..update(updates)).build();
 
   _$User._(
-      {this.id, this.username, this.email, this.name, this.phone, this.website})
+      {this.id,
+      this.username,
+      this.email,
+      this.avatar,
+      this.name,
+      this.phone,
+      this.website})
       : super._() {
     if (id == null) {
       throw new BuiltValueNullFieldError('User', 'id');
@@ -135,6 +153,7 @@ class _$User extends User {
         id == other.id &&
         username == other.username &&
         email == other.email &&
+        avatar == other.avatar &&
         name == other.name &&
         phone == other.phone &&
         website == other.website;
@@ -145,8 +164,10 @@ class _$User extends User {
     return $jf($jc(
         $jc(
             $jc(
-                $jc($jc($jc(0, id.hashCode), username.hashCode),
-                    email.hashCode),
+                $jc(
+                    $jc($jc($jc(0, id.hashCode), username.hashCode),
+                        email.hashCode),
+                    avatar.hashCode),
                 name.hashCode),
             phone.hashCode),
         website.hashCode));
@@ -158,6 +179,7 @@ class _$User extends User {
           ..add('id', id)
           ..add('username', username)
           ..add('email', email)
+          ..add('avatar', avatar)
           ..add('name', name)
           ..add('phone', phone)
           ..add('website', website))
@@ -180,6 +202,10 @@ class UserBuilder implements Builder<User, UserBuilder> {
   String get email => _$this._email;
   set email(String email) => _$this._email = email;
 
+  String _avatar;
+  String get avatar => _$this._avatar;
+  set avatar(String avatar) => _$this._avatar = avatar;
+
   String _name;
   String get name => _$this._name;
   set name(String name) => _$this._name = name;
@@ -199,6 +225,7 @@ class UserBuilder implements Builder<User, UserBuilder> {
       _id = _$v.id;
       _username = _$v.username;
       _email = _$v.email;
+      _avatar = _$v.avatar;
       _name = _$v.name;
       _phone = _$v.phone;
       _website = _$v.website;
@@ -227,6 +254,7 @@ class UserBuilder implements Builder<User, UserBuilder> {
             id: id,
             username: username,
             email: email,
+            avatar: avatar,
             name: name,
             phone: phone,
             website: website);

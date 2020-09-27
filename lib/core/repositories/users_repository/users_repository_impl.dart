@@ -32,10 +32,28 @@ class UsersRepositoryImpl implements UsersRepository {
         return user;
       }
     } on NetworkException catch (e) {
-      _log.severe('Failed to fetch posts remotely');
+      _log.severe('Failed to fetch user remotely');
       throw RepositoryException(e.message);
     } on CacheException catch (e) {
-      _log.severe('Failed to fetch posts locally');
+      _log.severe('Failed to fetch user locally');
+      throw RepositoryException(e.message);
+    }
+  }
+
+  @override
+  Future<List<User>> fetchContact() async {
+    try {
+      if (await connectivityService.isConnected) {
+        final contact = await remoteDataSource.fetchContact();
+        //await localDataSource.cacheContact(contact); // 目前存储list会失败 #https://github.com/hivedb/hive/issues/6
+        return contact;
+      }
+      return [];
+    } on NetworkException catch (e) {
+      _log.severe('Failed to fetch contact remotely');
+      throw RepositoryException(e.message);
+    } on CacheException catch (e) {
+      _log.severe('Failed to fetch contact locally');
       throw RepositoryException(e.message);
     }
   }

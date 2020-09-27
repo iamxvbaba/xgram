@@ -5,6 +5,7 @@ import 'package:provider_start/locator.dart';
 
 abstract class UsersRemoteDataSource {
   Future<User> fetchUser(int uid);
+  Future<List<User>> fetchContact();
 }
 
 class UsersRemoteDataSourceImpl implements UsersRemoteDataSource {
@@ -16,5 +17,20 @@ class UsersRemoteDataSourceImpl implements UsersRemoteDataSource {
         as Map<String, dynamic>;
 
     return User.fromMap(postsMap);
+  }
+
+  @override
+  Future<List<User>> fetchContact() async {
+    final userListJson =
+        await httpService.getHttp(ApiRoutes.contacts) as List<dynamic>;
+
+    var users = userListJson.map<User>((userMap) {
+      print('userMap:$userMap');
+      var user = User.fromMap(userMap);
+      print('user:$user');
+      return user;
+    }).toList();
+
+    return users;
   }
 }
