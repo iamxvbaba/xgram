@@ -45,7 +45,7 @@ class UsersRepositoryImpl implements UsersRepository {
     try {
       if (await connectivityService.isConnected) {
         final contact = await remoteDataSource.fetchContact();
-        //await localDataSource.cacheContact(contact); // 目前存储list会失败 #https://github.com/hivedb/hive/issues/6
+        //await localDataSource.cacheContact(contact); // 目前hive存储list会失败 #https://github.com/hivedb/hive/issues/6
         return contact;
       }
       return [];

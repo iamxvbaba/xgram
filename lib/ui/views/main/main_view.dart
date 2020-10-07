@@ -17,7 +17,7 @@ import 'package:stacked/stacked.dart';
 class MainView extends StatelessWidget {
   final _views = <Widget>[
     FadeIn(child: HomeView()),
-    //FadeIn(child: PlayListView()),
+    FadeIn(child: PlayListView()),
     FadeIn(child: ContactView()),
     FadeIn(child: SettingsView()),
   ];
@@ -36,6 +36,11 @@ class MainView extends StatelessWidget {
           itemBuilder: (_, index) => _views[index],
         ),
         bottomNavBar: PlatformNavBar(
+          android: (context) {
+            return MaterialNavBarData(
+              type: BottomNavigationBarType.fixed, // 解决超过3个不显示颜色的问题
+            );
+          },
           currentIndex: model.index,
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
@@ -45,7 +50,6 @@ class MainView extends StatelessWidget {
               ),
               title: Text(local.homeViewTitle),
             ),
-            /*
             BottomNavigationBarItem(
               icon: PlatformWidget(
                 material: (_, __) => Icon(Icons.music_note),
@@ -53,7 +57,6 @@ class MainView extends StatelessWidget {
               ),
               title: Text('music'),
             ),
-            */
             BottomNavigationBarItem(
               icon: PlatformWidget(
                 material: (_, __) => Icon(Icons.contacts),
