@@ -29,6 +29,12 @@ abstract class User implements Built<User, UserBuilder> {
   @nullable
   String get website;
 
+  @nullable
+  int get follwers;
+
+  @nullable
+  int get follwing;
+
   String toJson() {
     return json.encode(serializers.serializeWith(User.serializer, this));
   }

@@ -51,6 +51,18 @@ class _$UserSerializer implements StructuredSerializer<User> {
         ..add(serializers.serialize(object.website,
             specifiedType: const FullType(String)));
     }
+    if (object.follwers != null) {
+      result
+        ..add('follwers')
+        ..add(serializers.serialize(object.follwers,
+            specifiedType: const FullType(int)));
+    }
+    if (object.follwing != null) {
+      result
+        ..add('follwing')
+        ..add(serializers.serialize(object.follwing,
+            specifiedType: const FullType(int)));
+    }
     return result;
   }
 
@@ -93,6 +105,14 @@ class _$UserSerializer implements StructuredSerializer<User> {
           result.website = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
+        case 'follwers':
+          result.follwers = serializers.deserialize(value,
+              specifiedType: const FullType(int)) as int;
+          break;
+        case 'follwing':
+          result.follwing = serializers.deserialize(value,
+              specifiedType: const FullType(int)) as int;
+          break;
       }
     }
 
@@ -115,6 +135,10 @@ class _$User extends User {
   final String phone;
   @override
   final String website;
+  @override
+  final int follwers;
+  @override
+  final int follwing;
 
   factory _$User([void Function(UserBuilder) updates]) =>
       (new UserBuilder()..update(updates)).build();
@@ -126,7 +150,9 @@ class _$User extends User {
       this.avatar,
       this.name,
       this.phone,
-      this.website})
+      this.website,
+      this.follwers,
+      this.follwing})
       : super._() {
     if (id == null) {
       throw new BuiltValueNullFieldError('User', 'id');
@@ -156,7 +182,9 @@ class _$User extends User {
         avatar == other.avatar &&
         name == other.name &&
         phone == other.phone &&
-        website == other.website;
+        website == other.website &&
+        follwers == other.follwers &&
+        follwing == other.follwing;
   }
 
   @override
@@ -165,12 +193,16 @@ class _$User extends User {
         $jc(
             $jc(
                 $jc(
-                    $jc($jc($jc(0, id.hashCode), username.hashCode),
-                        email.hashCode),
-                    avatar.hashCode),
-                name.hashCode),
-            phone.hashCode),
-        website.hashCode));
+                    $jc(
+                        $jc(
+                            $jc($jc($jc(0, id.hashCode), username.hashCode),
+                                email.hashCode),
+                            avatar.hashCode),
+                        name.hashCode),
+                    phone.hashCode),
+                website.hashCode),
+            follwers.hashCode),
+        follwing.hashCode));
   }
 
   @override
@@ -182,7 +214,9 @@ class _$User extends User {
           ..add('avatar', avatar)
           ..add('name', name)
           ..add('phone', phone)
-          ..add('website', website))
+          ..add('website', website)
+          ..add('follwers', follwers)
+          ..add('follwing', follwing))
         .toString();
   }
 }
@@ -218,6 +252,14 @@ class UserBuilder implements Builder<User, UserBuilder> {
   String get website => _$this._website;
   set website(String website) => _$this._website = website;
 
+  int _follwers;
+  int get follwers => _$this._follwers;
+  set follwers(int follwers) => _$this._follwers = follwers;
+
+  int _follwing;
+  int get follwing => _$this._follwing;
+  set follwing(int follwing) => _$this._follwing = follwing;
+
   UserBuilder();
 
   UserBuilder get _$this {
@@ -229,6 +271,8 @@ class UserBuilder implements Builder<User, UserBuilder> {
       _name = _$v.name;
       _phone = _$v.phone;
       _website = _$v.website;
+      _follwers = _$v.follwers;
+      _follwing = _$v.follwing;
       _$v = null;
     }
     return this;
@@ -257,7 +301,9 @@ class UserBuilder implements Builder<User, UserBuilder> {
             avatar: avatar,
             name: name,
             phone: phone,
-            website: website);
+            website: website,
+            follwers: follwers,
+            follwing: follwing);
     replace(_$result);
     return _$result;
   }

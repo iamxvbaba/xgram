@@ -3,6 +3,7 @@ import 'dart:convert' as convert;
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:provider_start/core/exceptions/network_exception.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void checkForNetworkExceptions(Response response) {
   if (response.statusCode != 200) {
@@ -23,5 +24,13 @@ dynamic decodeResponseBodyToJson(String body) {
   } on FormatException catch (e) {
     debugPrint('Network Utils: Failed to decode response body ${e.message}');
     throw NetworkException(e.message);
+  }
+}
+
+void launchURL(String url) async {
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    print('Could not launch $url');
   }
 }

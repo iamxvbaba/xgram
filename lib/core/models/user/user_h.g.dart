@@ -23,13 +23,15 @@ class UserHAdapter extends TypeAdapter<UserH> {
       phone: fields[3] as String,
       email: fields[4] as String,
       website: fields[5] as String,
+      follwers: fields[6] as int,
+      follwing: fields[7] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, UserH obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -41,7 +43,11 @@ class UserHAdapter extends TypeAdapter<UserH> {
       ..writeByte(4)
       ..write(obj.email)
       ..writeByte(5)
-      ..write(obj.website);
+      ..write(obj.website)
+      ..writeByte(6)
+      ..write(obj.follwers)
+      ..writeByte(7)
+      ..write(obj.follwing);
   }
 
   @override

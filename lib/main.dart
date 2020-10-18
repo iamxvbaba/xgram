@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_screenutil/screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:provider_start/core/constant/theme.dart';
 import 'package:provider_start/core/localization/localization.dart';
 import 'package:provider_start/core/managers/core_manager.dart';
 import 'package:provider_start/core/services/navigation/navigation_service.dart';
@@ -42,7 +44,11 @@ class MyApp extends StatelessWidget {
         child: PlatformApp(
           debugShowCheckedModeBanner: false,
           material: (_, __) => MaterialAppData(
-            theme: themes.primaryMaterialTheme,
+            theme: AppTheme.apptheme.copyWith(
+              textTheme: GoogleFonts.muliTextTheme(
+                Theme.of(context).textTheme,
+              ),
+            ), //themes.primaryMaterialTheme,
             darkTheme: themes.darkMaterialTheme,
           ),
           cupertino: (_, __) => CupertinoAppData(

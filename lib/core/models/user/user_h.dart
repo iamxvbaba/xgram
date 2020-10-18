@@ -26,35 +26,44 @@ class UserH extends HiveObject {
   @HiveField(5)
   final String website;
 
-  UserH({
-    this.id,
-    this.name,
-    this.username,
-    this.phone,
-    this.email,
-    this.website,
-  });
+  @HiveField(6)
+  final int follwers;
+
+  @HiveField(7)
+  final int follwing;
+
+  UserH(
+      {this.id,
+      this.name,
+      this.username,
+      this.phone,
+      this.email,
+      this.website,
+      this.follwers,
+      this.follwing});
 
   factory UserH.fromUser(User user) {
     return UserH(
-      id: user.id,
-      name: user.name,
-      username: user.username,
-      phone: user.phone,
-      email: user.email,
-      website: user.website,
-    );
+        id: user.id,
+        name: user.name,
+        username: user.username,
+        phone: user.phone,
+        email: user.email,
+        website: user.website,
+        follwers: user.follwers,
+        follwing: user.follwing);
   }
 
   factory UserH.fromMap(Map<String, dynamic> map) {
     return UserH(
-      id: map['id'],
-      name: map['name'],
-      username: map['username'],
-      phone: map['phone'],
-      email: map['email'],
-      website: map['website'],
-    );
+        id: map['id'],
+        name: map['name'],
+        username: map['username'],
+        phone: map['phone'],
+        email: map['email'],
+        website: map['website'],
+        follwers: map['follwers'],
+        follwing: map['follwing']);
   }
 
   Map<String, dynamic> toMap() {
@@ -65,6 +74,8 @@ class UserH extends HiveObject {
     map['phone'] = phone;
     map['email'] = email;
     map['website'] = website;
+    map['follwers'] = follwers;
+    map['follwing'] = follwing;
     return map;
   }
 
@@ -75,7 +86,9 @@ class UserH extends HiveObject {
       username.hashCode ^
       phone.hashCode ^
       email.hashCode ^
-      website.hashCode;
+      website.hashCode ^
+      follwers.hashCode ^
+      follwing.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -87,5 +100,7 @@ class UserH extends HiveObject {
           username == other.username &&
           phone == other.phone &&
           email == other.email &&
-          website == other.website;
+          website == other.website &&
+          follwers == other.follwers &&
+          follwing == other.follwing;
 }
