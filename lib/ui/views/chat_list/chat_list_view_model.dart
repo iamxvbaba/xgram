@@ -5,7 +5,7 @@ import 'package:provider_start/core/repositories/users_repository/users_reposito
 import 'package:provider_start/locator.dart';
 import 'package:stacked/stacked.dart';
 
-class ContactViewModel extends BaseViewModel {
+class ChatListViewModel extends BaseViewModel {
   final _usersRepository = locator<UsersRepository>();
   final _log = Logger('ContactViewModel');
 

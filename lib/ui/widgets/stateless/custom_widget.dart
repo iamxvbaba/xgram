@@ -188,9 +188,58 @@ class CustomInkWell extends StatelessWidget {
   }
 }
 
+Widget customImage(
+  BuildContext context,
+  String path, {
+  double height = 50,
+  bool isBorder = false,
+}) {
+  return Container(
+    decoration: BoxDecoration(
+      shape: BoxShape.circle,
+      border: Border.all(color: Colors.grey.shade100, width: isBorder ? 2 : 0),
+    ),
+    child: CircleAvatar(
+      maxRadius: height / 2,
+      backgroundColor: Theme.of(context).cardColor,
+      backgroundImage: customAdvanceNetworkImage(path ?? dummyProfilePic),
+    ),
+  );
+}
+
 dynamic customAdvanceNetworkImage(String path) {
   path ??= dummyProfilePic;
   return CachedNetworkImageProvider(
     path ?? dummyProfilePic,
+  );
+}
+
+void customSnackBar(GlobalKey<ScaffoldState> _scaffoldKey, String msg,
+    {double height = 30, Color backgroundColor = Colors.black}) {
+  if (_scaffoldKey == null || _scaffoldKey.currentState == null) {
+    return;
+  }
+  _scaffoldKey.currentState.hideCurrentSnackBar();
+  final snackBar = SnackBar(
+    backgroundColor: backgroundColor,
+    content: Text(
+      msg,
+      style: TextStyle(
+        color: Colors.white,
+      ),
+    ),
+  );
+  _scaffoldKey.currentState.showSnackBar(snackBar);
+}
+
+Widget customTitleText(String title, {BuildContext context}) {
+  return Text(
+    title ?? '',
+    style: TextStyle(
+      color: Colors.black87,
+      fontFamily: 'HelveticaNeue',
+      fontWeight: FontWeight.w900,
+      fontSize: 20,
+    ),
   );
 }

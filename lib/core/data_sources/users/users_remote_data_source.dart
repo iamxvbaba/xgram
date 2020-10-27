@@ -23,11 +23,8 @@ class UsersRemoteDataSourceImpl implements UsersRemoteDataSource {
   Future<List<User>> fetchContact() async {
     final userListJson =
         await httpService.getHttp(ApiRoutes.contacts) as List<dynamic>;
-
     var users = userListJson.map<User>((userMap) {
-      print('userMap:$userMap');
       var user = User.fromMap(userMap);
-      print('user:$user');
       return user;
     }).toList();
 

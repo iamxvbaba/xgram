@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider_start/core/constant/app_icon.dart';
 import 'package:provider_start/core/localization/localization.dart';
-import 'package:provider_start/ui/views/contacts/contact_view.dart';
+import 'package:provider_start/ui/views/chat_list/chat_list_view.dart';
 import 'package:provider_start/ui/views/drawer/sidebar_view.dart';
 import 'package:provider_start/ui/views/main/main_view_model.dart';
 import 'package:provider_start/ui/views/player/play_list_view.dart';
@@ -21,8 +21,8 @@ class MainView extends StatelessWidget {
   final _views = <Widget>[
     FadeIn(child: HomeView()),
     FadeIn(child: PlayListView()),
-    FadeIn(child: ContactView()),
     FadeIn(child: SettingsView()),
+    FadeIn(child: ChatListView()), // SettingsView()
   ];
 
   @override
