@@ -10,6 +10,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../core/models/post/post.dart';
+import 'views/chat_screen/chat_screen_view.dart';
 import 'views/login/login_view.dart';
 import 'views/main/main_view.dart';
 import 'views/player/play_list_view.dart';
@@ -22,12 +23,14 @@ class Routes {
   static const String startUpView = '/';
   static const String postDetailsView = '/post-details-view';
   static const String playListView = '/play-list-view';
+  static const String chatScreenPage = '/chat-screen-page';
   static const all = <String>{
     mainView,
     loginView,
     startUpView,
     postDetailsView,
     playListView,
+    chatScreenPage,
   };
 }
 
@@ -40,6 +43,7 @@ class Router extends RouterBase {
     RouteDef(Routes.startUpView, page: StartUpView),
     RouteDef(Routes.postDetailsView, page: PostDetailsView),
     RouteDef(Routes.playListView, page: PlayListView),
+    RouteDef(Routes.chatScreenPage, page: ChatScreenPage),
   ];
   @override
   Map<Type, AutoRouteFactory> get pagesMap => _pagesMap;
@@ -78,6 +82,18 @@ class Router extends RouterBase {
         settings: data,
       );
     },
+    ChatScreenPage: (data) {
+      final args = data.getArgs<ChatScreenPageArguments>(
+        orElse: () => ChatScreenPageArguments(),
+      );
+      return buildAdaptivePageRoute<dynamic>(
+        builder: (context) => ChatScreenPage(
+          key: args.key,
+          userProfileId: args.userProfileId,
+        ),
+        settings: data,
+      );
+    },
   };
 }
 
@@ -90,4 +106,11 @@ class PostDetailsViewArguments {
   final Key key;
   final Post post;
   PostDetailsViewArguments({this.key, @required this.post});
+}
+
+/// ChatScreenPage arguments holder class
+class ChatScreenPageArguments {
+  final Key key;
+  final String userProfileId;
+  ChatScreenPageArguments({this.key, this.userProfileId});
 }

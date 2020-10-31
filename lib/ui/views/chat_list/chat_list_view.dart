@@ -39,14 +39,14 @@ class _ChatListViewState extends State<ChatListView> {
 }
 
 class _ChatListBody extends ViewModelWidget<ChatListViewModel> {
-  Widget _userCard(User model) {
+  Widget _userCard(ChatListViewModel model, int index) {
     return Container(
       color: Colors.white,
       child: ListTile(
           contentPadding: EdgeInsets.symmetric(horizontal: 10),
-          onTap: () {},
+          onTap: model.pushChatScreen,
           leading: RippleButton(
-            onPressed: () {},
+            onPressed: () => {},
             borderRadius: BorderRadius.circular(28),
             child: Container(
               height: 56,
@@ -56,20 +56,20 @@ class _ChatListBody extends ViewModelWidget<ChatListViewModel> {
                 borderRadius: BorderRadius.circular(28),
                 image: DecorationImage(
                     image: customAdvanceNetworkImage(
-                      model.avatar ?? dummyProfilePic,
+                      model.contacts[index].avatar ?? dummyProfilePic,
                     ),
                     fit: BoxFit.cover),
               ),
             ),
           ),
           title: TitleText(
-            model.name ?? 'NA',
+            model.contacts[index].name ?? 'NA',
             fontSize: 16,
             fontWeight: FontWeight.w800,
             overflow: TextOverflow.ellipsis,
           ),
           subtitle: CustomText(
-            title: model.name,
+            title: model.contacts[index].name,
             style: onPrimarySubTitleText.copyWith(color: Colors.black54),
           ),
           trailing: Text(
@@ -83,7 +83,7 @@ class _ChatListBody extends ViewModelWidget<ChatListViewModel> {
     return ListView.separated(
       physics: BouncingScrollPhysics(),
       itemCount: model.contacts.length,
-      itemBuilder: (context, index) => _userCard(model.contacts[index]),
+      itemBuilder: (context, index) => _userCard(model, index),
       separatorBuilder: (context, index) {
         return Divider(
           height: 0,

@@ -2,11 +2,14 @@ import 'package:logging/logging.dart';
 import 'package:provider_start/core/exceptions/repository_exception.dart';
 import 'package:provider_start/core/models/user/user.dart';
 import 'package:provider_start/core/repositories/users_repository/users_repository.dart';
+import 'package:provider_start/core/services/navigation/navigation_service.dart';
 import 'package:provider_start/locator.dart';
+import 'package:provider_start/ui/router.gr.dart';
 import 'package:stacked/stacked.dart';
 
 class ChatListViewModel extends BaseViewModel {
   final _usersRepository = locator<UsersRepository>();
+  final _navigationService = locator<NavigationService>();
   final _log = Logger('ContactViewModel');
 
   List<User> _contacts = [];
@@ -21,5 +24,9 @@ class ChatListViewModel extends BaseViewModel {
       _log.shout(e.message);
     }
     setBusy(false);
+  }
+
+  void pushChatScreen() {
+    _navigationService.pushNamed(Routes.chatScreenPage);
   }
 }

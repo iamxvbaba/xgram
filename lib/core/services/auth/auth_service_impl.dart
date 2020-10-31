@@ -21,12 +21,11 @@ class AuthServiceImpl implements AuthService {
       await Future.delayed(Duration(milliseconds: 250));
 
       // fetch current user from server
-      _currentUser = User(
-        (u) => u
-          ..id = 1
-          ..email = email
-          ..username = displayName,
-      );
+      _currentUser = User((u) => u
+        ..id = 1
+        ..email = email
+        ..name = displayName
+        ..username = displayName);
     } on Exception {
       _log.severe('AuthService: Error signing up');
       throw AuthException('Error signing up');
@@ -47,7 +46,8 @@ class AuthServiceImpl implements AuthService {
         (u) => u
           ..id = 1
           ..email = email
-          ..username = 'Barrack Obama',
+          ..username = 'xuhui'
+          ..name = 'xuhui',
       );
     } on Exception {
       _log.severe('AuthService: Error signing in');
@@ -70,7 +70,8 @@ class AuthServiceImpl implements AuthService {
       (u) => u
         ..id = 1
         ..email = '944808666@qq.com'
-        ..username = 'Barrack Obama',
+        ..username = 'xuhui'
+        ..name = 'xuhui',
     );
     return _currentUser != null;
   }
