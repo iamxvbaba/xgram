@@ -7,6 +7,8 @@ import 'package:provider_start/core/data_sources/users/users_local_data_source.d
 import 'package:provider_start/core/data_sources/users/users_remote_data_source.dart';
 import 'package:provider_start/core/services/app_settings/app_settings_service.dart';
 import 'package:provider_start/core/services/app_settings/app_settings_service_impl.dart';
+import 'package:provider_start/core/services/chat_state/chat_state_service.dart';
+import 'package:provider_start/core/services/chat_state/chat_state_service_impl.dart';
 import 'package:provider_start/core/services/http/http_service.dart';
 import 'package:provider_start/core/services/http/http_service_impl.dart';
 import 'package:provider_start/core/repositories/posts_repository/posts_repository.dart';
@@ -28,6 +30,7 @@ import 'package:provider_start/core/services/navigation/navigation_service_impl.
 import 'package:provider_start/core/services/snackbar/snack_bar_service.dart';
 import 'package:provider_start/core/services/snackbar/snack_bar_service_impl.dart';
 import 'package:provider_start/core/utils/file_helper.dart';
+import 'package:provider_start/ui/views/chat_screen/chat_screen_view_model.dart';
 
 GetIt locator = GetIt.instance;
 
@@ -82,6 +85,9 @@ Future<void> setupLocator() async {
 
   // player
   locator.registerLazySingleton<AssetsAudioPlayer>(() => AssetsAudioPlayer());
+
+  // 全局的聊天状态
+  locator.registerLazySingleton<ChatStateService>(() => ChatStateServiceImpl());
 }
 
 Future<void> _setupSharedPreferences() async {

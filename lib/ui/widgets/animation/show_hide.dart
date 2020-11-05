@@ -40,7 +40,7 @@ class _ShowHideState extends State<ShowHide>
   @override
   void initState() {
     _controller = AnimationController(
-      vsync: this,
+      //vsync: this,
       duration: widget.duration,
     );
     _animation = Tween<double>(

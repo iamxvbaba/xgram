@@ -41,7 +41,7 @@ class _FadeInTranslateState extends State<FadeInTranslate>
   void initState() {
     super.initState();
     _controller = AnimationController(
-      vsync: this,
+      //vsync: this,
       duration: widget.duration,
     );
     _opacityAnimation = Tween(

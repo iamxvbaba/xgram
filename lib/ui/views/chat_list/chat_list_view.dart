@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider_start/core/constant/app_icon.dart';
 import 'package:provider_start/core/constant/theme.dart';
-import 'package:provider_start/core/models/user/user.dart';
 import 'package:provider_start/core/utils/utility.dart';
 import 'package:provider_start/ui/widgets/stateless/custom_widget.dart';
 import 'package:provider_start/ui/widgets/stateless/loading_animation.dart';
@@ -32,7 +31,9 @@ class _ChatListViewState extends State<ChatListView> {
         ),
         body: model.isBusy
             ? _LoadingAnimation()
-            : model.contacts.isNotEmpty ? _ChatListBody() : _NoChatList(),
+            : model.contacts.isNotEmpty
+                ? _ChatListBody()
+                : _NoChatList(),
       ),
     );
   }
