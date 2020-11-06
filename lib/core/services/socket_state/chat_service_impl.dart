@@ -3,12 +3,16 @@ import 'package:logging/logging.dart';
 import 'package:provider_start/core/models/message/message.dart';
 import 'package:provider_start/core/models/user/user.dart';
 import 'package:provider_start/core/services/auth/auth_service.dart';
-import 'package:provider_start/core/services/chat_state/chat_state_service.dart';
+import 'package:provider_start/core/services/socket_state/chat_service.dart';
+import 'package:provider_start/core/services/socket_state/socket.dart';
 import 'package:provider_start/locator.dart';
 
 class ChatStateServiceImpl implements ChatStateService{
   final _authService = locator<AuthService>();
   final _log = Logger('ChatScreenViewModel');
+
+  // 全局socket 对象
+  final SocketBloc _socketBloc = SocketBloc();
 
   User _chatUser;
   List<ChatMessage> _chatUserList;

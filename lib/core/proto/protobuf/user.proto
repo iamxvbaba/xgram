@@ -1,0 +1,21 @@
+syntax = "proto3";
+package api;
+option go_package = ".;api";
+import "account_enum.proto";
+//用户信息
+message User{
+  int64  id = 1;   // ID
+  int64  SonicNo = 2; // 声波号
+  string phone = 3; // 手机号
+  Gender gender = 4;
+  string nickname = 5; // 昵称
+  string avatar = 6;  // 头像
+  string profile = 7; // 个人简介
+  string birthday = 8; // 生日
+  string area = 9; // 地区
+  int32 status = 10; // 账号状态
+}
+//OP.friends/attention/fans  好友/关注/粉丝 都用这个结构体
+message UserList {
+  repeated User users = 1;
+}

@@ -60,6 +60,10 @@ dependencies:
   flare_flutter: ^2.0.3
   auto_route: ^0.6.7
 
+  # proto
+  protobuf: ^0.14.3
+  crypto: ^2.1.5
+  encrypt: ^4.0.2
 dev_dependencies:
   flutter_test:
     sdk: flutter

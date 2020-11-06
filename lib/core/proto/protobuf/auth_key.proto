@@ -1,0 +1,74 @@
+syntax = "proto3";
+package api;
+option go_package = ".;api";
+
+// 由客户端生成一个nonce的随机数，便以标识.
+message ReqPQ{
+  bytes nonce = 1;
+}
+
+// 服务端返回ResPQ
+message ResPQ {
+  bytes nonce = 1; // 客户端请求消息里发送给服务端的值
+  bytes ServerNonce = 2; // 为服务器端生成的随机数
+  bytes PQ = 3; // 字符串pq是一个二进制大端格式编码的数字，这个数字是两个不同的奇素数的乘积。通常，pq小于或等于2^63-1。客户端需要将pq分解为素数因子，使得p<q
+  int64 ServerPublicKeyFingerprint = 4; //RSA公钥指纹（fingerprint）
+}
+
+message ReqDHParams {
+  bytes nonce = 1; // 客户端一开始随机生产的nonce
+  bytes ServerNonce = 2; //ResPQ.ServerNonce
+
+  // 分解ResPQ.PQ为素数因子可得
+  bytes P = 3;
+  bytes Q = 4;
+  int64  PublicKeyFingerprint = 5; // ResPQ和客户端预埋公钥查询可得
+
+  //PQInnerData 加密之后的数据
+  //计算`data_with_hash`, 使得长度等于255字节; data_with_hash：= SHA1（data）+ data +（任何随机字节填充到255字节）
+  //EncryptedData = RSA(data_with_hash，server_public_key)
+  bytes EncryptedData = 6;
+}
+message PQInnerData{
+  bytes PQ = 1;
+  bytes P = 2;
+  bytes Q = 3;
+  bytes nonce = 4;
+  bytes serverNonce = 5;
+  bytes newNonce = 6; // 客户端生成的另一个随机数; 在这个请求之后，客户端和服务器都知道它;
+  uint32 dc = 7;
+}
+
+message ResDHParamsOK {
+  bytes nonce = 1; // 客户端一开始随机生产的nonce
+  bytes ServerNonce = 2; //ResPQ.ServerNonce
+  bytes EncryptedAnswer = 3; // ServerDHInnerData 加密之后的数据
+}
+
+message ServerDHInnerData {
+  bytes nonce = 1; // 客户端一开始随机生产的nonce
+  bytes ServerNonce = 2; //ResPQ.ServerNonce
+  int32 G = 3;
+  string DhPrime = 4;
+  string GA = 5;
+  int32 ServerTime = 6;
+}
+
+message ClientDHParams {
+  bytes nonce = 1; // 客户端一开始随机生产的nonce
+  bytes ServerNonce = 2; //ResPQ.ServerNonce
+  bytes EncryptedData = 4; // ClientDHInnerData 加密之后的数据
+}
+message ClientDHInnerData{
+  bytes nonce = 1; // 客户端一开始随机生产的nonce
+  bytes ServerNonce = 2; //ResPQ.ServerNonce
+  int64 RetryID = 3;
+  bytes GB = 4;
+}
+
+message DH_GEN {
+  bool result = 1; // true: success, false: failed,once again
+  bytes nonce = 2; // 客户端一开始随机生产的nonce
+  bytes ServerNonce = 3; // ResPQ.ServerNonce
+  bytes NewNonceHash1 = 4; //
+}

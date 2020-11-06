@@ -1,0 +1,54 @@
+syntax = "proto3";
+package api;
+option go_package = ".;api";
+
+enum OP {
+  //dh 密钥交换
+  needDH = 0;
+  reqPQ = 1;
+  resPQ = 2;
+  reqDHParams = 3;
+  resDHParamsOK = 4;
+  clientDHParams = 5;
+  dhGenResult = 6;
+
+  needLogin=7;
+  loginOrRegister=8;
+  logout = 9;
+
+  channelReady = -100;
+  channelFinished = -200;
+
+  testData = 200;
+  testDataResp = 201;
+
+  pushSingle = 301; // 单聊消息推送, 参数: Message
+  receiveSingle = 302; // 收到单聊消息, data结构为 Message
+
+  // system notify
+  SystemNotifyC = 100000001;
+  SystemNotifyD = 100000002;
+}
+
+// 最外层的结构
+message Proto {
+  uint32 from = 1; // 客户端奇数，服务端返回的为偶数
+  int64 seq = 3;// 每条消息的ID
+  bytes data = 4; // 加密数据
+  OP op = 2;   // 请求的操作
+  bytes authKeyHash = 5; //通过认证得到的
+  bytes msgKey = 6; // 加密key
+  int32 ver=7; // 内部版本号
+}
+
+// 服务端统一返回的结构体，填充到Proto.data
+message Response {
+  int32 code = 1;
+  string msg = 2;
+  bytes data = 3; //protobuf对象
+}
+
+// 参数只有id的时候,都使用这个结构
+message ID {
+  repeated int64 ids = 1;
+}

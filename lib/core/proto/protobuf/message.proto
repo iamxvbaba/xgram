@@ -1,0 +1,97 @@
+syntax = "proto3";
+package api;
+option go_package = ".;api";
+import "user.proto";
+import "account_enum.proto";
+
+enum ContentType{
+  normalText = 0; // 纯文本
+  image = 1; // 图片
+  emoji = 18; // 表情符号
+  textAndLink = 3; // 文本+链接
+  imageAndLink = 4; // 图片+链接
+  textAndLinkAndTitle = 5; //文本+链接+链接名称
+}
+
+
+message GiftMessageInfo {
+  User Sender = 1;
+  repeated User Receiver = 2;
+  int32 giftID = 3;
+  int32 giftNum = 4;
+}
+
+message MessageBody {
+  ContentType contentType = 2; // 消息类型
+  int64 msgID = 3;
+  string msg = 4;
+  int64 sendTime = 5;
+  GiftMessageInfo giftInfo = 6; // 礼物详情
+}
+
+// Message中需要使用的双方用户信息
+message MessageUser {
+  User sender = 1;
+  repeated User receiver = 2;
+  //repeated int64 ateID = 3;
+}
+
+message Message {
+  int64 userID = 1; // 接收者
+  int64 senderID = 2; // 客户端此字段可不填
+  int64 roomID = 3; // 所在房间
+  MessageBody body = 4;
+  UserType ut=5;
+  MessageUser eachInfo = 6; // 双方信息
+}
+message MessageList {
+  repeated Message list = 1;
+}
+//OP.session 消息
+message Session {
+  repeated User live = 1; // 正在直播的用户
+  // 首次拉取只展示在页面，所有每个人都只返回一条最新的消息
+  message content {
+    User user = 1;
+    Message msg = 2;
+    int32 badge = 3; // 角标
+    bool follow=5;  // 是否关注
+    bool black=6; // 是否在黑名单
+  }
+  repeated content list = 2; // 消息列表
+}
+
+enum SessionFrom {
+  s_none = 0;
+  s_index = 1;
+  s_room = 2;
+}
+
+//OP.addSession
+message AddSessionArg {
+  int64 userID = 1;
+  SessionFrom from = 2;
+  int64 RoomID = 3;
+}
+
+//OP.sessionHistory
+message SessionHistoryArg {
+  int64 userID = 1;
+  int64 sendTime = 2;
+}
+
+//OP.delSingleMessage
+message DelSingleMessageArg {
+  int64 userID = 1;
+  int64 msgID = 2;
+  Message previousMsg = 3; // 要删除消息的前一个msg
+}
+
+//OP.receiveAck
+message MessageReceiveAckArg {
+  int64 userID = 1; // 发送者id
+  repeated int64 msgID = 2; // 消息id
+}
+message MessageReceiveAckMulArg {
+  repeated MessageReceiveAckArg ack = 1;
+}

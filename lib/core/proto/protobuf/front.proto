@@ -1,0 +1,42 @@
+syntax = "proto3";
+package api;
+option go_package = ".;api";
+import "abridged.proto";
+
+message EmptyArg {
+
+}
+message EmptyResponse {
+
+}
+message RoomUserPushInfo {
+  int64 frontID=1;
+  repeated uint64 authKey = 2;
+}
+message NotifyArg {
+  Proto p = 1;
+  uint64 authKey = 2;
+  int64 roomID = 3;
+  // 推送类型
+  enum PushType {
+    SingleChannel = 0;
+    RoomChannel = 1;
+    Broadcast = 2;
+    CSysNty = 3;
+    DSysNty = 4;
+  }
+  PushType pushType = 4;
+  int64 frontID = 5;
+  int64 ntyID=6; // 系统通知ID
+  bytes data=7; // 动态json数据
+  repeated RoomUserPushInfo roomPush=8;
+}
+
+service FrontNotify{
+  rpc Push(NotifyArg) returns (EmptyResponse) {}
+  rpc PushRoom(NotifyArg) returns (EmptyResponse) {}
+  rpc Broadcast(NotifyArg) returns (EmptyResponse) {}
+
+  rpc CPush(NotifyArg) returns (EmptyResponse) {}
+  rpc DPush(NotifyArg) returns (EmptyResponse) {}
+}

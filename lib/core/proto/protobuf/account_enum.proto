@@ -1,0 +1,59 @@
+syntax = "proto3";
+package api;
+option go_package = ".;api";
+
+// 认证连接状态
+enum AuthStatus {
+  success = 0;
+  fail = 1;
+}
+
+enum UserType {
+  ut_none = 0;
+  ut_common = 1; // 普通用户
+  ut_helper = 2; // 小助手
+  ut_system = 3; // 系统
+  ut_room = 4; // 房间
+  ut_guild_anchor = 101; // 公会主播
+  ut_guild_manager = 201; // 公会管理
+}
+
+enum Gender{
+  unknown = 0; // 未设置
+  male = 1; // 男
+  female = 11; // 女
+} // 性别
+
+//message AccountStatus{
+//  UserStatus userStatus = 1;
+//  RoomStatus roomStatus = 2;
+//}
+// 用户状态
+enum AccountStatus {
+  user_ac_none = 0;
+  user_active = 1; // 正常状态
+  user_half_banned = 101; // 部分封禁
+  user_banned = 201; // 全封禁
+}
+//房间状态
+enum RoomStatus {
+  room_ac_none = 0;
+  room_active = 1; // 正常状态
+  room_banned = 11; // 封禁
+}
+// 登录类型
+enum LoginType {
+  cellphoneCode = 0; // 短信验证码
+  localCellphone = 1; // 本机号码一键登录
+  oauthByWX = 2; // 微信登录
+  oauthByQQ = 3; // QQ登录
+  oauthByMW = 4; // 默往登录
+  oauthByApple = 5; // iOS苹果账号登录
+}
+// 短信验证码类型
+enum SMSCodeType {
+  codeLoginOrRegister = 0;
+  codeSetOrResetPwd = 1;//第一次设置密码、重置密码
+  codeCancelAccount = 2;//注销账号
+  codeChangeOrBindCellPhone = 3;//绑定或者更换手机号
+}

@@ -1,0 +1,21 @@
+syntax = "proto3";
+package api;
+option go_package = ".;api";
+import "account_enum.proto";
+// 登录注册参数
+message LoginOrRegister {
+  LoginType loginType = 1;// 登录类型
+  string cellphone = 2;      // 手机号
+  string code = 3;      // 验证码
+  string source = 10;  // 客户端来源
+}
+
+// 发送短信验证码
+message SendSmsCodeArg {
+  SMSCodeType smsCodeType = 1; // 短信验证码类型
+  string cellphone = 2; // 手机号
+}
+//青少年模式开启和关闭参数
+message YouthPwdArg{
+  int32 password = 1;
+}

@@ -1,0 +1,79 @@
+syntax = "proto3";
+package api;
+option go_package = ".;api";
+
+import "abridged.proto";
+import "message.proto";
+import "account_enum.proto";
+
+// 这个文件不需要给客户端
+message LogicArg {
+  Proto p = 1;
+  int64 userID = 2;
+  uint64 authKeyID = 3;
+  string IP = 4;
+  string Device = 5;
+  string Version = 6;
+  int32 os = 7;
+}
+
+message LogicResponse {
+  bool changeOP = 1;
+  OP op = 2; // 改变的op
+  AccountStatus accountStatus = 3; // 账号状态
+  AuthStatus authStatus = 4; // 认证状态
+  int64 roomID = 6; // 房间ID
+  int64 userID = 7; // 用户ID
+  int32 os = 8; // 系统 1: iOS 2: android
+  string Device = 9; // 设备信息
+  string Version = 10; // 版本号
+  Response resp = 5;
+}
+
+message NewConnArg{
+  int64 userID = 1;
+  uint64 authKey = 2;
+  string ip = 3;
+  int64 connID = 4;
+  string serverName = 5;
+  int64 frontID = 6;
+}
+
+message NewConnResponse {
+
+}
+message DisconnectArg {
+  int64 userID = 1;
+  uint64 authKey = 2;
+  int64 connID = 3;
+  string serverName = 4;
+}
+message DisconnectResponse {
+}
+
+message CNotifyArg {
+  int64 userID = 1; // 被通知的用户ID
+  uint64 authKey = 2;
+  int32 os = 3; // all:0 android:1  ios:11
+  int64 notifyID = 4; // 通知ID
+  int64 frontID = 5;
+  Message message = 6;
+  int64 roomID = 7;
+  bool store = 8; // 是否需要存入数据库
+  bool broadcast = 9; // 全部通知
+}
+message CNotifyReply {
+
+}
+
+service Logic {
+  rpc Handle(LogicArg) returns (LogicResponse) {}
+  rpc NewConnection(NewConnArg) returns(NewConnResponse){}
+  rpc Disconnect(DisconnectArg) returns (DisconnectResponse) {}
+
+  /// system call
+  // 1. 普通通知 (广告/礼物/谁上线了)
+  rpc CNotify(CNotifyArg) returns (CNotifyReply) {}
+  // 2. 违规通知 (账号系列通知)
+  rpc DNotify(CNotifyArg) returns (CNotifyReply) {}
+}
