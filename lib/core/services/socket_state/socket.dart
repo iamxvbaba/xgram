@@ -25,7 +25,7 @@ class SocketBloc {
   int _serverSalt;
   Uint8List _unusedData; // 缓存不完整的数据
 
-  int _rid;
+  int _rid = 1;
 
 
   factory SocketBloc() => _getInstance();
@@ -73,7 +73,7 @@ class SocketBloc {
 
   /// 发送数据
   void send(OP op,$pb.GeneratedMessage obj){
-    print('socket send op:$op obj:$obj');
+    print('1. socket send op:$op obj:$obj');
     var p = Proto.create();
     p.from = 1;     // 1 表示客户端向服务器发送消息
     p.op = op;  // 登录注册
