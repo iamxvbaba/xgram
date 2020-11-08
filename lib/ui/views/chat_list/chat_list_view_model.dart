@@ -19,7 +19,7 @@ class ChatListViewModel extends BaseViewModel {
     setBusy(true);
     try {
       _contacts = await _usersRepository.fetchContact();
-      print('_contacts:$_contacts');
+      //print('_contacts:$_contacts');
     } on RepositoryException catch (e) {
       _log.shout(e.message);
     }

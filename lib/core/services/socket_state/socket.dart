@@ -42,6 +42,7 @@ class SocketBloc {
   }
   //连接
   void _initConnect() {
+    print('初始化socket ===========================');
     Socket.connect(Config.socket_s, Config.socket_p).then((Socket sock) {
       _socket = sock;
       //首次必须先发送 0xaa
@@ -59,7 +60,7 @@ class SocketBloc {
 
   // 连接之后的第一个字节
   void _firstByte(){
-    print('1.firstByte');
+    print('socket send firstByte');
     var message = Uint8List(1);
     var byteData = ByteData.view(message.buffer);
     byteData.setUint8(0, 0xaa);
@@ -72,6 +73,7 @@ class SocketBloc {
 
   /// 发送数据
   void send(OP op,$pb.GeneratedMessage obj){
+    print('socket send op:$op obj:$obj');
     var p = Proto.create();
     p.from = 1;     // 1 表示客户端向服务器发送消息
     p.op = op;  // 登录注册
