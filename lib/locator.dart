@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
@@ -29,6 +31,7 @@ import 'package:provider_start/core/services/navigation/navigation_service.dart'
 import 'package:provider_start/core/services/navigation/navigation_service_impl.dart';
 import 'package:provider_start/core/services/snackbar/snack_bar_service.dart';
 import 'package:provider_start/core/services/snackbar/snack_bar_service_impl.dart';
+import 'package:provider_start/core/services/socket_state/socket.dart';
 import 'package:provider_start/core/utils/file_helper.dart';
 import 'package:provider_start/ui/views/chat_screen/chat_screen_view_model.dart';
 
@@ -86,6 +89,8 @@ Future<void> setupLocator() async {
   // player
   locator.registerLazySingleton<AssetsAudioPlayer>(() => AssetsAudioPlayer());
 
+  // 全局socket
+  locator.registerSingleton<SocketBloc>(SocketBloc());
   // 全局的聊天状态
   locator.registerLazySingleton<ChatStateService>(() => ChatStateServiceImpl());
 }

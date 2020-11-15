@@ -9,7 +9,7 @@ const User$json = const {
   '1': 'User',
   '2': const [
     const {'1': 'id', '3': 1, '4': 1, '5': 3, '10': 'id'},
-    const {'1': 'SonicNo', '3': 2, '4': 1, '5': 3, '10': 'SonicNo'},
+    const {'1': 'account', '3': 2, '4': 1, '5': 3, '10': 'account'},
     const {'1': 'phone', '3': 3, '4': 1, '5': 9, '10': 'phone'},
     const {'1': 'gender', '3': 4, '4': 1, '5': 14, '6': '.api.Gender', '10': 'gender'},
     const {'1': 'nickname', '3': 5, '4': 1, '5': 9, '10': 'nickname'},

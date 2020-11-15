@@ -31,7 +31,7 @@ class _ChatListViewState extends State<ChatListView> {
         ),
         body: model.isBusy
             ? _LoadingAnimation()
-            : model.contacts.isNotEmpty
+            : model.contacts.users.isNotEmpty
                 ? _ChatListBody()
                 : _NoChatList(),
       ),
@@ -57,20 +57,20 @@ class _ChatListBody extends ViewModelWidget<ChatListViewModel> {
                 borderRadius: BorderRadius.circular(28),
                 image: DecorationImage(
                     image: customAdvanceNetworkImage(
-                      model.contacts[index].avatar ?? dummyProfilePic,
+                      model.contacts.users[index].avatar ?? dummyProfilePic,
                     ),
                     fit: BoxFit.cover),
               ),
             ),
           ),
           title: TitleText(
-            model.contacts[index].name ?? 'NA',
+            model.contacts.users[index].nickname ?? 'NA',
             fontSize: 16,
             fontWeight: FontWeight.w800,
             overflow: TextOverflow.ellipsis,
           ),
           subtitle: CustomText(
-            title: model.contacts[index].name,
+            title: model.contacts.users[index].nickname,
             style: onPrimarySubTitleText.copyWith(color: Colors.black54),
           ),
           trailing: Text(
@@ -83,7 +83,7 @@ class _ChatListBody extends ViewModelWidget<ChatListViewModel> {
   Widget build(BuildContext context, ChatListViewModel model) {
     return ListView.separated(
       physics: BouncingScrollPhysics(),
-      itemCount: model.contacts.length,
+      itemCount: model.contacts.users.length,
       itemBuilder: (context, index) => _userCard(model, index),
       separatorBuilder: (context, index) {
         return Divider(

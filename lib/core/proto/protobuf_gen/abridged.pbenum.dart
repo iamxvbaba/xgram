@@ -20,6 +20,7 @@ class OP extends $pb.ProtobufEnum {
   static const OP needLogin = OP._(7, 'needLogin');
   static const OP loginOrRegister = OP._(8, 'loginOrRegister');
   static const OP logout = OP._(9, 'logout');
+  static const OP contact = OP._(10, 'contact');
   static const OP channelReady = OP._(-100, 'channelReady');
   static const OP channelFinished = OP._(-200, 'channelFinished');
   static const OP testData = OP._(200, 'testData');
@@ -40,6 +41,7 @@ class OP extends $pb.ProtobufEnum {
     needLogin,
     loginOrRegister,
     logout,
+    contact,
     channelReady,
     channelFinished,
     testData,

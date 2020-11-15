@@ -1,29 +1,37 @@
 import 'package:logging/logging.dart';
 import 'package:provider_start/core/exceptions/repository_exception.dart';
-import 'package:provider_start/core/models/user/user.dart';
+import 'package:provider_start/core/proto/protobuf_gen/abridged.pb.dart';
+import 'package:provider_start/core/proto/protobuf_gen/user.pb.dart';
 import 'package:provider_start/core/repositories/users_repository/users_repository.dart';
 import 'package:provider_start/core/services/navigation/navigation_service.dart';
+import 'package:provider_start/core/services/socket_state/socket.dart';
 import 'package:provider_start/locator.dart';
 import 'package:provider_start/ui/router.gr.dart';
 import 'package:stacked/stacked.dart';
 
 class ChatListViewModel extends BaseViewModel {
-  final _usersRepository = locator<UsersRepository>();
+  // final _usersRepository = locator<UsersRepository>();
   final _navigationService = locator<NavigationService>();
   final _log = Logger('ContactViewModel');
+  final SocketBloc _socket = locator<SocketBloc>();
 
-  List<User> _contacts = [];
-  List<User> get contacts => _contacts;
+  UserList _contacts;
+  UserList get contacts => _contacts;
 
   Future<void> init() async {
     setBusy(true);
-    try {
-      _contacts = await _usersRepository.fetchContact();
-      //print('_contacts:$_contacts');
-    } on RepositoryException catch (e) {
-      _log.shout(e.message);
-    }
+    // 获取通讯录列表
+    var param = Pagination.create();
+    param.page = 1;
+    param.size = 10;
+    print('=====获取通讯录列表=====');
+    _contacts = await _socket.send(OP.contact, param,_convertUser);
     setBusy(false);
+  }
+
+  UserList _convertUser(List<int> data) {
+    print('获取通讯录列表 返回!!!');
+    return UserList.fromBuffer(data);
   }
 
   void pushChatScreen() {

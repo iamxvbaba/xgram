@@ -16,6 +16,8 @@ enum OP {
   loginOrRegister=8;
   logout = 9;
 
+  contact = 10; // 通讯录列表
+
   channelReady = -100;
   channelFinished = -200;
 
@@ -51,4 +53,9 @@ message Response {
 // 参数只有id的时候,都使用这个结构
 message ID {
   repeated int64 ids = 1;
+}
+
+message Pagination {
+  int32 page=1;
+  int32 size=2;
 }

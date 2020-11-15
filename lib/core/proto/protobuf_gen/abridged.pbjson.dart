@@ -18,6 +18,7 @@ const OP$json = const {
     const {'1': 'needLogin', '2': 7},
     const {'1': 'loginOrRegister', '2': 8},
     const {'1': 'logout', '2': 9},
+    const {'1': 'contact', '2': 10},
     const {'1': 'channelReady', '2': -100},
     const {'1': 'channelFinished', '2': -200},
     const {'1': 'testData', '2': 200},
@@ -55,6 +56,14 @@ const ID$json = const {
   '1': 'ID',
   '2': const [
     const {'1': 'ids', '3': 1, '4': 3, '5': 3, '10': 'ids'},
+  ],
+};
+
+const Pagination$json = const {
+  '1': 'Pagination',
+  '2': const [
+    const {'1': 'page', '3': 1, '4': 1, '5': 5, '10': 'page'},
+    const {'1': 'size', '3': 2, '4': 1, '5': 5, '10': 'size'},
   ],
 };
 

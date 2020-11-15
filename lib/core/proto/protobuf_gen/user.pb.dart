@@ -15,7 +15,7 @@ import 'account_enum.pbenum.dart' as $0;
 class User extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('User', package: const $pb.PackageName('api'), createEmptyInstance: create)
     ..aInt64(1, 'id')
-    ..aInt64(2, 'SonicNo', protoName: 'SonicNo')
+    ..aInt64(2, 'account')
     ..aOS(3, 'phone')
     ..e<$0.Gender>(4, 'gender', $pb.PbFieldType.OE, defaultOrMaker: $0.Gender.unknown, valueOf: $0.Gender.valueOf, enumValues: $0.Gender.values)
     ..aOS(5, 'nickname')
@@ -52,13 +52,13 @@ class User extends $pb.GeneratedMessage {
   void clearId() => clearField(1);
 
   @$pb.TagNumber(2)
-  $fixnum.Int64 get sonicNo => $_getI64(1);
+  $fixnum.Int64 get account => $_getI64(1);
   @$pb.TagNumber(2)
-  set sonicNo($fixnum.Int64 v) { $_setInt64(1, v); }
+  set account($fixnum.Int64 v) { $_setInt64(1, v); }
   @$pb.TagNumber(2)
-  $core.bool hasSonicNo() => $_has(1);
+  $core.bool hasAccount() => $_has(1);
   @$pb.TagNumber(2)
-  void clearSonicNo() => clearField(2);
+  void clearAccount() => clearField(2);
 
   @$pb.TagNumber(3)
   $core.String get phone => $_getSZ(2);

@@ -12,7 +12,7 @@ class ChatStateServiceImpl implements ChatStateService{
   final _log = Logger('ChatScreenViewModel');
 
   // 全局socket 对象
-  final SocketBloc _socketBloc = SocketBloc();
+  final SocketBloc _socket = locator<SocketBloc>();
 
   User _chatUser;
   List<ChatMessage> _chatUserList;
