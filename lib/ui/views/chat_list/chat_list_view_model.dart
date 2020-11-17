@@ -25,7 +25,10 @@ class ChatListViewModel extends BaseViewModel {
     param.page = 1;
     param.size = 10;
     print('=====获取通讯录列表=====');
-    _contacts = await _socket.send(OP.contact, param,_convertUser);
+    _contacts = await _socket.send(OP.contact, param,_convertUser).
+    timeout(const Duration(seconds: 5)).catchError((e){
+      print('获取通讯录列表 FAILED:$e');
+    });
     setBusy(false);
   }
 

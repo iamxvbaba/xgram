@@ -77,13 +77,6 @@ class SocketBloc {
     print('send op id:$id');
     Completer<$pb.GeneratedMessage> c = Completer();
     call[id] = (List<int> data) {
-      /*
-      var timer = Timer(const Duration(seconds: 5), () {
-        //超时回调
-        print('op:$op id:$id 超时');
-        c.completeError('op:$op id:$id 超时');
-      });
-       */
       var result = handler(data);
       c.complete(result);
     };
