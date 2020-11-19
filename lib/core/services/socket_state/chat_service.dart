@@ -1,5 +1,5 @@
 import 'package:provider_start/core/models/message/message.dart';
-import 'package:provider_start/core/models/user/user.dart';
+import 'package:provider_start/core/proto/protobuf_gen/user.pb.dart';
 
 abstract class ChatStateService {
   User get currentUser;

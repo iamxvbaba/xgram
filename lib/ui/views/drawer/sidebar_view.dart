@@ -200,7 +200,7 @@ class _MenuHeader extends ViewModelWidget<SideBarViewModel> {
             title: Row(
               children: <Widget>[
                 UrlText(
-                  text: model.currentUser.email ?? 'none',
+                  text: model.currentUser.account ?? 'none',
                   style: onPrimaryTitleText.copyWith(
                       color: Colors.black, fontSize: 20),
                 ),
@@ -228,7 +228,7 @@ class _MenuHeader extends ViewModelWidget<SideBarViewModel> {
               ],
             ),
             subtitle: CustomText(
-              title: model.currentUser.name ?? '旧伯伯',
+              title: model.currentUser.nickname ?? '旧伯伯',
               style: onPrimarySubTitleText.copyWith(
                   color: Colors.black54, fontSize: 15),
             ),
@@ -243,9 +243,9 @@ class _MenuHeader extends ViewModelWidget<SideBarViewModel> {
                 SizedBox(
                   width: 17,
                 ),
-                _tappbleText(context, model.currentUser.follwers ?? 0, ' 关注者'),
+                _tappbleText(context, /*model.currentUser.follwers ??*/ 0, ' 关注者'),
                 SizedBox(width: 10),
-                _tappbleText(context, model.currentUser.follwing ?? 0, ' 正在关注'),
+                _tappbleText(context, /*model.currentUser.follwing ??*/ 0, ' 正在关注'),
               ],
             ),
           ),

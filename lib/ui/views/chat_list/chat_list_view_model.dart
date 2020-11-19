@@ -1,8 +1,6 @@
 import 'package:logging/logging.dart';
-import 'package:provider_start/core/exceptions/repository_exception.dart';
 import 'package:provider_start/core/proto/protobuf_gen/abridged.pb.dart';
 import 'package:provider_start/core/proto/protobuf_gen/user.pb.dart';
-import 'package:provider_start/core/repositories/users_repository/users_repository.dart';
 import 'package:provider_start/core/services/navigation/navigation_service.dart';
 import 'package:provider_start/core/services/socket_state/socket.dart';
 import 'package:provider_start/locator.dart';

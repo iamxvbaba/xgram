@@ -16,22 +16,22 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   final formKey = GlobalKey<FormState>();
 
-  TextEditingController emailController;
-  TextEditingController passwordController;
+  TextEditingController phoneController;
+  TextEditingController codeController;
   FocusNode passwordFocusNode;
 
   @override
   void initState() {
     super.initState();
-    emailController = TextEditingController();
-    passwordController = TextEditingController();
+    phoneController = TextEditingController();
+    codeController = TextEditingController();
     passwordFocusNode = FocusNode();
   }
 
   @override
   void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
+    phoneController.dispose();
+    codeController.dispose();
     passwordFocusNode.dispose();
     super.dispose();
   }
@@ -65,28 +65,28 @@ class _LoginViewState extends State<LoginView> {
                   child: Column(
                     children: <Widget>[
                       _EmailTextField(
-                        controller: emailController,
+                        controller: phoneController,
                         onFieldSubmitted: (_) =>
                             passwordFocusNode.requestFocus(),
-                        validator: (_) => local.translate(
-                          model.validateEmail(emailController.text),
-                        ),
+                        /*validator: (_) => local.translate(
+                          model.validateEmail(phoneController.text),
+                        ),*/
                       ),
                       UIHelper.verticalSpaceMedium(),
                       _PasswordTextField(
-                        controller: passwordController,
+                        controller: codeController,
                         focusNode: passwordFocusNode,
                         onFieldSubmitted: (_) {
                           if (!formKey.currentState.validate()) return;
-
                           model.login(
-                            emailController.text,
-                            passwordController.text,
+                            phoneController.text,
+                            codeController.text,
                           );
                         },
+                        /*
                         validator: (_) => local.translate(
-                          model.validatePassword(passwordController.text),
-                        ),
+                          model.validatePassword(codeController.text),
+                        ),*/
                       ),
                       UIHelper.verticalSpaceMedium(),
                       _SignInButton(
@@ -95,8 +95,8 @@ class _LoginViewState extends State<LoginView> {
                           if (!formKey.currentState.validate()) return;
 
                           model.login(
-                            emailController.text,
-                            passwordController.text,
+                            phoneController.text,
+                            codeController.text,
                           );
                         },
                       ),
@@ -164,7 +164,7 @@ class _EmailTextField extends StatelessWidget {
         textInputAction: TextInputAction.next,
         keyboardType: TextInputType.emailAddress,
         decoration: InputDecoration(
-          prefixIcon: Icon(Icons.email),
+          prefixIcon: Icon(Icons.phone),
           hintText: local.emailHint,
           contentPadding: const EdgeInsets.all(8),
           border: OutlineInputBorder(
@@ -183,7 +183,7 @@ class _EmailTextField extends StatelessWidget {
         keyboardType: TextInputType.emailAddress,
         prefix: Padding(
           padding: const EdgeInsets.all(4),
-          child: Icon(CupertinoIcons.mail),
+          child: Icon(CupertinoIcons.phone),
         ),
         decoration: BoxDecoration(
           color: CupertinoColors.systemGrey6,
@@ -217,12 +217,12 @@ class _PasswordTextField extends StatelessWidget {
         controller: controller,
         validator: validator,
         focusNode: focusNode,
-        obscureText: true,
+        //obscureText: true,
         textInputAction: TextInputAction.send,
         onFieldSubmitted: onFieldSubmitted,
         decoration: InputDecoration(
           hintText: local.passwordHint,
-          prefixIcon: Icon(Icons.lock),
+          prefixIcon: Icon(Icons.message),
           contentPadding: const EdgeInsets.all(8),
           border: OutlineInputBorder(
             borderRadius: const BorderRadius.all(
@@ -236,7 +236,7 @@ class _PasswordTextField extends StatelessWidget {
         controller: controller,
         focusNode: focusNode,
         placeholder: local.passwordHint,
-        obscureText: true,
+        //obscureText: true,
         onFieldSubmitted: onFieldSubmitted,
         textInputAction: TextInputAction.send,
         prefix: Padding(

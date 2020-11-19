@@ -18,28 +18,12 @@ void main() {
     authService = locator<AuthService>();
   });
 
-  group('signUpWithEmailPassword', () {
+  group('signInWithPhone', () {
     test('current user is not null when signed up', () async {
       // arrange
 
       // act
-      await authService.signUpWithEmailPassword(
-        mockUser.email,
-        mockPassword,
-        mockUser.username,
-      );
-
-      // assert
-      expect(authService.currentUser.id, equals(mockUser.id));
-    });
-  });
-
-  group('signUpWithEmailPassword', () {
-    test('current user is not null when signed in', () async {
-      // arrange
-
-      // act
-      await authService.signInWithEmailAndPassword(
+      await authService.signInWithPhone(
         mockUser.email,
         mockPassword,
       );

@@ -1,17 +1,12 @@
-import 'package:provider_start/core/models/user/user.dart';
+
+import 'package:provider_start/core/proto/protobuf_gen/user.pb.dart';
 
 abstract class AuthService {
   User get currentUser;
 
-  Future<void> signUpWithEmailPassword(
-    String email,
-    String password,
-    String displayName,
-  );
-
-  Future<void> signInWithEmailAndPassword(
-    String email,
-    String password,
+  Future<void> signInWithPhone(
+    String phone,
+    String code,
   );
 
   Future<void> signOut();

@@ -216,7 +216,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
         receiverId: model.currentUser.id.toString(),
         seen: false,
         timeStamp: DateTime.now().toUtc().millisecondsSinceEpoch.toString(),
-        senderName: model.currentUser.name);
+        senderName: model.currentUser.nickname);
     if (messageController.text == null || messageController.text.isEmpty) {
       return;
     }
@@ -253,14 +253,14 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       UrlText(
-                        text: model.chatUser.name,
+                        text: model.chatUser.nickname,
                         style: TextStyle(
                             color: Colors.black87,
                             fontSize: 20,
                             fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        model.chatUser.name,
+                        model.chatUser.nickname,
                         style:
                             TextStyle(color: AppColor.darkGrey, fontSize: 15),
                       )

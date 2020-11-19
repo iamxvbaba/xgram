@@ -1,6 +1,6 @@
 import 'package:logging/logging.dart';
 import 'package:provider_start/core/models/message/message.dart';
-import 'package:provider_start/core/models/user/user.dart';
+import 'package:provider_start/core/proto/protobuf_gen/user.pb.dart';
 import 'package:provider_start/core/services/socket_state/chat_service.dart';
 import 'package:provider_start/locator.dart';
 import 'package:stacked/stacked.dart';

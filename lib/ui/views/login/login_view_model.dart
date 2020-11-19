@@ -13,10 +13,10 @@ class LoginViewModel extends BaseViewModel with Validators {
   final _navigationService = locator<NavigationService>();
   final _log = Logger('HomeViewModel');
 
-  Future<void> login(String email, String password) async {
+  Future<void> login(String phone, String code) async {
     setBusy(true);
     try {
-      await _authService.signInWithEmailAndPassword(email, password);
+      await _authService.signInWithPhone(phone, code);
       unawaited(_navigationService.popAllAndPushNamed(Routes.mainView));
     } on AuthException catch (e) {
       _log.shout(e.message);

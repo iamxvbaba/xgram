@@ -1,58 +1,48 @@
 import 'package:logging/logging.dart';
+import 'package:provider_start/core/proto/protobuf_gen/abridged.pb.dart';
 import 'package:provider_start/core/exceptions/auth_exception.dart';
-import 'package:provider_start/core/models/user/user.dart';
+import 'package:provider_start/core/proto/protobuf_gen/account.pb.dart';
+import 'package:provider_start/core/proto/protobuf_gen/user.pb.dart';
 import 'package:provider_start/core/services/auth/auth_service.dart';
+import 'package:provider_start/core/services/socket_state/socket.dart';
+import 'package:provider_start/locator.dart';
 
 class AuthServiceImpl implements AuthService {
   final _log = Logger('AuthServiceImpl');
+  final SocketBloc _socket = locator<SocketBloc>();
 
   User _currentUser;
+
   @override
   User get currentUser => _currentUser;
 
   @override
-  Future<void> signUpWithEmailPassword(
-    String email,
-    String password,
-    String displayName,
+  Future<void> signInWithPhone(
+    String phone,
+    String code,
   ) async {
     try {
       // authenticate with server
-      await Future.delayed(Duration(milliseconds: 250));
-
+      var param = LoginOrRegister.create();
+      param.cellphone = phone;
+      param.code = code;
+      _currentUser = await _socket
+          .send(OP.loginOrRegister, param, _convertUser)
+          .timeout(const Duration(seconds: 5))
+          .catchError((e) {
+        print('登录超时:$e');
+      });
       // fetch current user from server
-      _currentUser = User((u) => u
-        ..id = 1
-        ..email = email
-        ..name = displayName
-        ..username = displayName);
+
     } on Exception {
       _log.severe('AuthService: Error signing up');
       throw AuthException('Error signing up');
     }
   }
 
-  @override
-  Future<void> signInWithEmailAndPassword(
-    String email,
-    String password,
-  ) async {
-    try {
-      // authenticate with server
-      await Future.delayed(Duration(milliseconds: 250));
-
-      // fetch current user from server
-      _currentUser = User(
-        (u) => u
-          ..id = 1
-          ..email = email
-          ..username = 'xuhui'
-          ..name = 'xuhui',
-      );
-    } on Exception {
-      _log.severe('AuthService: Error signing in');
-      throw AuthException('Error signing in');
-    }
+  User _convertUser(List<int> data) {
+    print('登录返回');
+    return User.fromBuffer(data);
   }
 
   @override
@@ -66,6 +56,7 @@ class AuthServiceImpl implements AuthService {
     // check server for login status
     await Future.delayed(Duration(seconds: 1));
     // 先跳过登录
+    /*
     _currentUser ??= User(
       (u) => u
         ..id = 1
@@ -73,6 +64,7 @@ class AuthServiceImpl implements AuthService {
         ..username = 'xuhui'
         ..name = 'xuhui',
     );
+     */
     return _currentUser != null;
   }
 }
