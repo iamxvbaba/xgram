@@ -10,9 +10,8 @@ import 'package:stacked/stacked.dart';
 
 class ChatScreenViewModel extends BaseViewModel {
   final _chatStateService = locator<ChatStateService>();
-  final EventBus _eventBus = locator<EventBus>();
+
   final _log = Logger('ChatScreenViewModel');
-  StreamSubscription<Message> _stream;
   User get currentUser => _chatStateService.currentUser;
   User get chatUser => _chatStateService.chatUser;
   List<Message> get msg => _chatStateService.msg;
@@ -21,24 +20,20 @@ class ChatScreenViewModel extends BaseViewModel {
   }
   bool setIsChatScreenOpen;
   Future<void> init() async {
-    _stream = _eventBus.on<Message>().listen((model) {
-      print('接受到消息:$model');
-      onAddMessage(model,false);
-    });
+    _chatStateService.setNotify(notifyListeners);
     setBusy(true);
     setIsChatScreenOpen = true;
     setBusy(false);
   }
 
-
   void onAddMessage(Message message,bool send) {
-    _chatStateService.addMessage(message,send);
+    _chatStateService.addMessage(message);
     notifyListeners();
   }
 
   @override
   void dispose() {
     super.dispose();
-    _stream.cancel();
+    _chatStateService.setNotify(null);
   }
 }

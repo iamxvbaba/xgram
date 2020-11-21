@@ -11,7 +11,25 @@ import 'package:fixnum/fixnum.dart';
 
 class ChatStateServiceImpl implements ChatStateService {
   final _authService = locator<AuthService>();
+  final EventBus _eventBus = locator<EventBus>();
   final _log = Logger('ChatScreenViewModel');
+
+  Function _notify;
+  @override
+  void setNotify(Function f) {
+    _notify = f;
+  }
+
+  ChatStateServiceImpl(){
+    _eventBus.on<Message>().listen((model) {
+      print('接受到消息:$model');
+      sendOrReceiveMessage(model,false);
+      // 回调
+      if (_notify != null) {
+        _notify();
+      }
+    });
+  }
 
   // 全局socket 对象
   final SocketBloc _socket = locator<SocketBloc>();
@@ -57,8 +75,8 @@ class ChatStateServiceImpl implements ChatStateService {
   }
 
   @override
-  void addMessage(Message message,bool send) {
-    sendAndRetrieveMessage(message,send);
+  void addMessage(Message message) {
+    sendOrReceiveMessage(message,true);
     _log.fine('add message');
   }
 
@@ -69,7 +87,7 @@ class ChatStateServiceImpl implements ChatStateService {
     return senderID.toString() + '_' + userID.toString();
   }
 
-  Future<void> sendAndRetrieveMessage(Message model,bool send) async {
+  Future<void> sendOrReceiveMessage(Message model,bool send) async {
     var key = _calKey(model.senderID, model.userID);
     if (_msgMap[key] == null) {
       _msgMap[key] = <Message>[];

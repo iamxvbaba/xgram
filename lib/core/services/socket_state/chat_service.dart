@@ -9,5 +9,6 @@ abstract class ChatStateService {
   List<Message> get chatUserList;
   List<Message> get msg;
 
-  void addMessage(Message message,bool send);
+  void addMessage(Message message);
+  void setNotify(Function f);
 }
