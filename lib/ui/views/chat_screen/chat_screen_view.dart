@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:provider_start/core/constant/theme.dart';
 import 'package:provider_start/core/models/message/message.dart';
 import 'package:provider_start/core/proto/protobuf_gen/message.pb.dart';
+import 'package:provider_start/core/proto/protobuf_gen/user.pb.dart';
 import 'package:provider_start/core/utils/utility.dart';
 import 'package:provider_start/ui/views/chat_screen/chat_screen_view_model.dart';
 import 'package:provider_start/ui/widgets/stateless/custom_widget.dart';
@@ -22,7 +23,6 @@ class ChatScreenPage extends StatefulWidget {
 
 class _ChatScreenPageState extends State<ChatScreenPage> {
   final messageController = TextEditingController();
-  String userImage;
   ScrollController _controller;
   GlobalKey<ScaffoldState> _scaffoldKey;
 
@@ -54,12 +54,12 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
       reverse: true,
       physics: BouncingScrollPhysics(),
       itemCount: model.msg.length,
-      itemBuilder: (context, index) => _message(
-          model.msg[index], model.msg[index].senderID == model.currentUser.id),
+      itemBuilder: (context, index) => _message(model.msg[index],
+          model.chatUser, model.msg[index].senderID == model.currentUser.id),
     );
   }
 
-  Widget _message(Message chat, bool self) {
+  Widget _message(Message msg, User chatUser, bool self) {
     return Column(
       crossAxisAlignment:
           self ? CrossAxisAlignment.end : CrossAxisAlignment.start,
@@ -75,7 +75,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
                 ? SizedBox()
                 : CircleAvatar(
                     backgroundColor: Colors.transparent,
-                    backgroundImage: customAdvanceNetworkImage(userImage),
+                    backgroundImage: customAdvanceNetworkImage(chatUser.avatar),
                   ),
             Expanded(
               child: Container(
@@ -96,7 +96,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
                             : TwitterColor.mystic,
                       ),
                       child: UrlText(
-                        text: chat.body.msg,
+                        text: msg.body.msg,
                         style: TextStyle(
                           fontSize: 16,
                           color: self ? TwitterColor.white : Colors.black,
@@ -118,7 +118,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
                       child: InkWell(
                         borderRadius: getBorder(self),
                         onLongPress: () {
-                          var text = ClipboardData(text: chat.body.msg);
+                          var text = ClipboardData(text: msg.body.msg);
                           Clipboard.setData(text);
                           _scaffoldKey.currentState.hideCurrentSnackBar();
                           _scaffoldKey.currentState.showSnackBar(
@@ -144,7 +144,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
           padding: EdgeInsets.only(right: 10, left: 10),
           child: Text(
             getChatTime(
-                DateTime.fromMillisecondsSinceEpoch(chat.body.sendTime.toInt())
+                DateTime.fromMillisecondsSinceEpoch(msg.body.sendTime.toInt())
                     .toLocal()
                     .toString()),
             style: Theme.of(context).textTheme.caption.copyWith(fontSize: 12),
