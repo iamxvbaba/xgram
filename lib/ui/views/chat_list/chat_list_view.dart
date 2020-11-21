@@ -24,7 +24,7 @@ class _ChatListViewState extends State<ChatListView> {
       onModelReady: (model) => model.init(),
       builder: (context, model, child) => PlatformScaffold(
         appBar: PlatformAppBar(
-          title: customTitleText('chat_list'),
+          title: customTitleText('历史会话'),
           cupertino: (_, __) => CupertinoNavigationBarData(
             transitionBetweenRoutes: false,
           ),
@@ -45,7 +45,9 @@ class _ChatListBody extends ViewModelWidget<ChatListViewModel> {
       color: Colors.white,
       child: ListTile(
           contentPadding: EdgeInsets.symmetric(horizontal: 10),
-          onTap: model.pushChatScreen,
+          onTap: (){
+            model.pushChatScreen(model.contacts.users[index]);
+          },
           leading: RippleButton(
             onPressed: () => {},
             borderRadius: BorderRadius.circular(28),

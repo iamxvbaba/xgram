@@ -1,5 +1,6 @@
+import 'package:event_bus/event_bus.dart';
 import 'package:logging/logging.dart';
-import 'package:provider_start/core/models/message/message.dart';
+import 'package:provider_start/core/proto/protobuf_gen/message.pb.dart';
 import 'package:provider_start/core/proto/protobuf_gen/user.pb.dart';
 import 'package:provider_start/core/services/socket_state/chat_service.dart';
 import 'package:provider_start/locator.dart';
@@ -7,25 +8,27 @@ import 'package:stacked/stacked.dart';
 
 class ChatScreenViewModel extends BaseViewModel {
   final _chatStateService = locator<ChatStateService>();
+  final EventBus _eventBus = locator<EventBus>();
   final _log = Logger('ChatScreenViewModel');
-
   User get currentUser => _chatStateService.currentUser;
   User get chatUser => _chatStateService.chatUser;
-  List<ChatMessage> get msg => _chatStateService.msg;
+  List<Message> get msg => _chatStateService.msg;
   set changeChatUser(User model) {
     _chatStateService.setChatUser(model);
   }
-
   bool setIsChatScreenOpen;
   Future<void> init() async {
+    _eventBus.on<Message>().listen((model) {
+      print('接受到消息:$model');
+      onAddMessage(model,false);
+    });
     setBusy(true);
     setIsChatScreenOpen = true;
     setBusy(false);
   }
 
-  void onMessageSubmitted(ChatMessage message, {User myUser, User secondUser}) {
-    _chatStateService.onMessageSubmitted(message,myUser: myUser,secondUser: secondUser);
+  void onAddMessage(Message message,bool send) {
+    _chatStateService.addMessage(message,send);
     notifyListeners();
   }
-
 }

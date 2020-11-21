@@ -1,11 +1,15 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider_start/core/constant/theme.dart';
 import 'package:provider_start/core/models/message/message.dart';
+import 'package:provider_start/core/proto/protobuf_gen/message.pb.dart';
 import 'package:provider_start/core/utils/utility.dart';
 import 'package:provider_start/ui/views/chat_screen/chat_screen_view_model.dart';
 import 'package:provider_start/ui/widgets/stateless/custom_widget.dart';
 import 'package:stacked/stacked.dart';
+import 'package:fixnum/fixnum.dart';
 
 class ChatScreenPage extends StatefulWidget {
   ChatScreenPage({Key key, this.userProfileId}) : super(key: key);
@@ -18,7 +22,6 @@ class ChatScreenPage extends StatefulWidget {
 
 class _ChatScreenPageState extends State<ChatScreenPage> {
   final messageController = TextEditingController();
-  String senderId;
   String userImage;
   ScrollController _controller;
   GlobalKey<ScaffoldState> _scaffoldKey;
@@ -33,7 +36,6 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
   void initState() {
     _scaffoldKey = GlobalKey<ScaffoldState>();
     _controller = ScrollController();
-    senderId = '1';
     super.initState();
   }
 
@@ -52,27 +54,16 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
       reverse: true,
       physics: BouncingScrollPhysics(),
       itemCount: model.msg.length,
-      itemBuilder: (context, index) => chatMessage(model.msg[index]),
+      itemBuilder: (context, index) => _message(
+          model.msg[index], model.msg[index].senderID == model.currentUser.id),
     );
   }
 
-  Widget chatMessage(ChatMessage message) {
-    if (senderId == null) {
-      return Container();
-    }
-    if (message.senderId == senderId) {
-      return _message(message, true);
-    } else {
-      return _message(message, false);
-    }
-  }
-
-  Widget _message(ChatMessage chat, bool myMessage) {
+  Widget _message(Message chat, bool self) {
     return Column(
       crossAxisAlignment:
-          myMessage ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-      mainAxisAlignment:
-          myMessage ? MainAxisAlignment.end : MainAxisAlignment.start,
+          self ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+      mainAxisAlignment: self ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: <Widget>[
         Row(
           crossAxisAlignment: CrossAxisAlignment.end,
@@ -80,7 +71,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
             SizedBox(
               width: 15,
             ),
-            myMessage
+            self
                 ? SizedBox()
                 : CircleAvatar(
                     backgroundColor: Colors.transparent,
@@ -88,32 +79,31 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
                   ),
             Expanded(
               child: Container(
-                alignment:
-                    myMessage ? Alignment.centerRight : Alignment.centerLeft,
+                alignment: self ? Alignment.centerRight : Alignment.centerLeft,
                 margin: EdgeInsets.only(
-                  right: myMessage ? 10 : (fullWidth(context) / 4),
+                  right: self ? 10 : (fullWidth(context) / 4),
                   top: 20,
-                  left: myMessage ? (fullWidth(context) / 4) : 10,
+                  left: self ? (fullWidth(context) / 4) : 10,
                 ),
                 child: Stack(
                   children: <Widget>[
                     Container(
                       padding: EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        borderRadius: getBorder(myMessage),
-                        color: myMessage
+                        borderRadius: getBorder(self),
+                        color: self
                             ? TwitterColor.dodgetBlue
                             : TwitterColor.mystic,
                       ),
                       child: UrlText(
-                        text: chat.message,
+                        text: chat.body.msg,
                         style: TextStyle(
                           fontSize: 16,
-                          color: myMessage ? TwitterColor.white : Colors.black,
+                          color: self ? TwitterColor.white : Colors.black,
                         ),
                         urlStyle: TextStyle(
                           fontSize: 16,
-                          color: myMessage
+                          color: self
                               ? TwitterColor.white
                               : TwitterColor.dodgetBlue,
                           decoration: TextDecoration.underline,
@@ -126,9 +116,9 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
                       right: 0,
                       left: 0,
                       child: InkWell(
-                        borderRadius: getBorder(myMessage),
+                        borderRadius: getBorder(self),
                         onLongPress: () {
-                          var text = ClipboardData(text: chat.message);
+                          var text = ClipboardData(text: chat.body.msg);
                           Clipboard.setData(text);
                           _scaffoldKey.currentState.hideCurrentSnackBar();
                           _scaffoldKey.currentState.showSnackBar(
@@ -153,7 +143,10 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
         Padding(
           padding: EdgeInsets.only(right: 10, left: 10),
           child: Text(
-            getChatTime(chat.createdAt),
+            getChatTime(
+                DateTime.fromMillisecondsSinceEpoch(chat.body.sendTime.toInt())
+                    .toLocal()
+                    .toString()),
             style: Theme.of(context).textTheme.caption.copyWith(fontSize: 12),
           ),
         )
@@ -208,21 +201,17 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
   }
 
   void submitMessage(ChatScreenViewModel model) {
-    ChatMessage message;
-    message = ChatMessage(
-        message: messageController.text,
-        createdAt: DateTime.now().toUtc().toString(),
-        senderId: model.currentUser.id.toString(),
-        receiverId: model.currentUser.id.toString(),
-        seen: false,
-        timeStamp: DateTime.now().toUtc().millisecondsSinceEpoch.toString(),
-        senderName: model.currentUser.nickname);
-    if (messageController.text == null || messageController.text.isEmpty) {
+    if (messageController.text.isEmpty) {
       return;
     }
-    var myUser = model.currentUser;
-    var secondUser = model.chatUser;
-    model.onMessageSubmitted(message, myUser: myUser, secondUser: secondUser);
+    Message message = Message.create();
+    message.senderID = model.currentUser.id;
+    message.userID = model.chatUser.id;
+    message.body = MessageBody.create();
+
+    message.body.sendTime = Int64(DateTime.now().millisecondsSinceEpoch);
+    message.body.msg = messageController.text;
+    model.onAddMessage(message, true);
     Future.delayed(Duration(milliseconds: 50)).then((_) {
       messageController.clear();
     });
@@ -244,6 +233,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
   Widget build(BuildContext context) {
     return ViewModelBuilder<ChatScreenViewModel>.reactive(
         viewModelBuilder: () => ChatScreenViewModel(),
+        onModelReady: (model) => model.init(),
         builder: (context, model, child) => WillPopScope(
               onWillPop: () => _onWillPop(model),
               child: Scaffold(

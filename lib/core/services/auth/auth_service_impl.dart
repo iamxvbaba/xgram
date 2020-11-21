@@ -40,9 +40,9 @@ class AuthServiceImpl implements AuthService {
     }
   }
 
-  User _convertUser(List<int> data) {
-    print('登录返回');
-    return User.fromBuffer(data);
+  User _convertUser(Response resp) {
+    print('登录返回:$resp');
+    return User.fromBuffer(resp.data);
   }
 
   @override

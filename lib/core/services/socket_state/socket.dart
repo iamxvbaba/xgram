@@ -2,16 +2,21 @@ import 'dart:async';
 import 'dart:ffi';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:event_bus/event_bus.dart';
 import 'package:provider_start/core/proto/config.dart';
 import 'package:provider_start/core/proto/protobuf_gen/abridged.pb.dart';
 import 'package:provider_start/core/proto/protobuf_gen/auth_key.pb.dart';
+import 'package:provider_start/core/proto/protobuf_gen/message.pb.dart';
 import 'package:provider_start/core/proto/util.dart';
 import 'package:crypto/crypto.dart';
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
+import 'package:provider_start/locator.dart';
 
 class SocketBloc {
-  Map<int, Function(List<int>)> call = <int, Function(List<int>)>{};
+  final EventBus _eventBus = locator<EventBus>();
+
+  Map<int, Function(Response)> call = <int, Function(Response)>{};
 
   Socket _socket;
   bool _encryptionReady = false;
@@ -72,12 +77,12 @@ class SocketBloc {
   }
 
   Future<$pb.GeneratedMessage> send(OP op, $pb.GeneratedMessage obj,
-      $pb.GeneratedMessage Function(List<int> data) handler) async {
+      $pb.GeneratedMessage Function(Response resp) handler) async {
     var id = _send(op, obj);
     print('send op id:$id');
     Completer<$pb.GeneratedMessage> c = Completer();
-    call[id] = (List<int> data) {
-      var result = handler(data);
+    call[id] = (Response resp) {
+      var result = handler(resp);
       c.complete(result);
     };
     return c.future;
@@ -165,10 +170,15 @@ class SocketBloc {
   }
 
   void _handleResult(Proto p) {
-    var result = Response.fromBuffer(p.data);
-    print('接受服务器返回的信息');
+    Response result = Response.fromBuffer(p.data);
+    if (p.op == OP.receiveSingle) {
+      Message msg = Message.fromBuffer(result.data);
+      print('======socket 收到消息======$msg');
+      _eventBus.fire(msg);
+      return;
+    }
     var id = p.seq.toInt();
-    call[id](result.data);
+    call[id](result);
     call.remove(id);
     print('call callback success');
   }
@@ -198,8 +208,8 @@ class SocketBloc {
     print('gen auth_key result:$dhGen');
   }
   //2. res pq
-  ResPQ _resPQ(List<int> data) {
-    var resPQ = ResPQ.fromBuffer(data);
+  ResPQ _resPQ(Response resp) {
+    var resPQ = ResPQ.fromBuffer(resp.data);
     if (!utils.ListEQ(resPQ.nonce, _firstNonce)) {
       print('resPQ.nonce error! ${resPQ.nonce} == ${_firstNonce}');
       _socket.close();
@@ -241,8 +251,8 @@ class SocketBloc {
   }
 
   //4. ResDHParamsOK
-  ClientDHParams _resDHParamsOK(List<int> data){
-    var resDHOK = ResDHParamsOK.fromBuffer(data);
+  ClientDHParams _resDHParamsOK(Response resp){
+    var resDHOK = ResDHParamsOK.fromBuffer(resp.data);
     if (!utils.ListEQ(resDHOK.nonce, _firstNonce)) {
       print('resDHParamsOK.nonce error!');
       return null;
@@ -328,8 +338,8 @@ class SocketBloc {
   }
 
   //5. dh gen result
-  DH_GEN _dhResult(List<int> data)  {
-    var dhGenResult = DH_GEN.fromBuffer(data);
+  DH_GEN _dhResult(Response resp)  {
+    var dhGenResult = DH_GEN.fromBuffer(resp.data);
     if (!dhGenResult.result) {
       //TODO: 回到第一步(reqPQ)重新开始生成
       return null;

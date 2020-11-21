@@ -23,8 +23,8 @@ class _LoginViewState extends State<LoginView> {
   @override
   void initState() {
     super.initState();
-    phoneController = TextEditingController();
-    codeController = TextEditingController();
+    phoneController = TextEditingController(text: '18567913187');
+    codeController = TextEditingController(text: '1234');
     passwordFocusNode = FocusNode();
   }
 
