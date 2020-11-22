@@ -69,7 +69,7 @@ class ChatStateServiceImpl implements ChatStateService {
     if (_msg == null || _msg.isEmpty) {
       return null;
     } else {
-      _msg.sort((x, y) =>y.body.sendTime.compareTo(x.body.sendTime));
+      //_msg.sort((x, y) =>y.body.sendTime.compareTo(x.body.sendTime));
       return _msg;
     }
   }
@@ -92,7 +92,7 @@ class ChatStateServiceImpl implements ChatStateService {
     if (_msgMap[key] == null) {
       _msgMap[key] = <Message>[];
     }
-    _msgMap[key].add(model);
+    _msgMap[key].insert(0,model);
     print('添加消息:${model.body.msg}');
     if (send) {
       Response resp = await _socket.send(OP.pushSingle, model, _convertMessage);
