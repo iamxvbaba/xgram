@@ -10,10 +10,8 @@ const ContentType$json = const {
   '2': const [
     const {'1': 'normalText', '2': 0},
     const {'1': 'image', '2': 1},
-    const {'1': 'emoji', '2': 18},
-    const {'1': 'textAndLink', '2': 3},
-    const {'1': 'imageAndLink', '2': 4},
-    const {'1': 'textAndLinkAndTitle', '2': 5},
+    const {'1': 'video', '2': 2},
+    const {'1': 'location', '2': 3},
   ],
 };
 

@@ -1,16 +1,16 @@
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/screenutil.dart';
 import 'package:provider_start/core/constant/theme.dart';
-import 'package:provider_start/core/models/message/message.dart';
 import 'package:provider_start/core/proto/protobuf_gen/message.pb.dart';
-import 'package:provider_start/core/proto/protobuf_gen/user.pb.dart';
-import 'package:provider_start/core/utils/utility.dart';
 import 'package:provider_start/ui/views/chat_screen/chat_screen_view_model.dart';
+import 'package:provider_start/ui/views/chat_screen/record_view.dart';
 import 'package:provider_start/ui/widgets/stateless/custom_widget.dart';
 import 'package:stacked/stacked.dart';
 import 'package:fixnum/fixnum.dart';
+
+import 'icon_button.dart';
 
 class ChatScreenPage extends StatefulWidget {
   ChatScreenPage({Key key, this.userProfileId}) : super(key: key);
@@ -54,103 +54,12 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
       reverse: true,
       physics: BouncingScrollPhysics(),
       itemCount: model.msg.length,
-      itemBuilder: (context, index) => _message(model.msg[index],
-          model.chatUser, model.msg[index].senderID == model.currentUser.id),
-    );
-  }
-
-  Widget _message(Message msg, User chatUser, bool self) {
-    return Column(
-      crossAxisAlignment:
-          self ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-      mainAxisAlignment: self ? MainAxisAlignment.end : MainAxisAlignment.start,
-      children: <Widget>[
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: <Widget>[
-            SizedBox(
-              width: 15,
-            ),
-            self
-                ? SizedBox()
-                : CircleAvatar(
-                    backgroundColor: Colors.transparent,
-                    backgroundImage: customAdvanceNetworkImage(chatUser.avatar),
-                  ),
-            Expanded(
-              child: Container(
-                alignment: self ? Alignment.centerRight : Alignment.centerLeft,
-                margin: EdgeInsets.only(
-                  right: self ? 10 : (fullWidth(context) / 4),
-                  top: 20,
-                  left: self ? (fullWidth(context) / 4) : 10,
-                ),
-                child: Stack(
-                  children: <Widget>[
-                    Container(
-                      padding: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        borderRadius: getBorder(self),
-                        color: self
-                            ? TwitterColor.dodgetBlue
-                            : TwitterColor.mystic,
-                      ),
-                      child: UrlText(
-                        text: msg.body.msg,
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: self ? TwitterColor.white : Colors.black,
-                        ),
-                        urlStyle: TextStyle(
-                          fontSize: 16,
-                          color: self
-                              ? TwitterColor.white
-                              : TwitterColor.dodgetBlue,
-                          decoration: TextDecoration.underline,
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      top: 0,
-                      bottom: 0,
-                      right: 0,
-                      left: 0,
-                      child: InkWell(
-                        borderRadius: getBorder(self),
-                        onLongPress: () {
-                          var text = ClipboardData(text: msg.body.msg);
-                          Clipboard.setData(text);
-                          _scaffoldKey.currentState.hideCurrentSnackBar();
-                          _scaffoldKey.currentState.showSnackBar(
-                            SnackBar(
-                              backgroundColor: TwitterColor.white,
-                              content: Text(
-                                'Message copied',
-                                style: TextStyle(color: Colors.black),
-                              ),
-                            ),
-                          );
-                        },
-                        child: SizedBox(),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-        Padding(
-          padding: EdgeInsets.only(right: 10, left: 10),
-          child: Text(
-            getChatTime(
-                DateTime.fromMillisecondsSinceEpoch(msg.body.sendTime.toInt())
-                    .toLocal()
-                    .toString()),
-            style: Theme.of(context).textTheme.caption.copyWith(fontSize: 12),
-          ),
-        )
-      ],
+      itemBuilder: (context, index) => TextRecordRow(
+          avatar: model.msg[index].senderID == model.currentUser.id
+              ? model.currentUser.avatar
+              : model.chatUser.avatar,
+          msg: model.msg[index].body.msg,
+          self: model.msg[index].senderID == model.currentUser.id),
     );
   }
 
@@ -173,22 +82,43 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
             thickness: 0,
             height: 1,
           ),
-          TextField(
-            onSubmitted: (val) async {
-              submitMessage(model);
-            },
-            controller: messageController,
-            decoration: InputDecoration(
-              contentPadding:
-                  EdgeInsets.symmetric(horizontal: 10, vertical: 13),
-              alignLabelWithHint: true,
-              hintText: 'Start with a message...',
-              suffixIcon: IconButton(
-                  icon: Icon(Icons.send),
-                  onPressed: () => submitMessage(model)),
-              // fillColor: Colors.black12, filled: true
-            ),
+          Row(
+            children: [
+              OutlinedIconButton(
+                icon: Icon(Icons.face),
+                onTap: () async {
+                  //发送表情
+                },
+              ),
+              OutlinedIconButton(
+                icon: Icon(Icons.add),
+                onTap: () async {
+                  //发送文件
+                },
+              ),
+              Expanded(
+                child: TextField(
+                  onSubmitted: (val) async {
+                    submitMessage(model);
+                  },
+                  controller: messageController,
+                  decoration: InputDecoration(
+                    contentPadding:
+                    EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(10), vertical: ScreenUtil().setHeight(28)),
+                    border: InputBorder.none,
+                    alignLabelWithHint: true,
+                    hintText: 'Start with a message...',
+                    suffixIcon: IconButton(
+                        icon: Icon(Icons.send),
+                        color: Colors.grey,
+                        onPressed: () => submitMessage(model)),
+                    // fillColor: Colors.black12, filled: true
+                  ),
+                ),
+              )
+            ],
           ),
+
         ],
       ),
     );
@@ -257,7 +187,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
                     ],
                   ),
                   iconTheme: IconThemeData(color: Colors.blue),
-                  backgroundColor: Colors.white,
+                  backgroundColor: Colors.white54,
                   actions: <Widget>[
                     IconButton(
                         icon: Icon(Icons.info, color: AppColor.primary),
@@ -274,7 +204,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
                           child: _chatScreenBody(model),
                         ),
                       ),
-                      _bottomEntryField(model)
+                      _bottomEntryField(model),
                     ],
                   ),
                 ),

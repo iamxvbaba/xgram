@@ -7,10 +7,8 @@ import "account_enum.proto";
 enum ContentType{
   normalText = 0; // 纯文本
   image = 1; // 图片
-  emoji = 18; // 表情符号
-  textAndLink = 3; // 文本+链接
-  imageAndLink = 4; // 图片+链接
-  textAndLinkAndTitle = 5; //文本+链接+链接名称
+  video = 2; // 表情符号
+  location=3; // 位置
 }
 
 
