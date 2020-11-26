@@ -8,7 +8,6 @@ class KeyStorageServiceImpl implements KeyStorageService {
   final _log = Logger('KeyStorageServiceImpl');
 
   static const notifications_key = 'notifications_key';
-
   static KeyStorageServiceImpl _instance;
   static SharedPreferences _preferences;
 
@@ -19,7 +18,19 @@ class KeyStorageServiceImpl implements KeyStorageService {
 
     return _instance;
   }
-
+  
+  @override
+  void set(String key,dynamic value) {
+    _saveToDisk(key, value);
+  }
+  @override
+  void del(String key) {
+    _preferences.remove(key);
+  }
+  @override
+  dynamic get(String key) {
+    return _getFromDisk(key);
+  }
   @override
   bool get hasNotificationsEnabled => _getFromDisk(notifications_key) ?? false;
   @override

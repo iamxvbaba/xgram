@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:ffi';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:event_bus/event_bus.dart';
@@ -11,14 +11,18 @@ import 'package:provider_start/core/proto/util.dart';
 import 'package:crypto/crypto.dart';
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
+import 'package:provider_start/core/services/key_storage/key_storage_service.dart';
 import 'package:provider_start/locator.dart';
 
 class SocketBloc {
+  static const auth_key = 'auth_key';
+  final _keyStorageService = locator<KeyStorageService>();
   final EventBus _eventBus = locator<EventBus>();
 
   Map<int, Function(Response)> call = <int, Function(Response)>{};
 
   Socket _socket;
+  bool _socketReady = false;
   bool _encryptionReady = false;
 
   // 以下这些字段是 dh 密钥交换得到的
@@ -59,6 +63,7 @@ class SocketBloc {
       //首次必须先发送 0xaa
       _firstByte();
       //gen auth_key
+
       _genAuthKey();
     });
   }
@@ -107,9 +112,7 @@ class SocketBloc {
         if (p.data.length < 20) {
           msgKey = utils.CreateCryptoRandomString(16);
         } else {
-          msgKey = sha1
-              .convert(p.data.sublist(4, 20))
-              .bytes;
+          msgKey = sha1.convert(p.data.sublist(4, 20)).bytes;
         }
         var aes = utils.GenerateAES(msgKey, _authKey, false);
         p.msgKey = msgKey;
@@ -170,17 +173,28 @@ class SocketBloc {
   }
 
   void _handleResult(Proto p) {
-    Response result = Response.fromBuffer(p.data);
-    if (p.op == OP.receiveSingle) {
-      Message msg = Message.fromBuffer(result.data);
-      print('======socket 收到消息======$msg');
-      _eventBus.fire(msg);
-      return;
+    var result = Response.fromBuffer(p.data);
+    switch (p.op) {
+      case OP.needDH:
+        print('authKey过期了,退出');
+        _socket.close();
+        _keyStorageService.del(auth_key);
+        exit(0);
+        return;
+      case OP.needLogin:
+        // TODO: 需要登录,跳转到登录页
+        return;
+      case OP.receiveSingle:
+        var msg = Message.fromBuffer(result.data);
+        print('======socket 收到消息======$msg');
+        _eventBus.fire(msg);
+        return;
+      default:
+        var id = p.seq.toInt();
+        call[id](result);
+        call.remove(id);
+        print('call callback success');
     }
-    var id = p.seq.toInt();
-    call[id](result);
-    call.remove(id);
-    print('call callback success');
   }
 
   void _error(error, StackTrace trace) {
@@ -193,6 +207,16 @@ class SocketBloc {
 
   // auth_key
   void _genAuthKey() async {
+    _socketReady = false;
+    var _authKeyString = _keyStorageService.get(auth_key);
+    if (_authKeyString != null) {
+      _authKey = base64.decode(_authKeyString);
+      _authKeyHash = sha1.convert(_authKey).bytes.sublist(12, 20);
+      _encryptionReady = true;
+      print('使用本地的authKey:$_authKeyHash');
+      _socketReady = true;
+      return null;
+    }
     var rpq = ReqPQ.create();
     rpq.nonce = utils.CreateCryptoRandomString();
     _firstNonce = rpq.nonce;
@@ -201,12 +225,14 @@ class SocketBloc {
 
     // 2.
     var dhParams = await _reqDHParams(resPQ);
-    ClientDHParams dhParamOK = await send(OP.reqDHParams, dhParams, _resDHParamsOK);
+    ClientDHParams dhParamOK =
+        await send(OP.reqDHParams, dhParams, _resDHParamsOK);
 
     // 3.
     DH_GEN dhGen = await send(OP.clientDHParams, dhParamOK, _dhResult);
     print('gen auth_key result:$dhGen');
   }
+
   //2. res pq
   ResPQ _resPQ(Response resp) {
     var resPQ = ResPQ.fromBuffer(resp.data);
@@ -217,6 +243,7 @@ class SocketBloc {
     }
     return resPQ;
   }
+
   //3. reqDHParams
   Future<ReqDHParams> _reqDHParams(ResPQ resPQ) async {
     var dhParams = ReqDHParams.create();
@@ -241,9 +268,7 @@ class SocketBloc {
     var innerData1 = pqInnerData.writeToBuffer();
 
     //sha1 加密innerData
-    var shaX = sha1
-        .convert(innerData1)
-        .bytes;
+    var shaX = sha1.convert(innerData1).bytes;
     //rsa 加密
     var encryptData = await utils.RSAEncrypt(shaX + innerData1);
     dhParams.encryptedData = encryptData;
@@ -251,7 +276,7 @@ class SocketBloc {
   }
 
   //4. ResDHParamsOK
-  ClientDHParams _resDHParamsOK(Response resp){
+  ClientDHParams _resDHParamsOK(Response resp) {
     var resDHOK = ResDHParamsOK.fromBuffer(resp.data);
     if (!utils.ListEQ(resDHOK.nonce, _firstNonce)) {
       print('resDHParamsOK.nonce error!');
@@ -263,15 +288,9 @@ class SocketBloc {
     }
 
     // aes 解密
-    var hash1 = sha1
-        .convert(_secondNonce + _serverNonce)
-        .bytes;
-    var hash2 = sha1
-        .convert(_serverNonce + _secondNonce)
-        .bytes;
-    var hash3 = sha1
-        .convert(_secondNonce + _secondNonce)
-        .bytes;
+    var hash1 = sha1.convert(_secondNonce + _serverNonce).bytes;
+    var hash2 = sha1.convert(_serverNonce + _secondNonce).bytes;
+    var hash3 = sha1.convert(_secondNonce + _secondNonce).bytes;
 
     var tmpAESKey = hash1 + hash2.sublist(0, 12);
     var tmpAESIV = hash2.sublist(12) + hash3 + _secondNonce.sublist(4);
@@ -301,19 +320,10 @@ class SocketBloc {
     //print(''authKey:$authKey'');
 
     // 客户端本地保存此字段
-    _tmplAuthKeyHash = sha1
-        .convert(_authKey)
-        .bytes
-        .sublist(12, 20);
+    _tmplAuthKeyHash = sha1.convert(_authKey).bytes.sublist(12, 20);
 
-    var t4 = _secondNonce + [1] + sha1
-        .convert(_authKey)
-        .bytes
-        .sublist(0, 8);
-    _nonceHash1 = sha1
-        .convert(t4)
-        .bytes
-        .sublist(4, 20);
+    var t4 = _secondNonce + [1] + sha1.convert(_authKey).bytes.sublist(0, 8);
+    _nonceHash1 = sha1.convert(t4).bytes.sublist(4, 20);
     var saltBuf = _secondNonce.sublist(0, 8);
     saltBuf = utils.xor(saltBuf, _secondNonce);
     _serverSalt = ByteData.sublistView(Uint8List.fromList(saltBuf))
@@ -328,7 +338,7 @@ class SocketBloc {
     var innerData2 = clientDHInnerData.writeToBuffer();
 
     var encryptedData2 =
-    utils.AesEncrypt(innerData2, tmpAESKey, tmpAESIV.sublist(0, 16));
+        utils.AesEncrypt(innerData2, tmpAESKey, tmpAESIV.sublist(0, 16));
 
     var cp = ClientDHParams();
     cp.nonce = _firstNonce;
@@ -338,7 +348,7 @@ class SocketBloc {
   }
 
   //5. dh gen result
-  DH_GEN _dhResult(Response resp)  {
+  DH_GEN _dhResult(Response resp) {
     var dhGenResult = DH_GEN.fromBuffer(resp.data);
     if (!dhGenResult.result) {
       //TODO: 回到第一步(reqPQ)重新开始生成
@@ -363,15 +373,18 @@ class SocketBloc {
     }
     print('authKeyHash:$_tmplAuthKeyHash');
     print(
-        'authKeyID:${ByteData.sublistView(Uint8List.fromList(_tmplAuthKeyHash))
-            .getInt64(0, Endian.little)}');
+        'authKeyID:${ByteData.sublistView(Uint8List.fromList(_tmplAuthKeyHash)).getInt64(0, Endian.little)}');
     print('=====链接认证成功=====');
 
     _authKeyHash = _tmplAuthKeyHash;
-    _tmplAuthKeyHash = null;
 
+    _keyStorageService.set(auth_key, base64.encode(_authKey));
+    print('_keyStorageService:${_keyStorageService.get(auth_key)}');
+
+    _tmplAuthKeyHash = null;
     //此后所有与服务端之间的消息都需要加密
     _encryptionReady = true;
+    _socketReady = true;
     //测试登录
     return dhGenResult;
   }
