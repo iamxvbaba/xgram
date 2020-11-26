@@ -64,7 +64,7 @@ class ChatStateServiceImpl implements ChatStateService {
 
   @override
   List<Message> get msg {
-    List<Message> _msg =
+    var _msg =
         _msgMap[_calKey(_authService.currentUser.id, _chatUser.id)];
     if (_msg == null || _msg.isEmpty) {
       return null;
