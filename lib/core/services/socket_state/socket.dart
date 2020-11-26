@@ -59,11 +59,9 @@ class SocketBloc {
     Socket.connect(Config.socket_s, Config.socket_p).then((Socket sock) {
       _socket = sock;
       sock.listen(_unpack, onError: _error, onDone: _done, cancelOnError: true);
-
       //首次必须先发送 0xaa
       _firstByte();
       //gen auth_key
-
       _genAuthKey();
     });
   }
@@ -178,8 +176,9 @@ class SocketBloc {
       case OP.needDH:
         print('authKey过期了,退出');
         _socket.close();
+        _socket = null;
         _keyStorageService.del(auth_key);
-        exit(0);
+        _initConnect();
         return;
       case OP.needLogin:
         // TODO: 需要登录,跳转到登录页
