@@ -7,8 +7,6 @@ import "account_enum.proto";
 enum ContentType{
   normalText = 0; // 纯文本
   image = 1; // 图片
-  video = 2; // 表情符号
-  location=3; // 位置
 }
 
 
@@ -45,38 +43,7 @@ message Message {
 message MessageList {
   repeated Message list = 1;
 }
-//OP.session 消息
-message Session {
-  repeated User live = 1; // 正在直播的用户
-  // 首次拉取只展示在页面，所有每个人都只返回一条最新的消息
-  message content {
-    User user = 1;
-    Message msg = 2;
-    int32 badge = 3; // 角标
-    bool follow=5;  // 是否关注
-    bool black=6; // 是否在黑名单
-  }
-  repeated content list = 2; // 消息列表
-}
 
-enum SessionFrom {
-  s_none = 0;
-  s_index = 1;
-  s_room = 2;
-}
-
-//OP.addSession
-message AddSessionArg {
-  int64 userID = 1;
-  SessionFrom from = 2;
-  int64 RoomID = 3;
-}
-
-//OP.sessionHistory
-message SessionHistoryArg {
-  int64 userID = 1;
-  int64 sendTime = 2;
-}
 
 //OP.delSingleMessage
 message DelSingleMessageArg {

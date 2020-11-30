@@ -10,17 +10,6 @@ const ContentType$json = const {
   '2': const [
     const {'1': 'normalText', '2': 0},
     const {'1': 'image', '2': 1},
-    const {'1': 'video', '2': 2},
-    const {'1': 'location', '2': 3},
-  ],
-};
-
-const SessionFrom$json = const {
-  '1': 'SessionFrom',
-  '2': const [
-    const {'1': 's_none', '2': 0},
-    const {'1': 's_index', '2': 1},
-    const {'1': 's_room', '2': 2},
   ],
 };
 
@@ -69,43 +58,6 @@ const MessageList$json = const {
   '1': 'MessageList',
   '2': const [
     const {'1': 'list', '3': 1, '4': 3, '5': 11, '6': '.api.Message', '10': 'list'},
-  ],
-};
-
-const Session$json = const {
-  '1': 'Session',
-  '2': const [
-    const {'1': 'live', '3': 1, '4': 3, '5': 11, '6': '.api.User', '10': 'live'},
-    const {'1': 'list', '3': 2, '4': 3, '5': 11, '6': '.api.Session.content', '10': 'list'},
-  ],
-  '3': const [Session_content$json],
-};
-
-const Session_content$json = const {
-  '1': 'content',
-  '2': const [
-    const {'1': 'user', '3': 1, '4': 1, '5': 11, '6': '.api.User', '10': 'user'},
-    const {'1': 'msg', '3': 2, '4': 1, '5': 11, '6': '.api.Message', '10': 'msg'},
-    const {'1': 'badge', '3': 3, '4': 1, '5': 5, '10': 'badge'},
-    const {'1': 'follow', '3': 5, '4': 1, '5': 8, '10': 'follow'},
-    const {'1': 'black', '3': 6, '4': 1, '5': 8, '10': 'black'},
-  ],
-};
-
-const AddSessionArg$json = const {
-  '1': 'AddSessionArg',
-  '2': const [
-    const {'1': 'userID', '3': 1, '4': 1, '5': 3, '10': 'userID'},
-    const {'1': 'from', '3': 2, '4': 1, '5': 14, '6': '.api.SessionFrom', '10': 'from'},
-    const {'1': 'RoomID', '3': 3, '4': 1, '5': 3, '10': 'RoomID'},
-  ],
-};
-
-const SessionHistoryArg$json = const {
-  '1': 'SessionHistoryArg',
-  '2': const [
-    const {'1': 'userID', '3': 1, '4': 1, '5': 3, '10': 'userID'},
-    const {'1': 'sendTime', '3': 2, '4': 1, '5': 3, '10': 'sendTime'},
   ],
 };
 

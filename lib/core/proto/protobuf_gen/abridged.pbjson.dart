@@ -18,7 +18,7 @@ const OP$json = const {
     const {'1': 'needLogin', '2': 7},
     const {'1': 'loginOrRegister', '2': 8},
     const {'1': 'logout', '2': 9},
-    const {'1': 'contact', '2': 10},
+    const {'1': 'session', '2': 10},
     const {'1': 'channelReady', '2': -100},
     const {'1': 'channelFinished', '2': -200},
     const {'1': 'testData', '2': 200},

@@ -1,5 +1,6 @@
 import 'package:logging/logging.dart';
 import 'package:provider_start/core/proto/protobuf_gen/abridged.pb.dart';
+import 'package:provider_start/core/proto/protobuf_gen/session.pb.dart';
 import 'package:provider_start/core/proto/protobuf_gen/user.pb.dart';
 import 'package:provider_start/core/services/navigation/navigation_service.dart';
 import 'package:provider_start/core/services/socket_state/chat_service.dart';
@@ -14,8 +15,8 @@ class ChatListViewModel extends BaseViewModel {
   final _log = Logger('ContactViewModel');
   final SocketBloc _socket = locator<SocketBloc>();
 
-  UserList _contacts;
-  UserList get contacts => _contacts;
+  Session _session;
+  Session get session => _session;
 
   Future<void> init() async {
     setBusy(true);
@@ -23,25 +24,29 @@ class ChatListViewModel extends BaseViewModel {
     var param = Pagination.create();
     param.page = 1;
     param.size = 10;
-    _contacts = await _socket.send(OP.contact, param,_convertUser).
+    _session = await _socket.send(OP.session, param,_convertSession).
     timeout(const Duration(seconds: 5)).catchError((e){
       _log.warning('获取通讯录列表 FAILED:$e');
     });
     setBusy(false);
   }
 
-  UserList _convertUser(Response resp) {
+  Session _convertSession(Response resp) {
     if (resp.code != 200) {
-      _log.warning('获取聊天列表失败:${resp.msg}');
+      _log.warning('获取会话列表失败:${resp.msg}');
       return null;
     }
-    return UserList.fromBuffer(resp.data);
+    if (resp.data.isEmpty) {
+      _log.warning('未有会话');
+      return null;
+    }
+    return Session.fromBuffer(resp.data);
   }
 
   void pushChatScreen(User chatUser) {
+    //TODO: 调用接口角标设置为 0
     // 设置当前的聊天对象
     _chatStateService.setChatUser(chatUser);
-
     _navigationService.pushNamed(Routes.chatScreenPage);
   }
 }

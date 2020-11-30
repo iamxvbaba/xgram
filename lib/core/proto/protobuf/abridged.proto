@@ -16,7 +16,7 @@ enum OP {
   loginOrRegister=8;
   logout = 9;
 
-  contact = 10; // 通讯录列表
+  session = 10; // 会话列表
 
   channelReady = -100;
   channelFinished = -200;

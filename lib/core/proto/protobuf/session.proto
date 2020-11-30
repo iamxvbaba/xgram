@@ -1,0 +1,17 @@
+syntax = "proto3";
+package api;
+option go_package = ".;api";
+import "user.proto";
+import "message.proto";
+
+//OP.session 消息
+message Session {
+  // 每个人都只返回一条最新的消息
+  message content {
+    User user = 1;
+    Message msg = 2;
+    int32 badge = 3; // 角标
+    bool isOnline=5;  // 是否关注
+  }
+  repeated content list = 1; // 消息列表
+}
