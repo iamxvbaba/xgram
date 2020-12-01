@@ -1,3 +1,5 @@
+import 'package:provider_start/core/constant/theme.dart';
+
 class RelativeDateFormat {
   static final num ONE_MINUTE = 60000;
   static final num ONE_HOUR = 3600000;
@@ -14,10 +16,11 @@ class RelativeDateFormat {
   //时间转换
   static String format(int t) {
     var date = DateTime.fromMillisecondsSinceEpoch(t);
-    num delta =
+    var delta =
         DateTime.now().millisecondsSinceEpoch - date.millisecondsSinceEpoch;
     if (delta < 1 * ONE_MINUTE) {
       var seconds = toSeconds(delta);
+      print('传入的时间戳为:$t seconds:$seconds');
       return (seconds <= 0 ? 1 : seconds).toInt().toString() + ONE_SECOND_AGO;
     }
     if (delta < 60 * ONE_MINUTE) {

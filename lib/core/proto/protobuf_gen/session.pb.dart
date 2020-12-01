@@ -7,6 +7,7 @@
 
 import 'dart:core' as $core;
 
+import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 import 'user.pb.dart' as $3;
@@ -79,7 +80,7 @@ class Session_content extends $pb.GeneratedMessage {
 
 class Session extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('Session', package: const $pb.PackageName('api'), createEmptyInstance: create)
-    ..pc<Session_content>(1, 'list', $pb.PbFieldType.PM, subBuilder: Session_content.create)
+    ..m<$fixnum.Int64, Session_content>(1, 'list', entryClassName: 'Session.ListEntry', keyFieldType: $pb.PbFieldType.O6, valueFieldType: $pb.PbFieldType.OM, valueCreator: Session_content.create, packageName: const $pb.PackageName('api'))
     ..hasRequiredFields = false
   ;
 
@@ -99,6 +100,6 @@ class Session extends $pb.GeneratedMessage {
   static Session _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.List<Session_content> get list => $_getList(0);
+  $core.Map<$fixnum.Int64, Session_content> get list => $_getMap(0);
 }
 

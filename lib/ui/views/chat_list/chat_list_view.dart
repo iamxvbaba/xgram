@@ -29,7 +29,7 @@ class _ChatListViewState extends State<ChatListView> {
         ),
         body: model.isBusy
             ? _LoadingAnimation()
-            : model.session.list.isNotEmpty
+            : model.session.isNotEmpty
                 ? _ChatListBody()
                 : _NoChatList(),
       ),
@@ -41,7 +41,7 @@ class _ChatListBody extends ViewModelWidget<ChatListViewModel> {
   Widget _item(BuildContext context, ChatListViewModel model, int index) {
     return GestureDetector(
       onTap: () {
-        model.pushChatScreen(model.session.list[index].user);
+        model.pushChatScreen(model.session[index].user);
       },
       child: Container(
         padding: EdgeInsets.symmetric(
@@ -65,7 +65,7 @@ class _ChatListBody extends ViewModelWidget<ChatListViewModel> {
               child: CircleAvatar(
                 radius: ScreenUtil().setHeight(56),
                 backgroundImage: CachedNetworkImageProvider(
-                    model.session.list[index].user.avatar),
+                    model.session[index].user.avatar),
               ),
             ),
             Container(
@@ -81,13 +81,13 @@ class _ChatListBody extends ViewModelWidget<ChatListViewModel> {
                       Row(
                         children: <Widget>[
                           Text(
-                            model.session.list[index].user.nickname,
+                            model.session[index].user.nickname,
                             style: TextStyle(
                               fontSize: ScreenUtil().setHeight(26),
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          model.session.list[index].badge > 0 // 未读标志
+                          model.session[index].badge > 0 // 未读标志
                               ? Container(
                                   margin: const EdgeInsets.only(left: 5),
                                   width: ScreenUtil().setWidth(12),
@@ -104,7 +104,7 @@ class _ChatListBody extends ViewModelWidget<ChatListViewModel> {
                       ),
                       Text(
                         RelativeDateFormat.format(model
-                            .session.list[index].msg.body.sendTime
+                            .session[index].msg.body.sendTime
                             .toInt()), //chat.time,
                         style: TextStyle(
                           fontSize: ScreenUtil().setHeight(25),
@@ -124,7 +124,7 @@ class _ChatListBody extends ViewModelWidget<ChatListViewModel> {
                         alignment: Alignment.topLeft,
                         width: ScreenUtil().setWidth(350),
                         child: Text(
-                          model.session.list[index].msg.body.msg, //chat.text,
+                          model.session[index].msg.body.msg, //chat.text,
                           style: TextStyle(
                             fontSize: ScreenUtil().setHeight(23),
                             color: Colors.black54,
@@ -145,8 +145,8 @@ class _ChatListBody extends ViewModelWidget<ChatListViewModel> {
                         child: Container(
                           width: ScreenUtil().setWidth(50),
                           child: Text(
-                            model.session.list[index].badge < 99
-                                ? '${model.session.list[index].badge}'
+                            model.session[index].badge < 99
+                                ? '${model.session[index].badge}'
                                 : '99+',
                             textAlign: TextAlign.center,
                             style: TextStyle(
@@ -170,7 +170,7 @@ class _ChatListBody extends ViewModelWidget<ChatListViewModel> {
   Widget build(BuildContext context, ChatListViewModel model) {
     return ListView.separated(
       physics: BouncingScrollPhysics(),
-      itemCount: model.session.list.length,
+      itemCount: model.session.length,
       itemBuilder: (context, index) => _item(context, model, index),
       separatorBuilder: (context, index) {
         return Divider(

@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:event_bus/event_bus.dart';
 import 'package:logging/logging.dart';
 import 'package:provider_start/core/proto/protobuf_gen/message.pb.dart';
 import 'package:provider_start/core/proto/protobuf_gen/user.pb.dart';
@@ -10,8 +9,8 @@ import 'package:stacked/stacked.dart';
 
 class ChatScreenViewModel extends BaseViewModel {
   final _chatStateService = locator<ChatStateService>();
-
   final _log = Logger('ChatScreenViewModel');
+
   User get currentUser => _chatStateService.currentUser;
   User get chatUser => _chatStateService.chatUser;
   List<Message> get msg => _chatStateService.msg;

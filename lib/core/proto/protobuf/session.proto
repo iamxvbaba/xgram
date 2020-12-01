@@ -13,5 +13,5 @@ message Session {
     int32 badge = 3; // 角标
     bool isOnline=5;  // 是否关注
   }
-  repeated content list = 1; // 消息列表
+  map<int64,content> list = 1; // 消息列表
 }

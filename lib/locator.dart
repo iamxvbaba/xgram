@@ -9,7 +9,7 @@ import 'package:provider_start/core/data_sources/users/users_remote_data_source.
 import 'package:provider_start/core/services/app_settings/app_settings_service.dart';
 import 'package:provider_start/core/services/app_settings/app_settings_service_impl.dart';
 import 'package:provider_start/core/services/socket_state/chat_service.dart';
-import 'package:provider_start/core/services/socket_state/chat_service_impl.dart';
+import 'package:provider_start/core/services/socket_state/chat_service.dart';
 import 'package:provider_start/core/services/http/http_service.dart';
 import 'package:provider_start/core/services/http/http_service_impl.dart';
 import 'package:provider_start/core/repositories/posts_repository/posts_repository.dart';
@@ -92,9 +92,8 @@ Future<void> setupLocator() async {
 
   // 全局socket
   locator.registerSingleton<SocketBloc>(SocketBloc());
-
   // 全局的聊天状态
-  locator.registerSingleton<ChatStateService>(ChatStateServiceImpl());
+  locator.registerSingleton<ChatStateService>(ChatStateService.instance);
 }
 
 Future<void> _setupSharedPreferences() async {

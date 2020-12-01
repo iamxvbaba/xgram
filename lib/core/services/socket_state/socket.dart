@@ -14,6 +14,8 @@ import 'package:protobuf/protobuf.dart' as $pb;
 import 'package:provider_start/core/services/key_storage/key_storage_service.dart';
 import 'package:provider_start/locator.dart';
 
+import 'chat_service.dart';
+
 class SocketBloc {
   static const auth_key = 'auth_key';
   final _keyStorageService = locator<KeyStorageService>();
