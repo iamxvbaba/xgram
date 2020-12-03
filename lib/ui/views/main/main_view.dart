@@ -1,10 +1,11 @@
+import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider_start/core/constant/app_icon.dart';
 import 'package:provider_start/core/localization/localization.dart';
+import 'package:provider_start/ui/theme/multiple_themes/multiple_themes_view.dart';
 import 'package:provider_start/ui/views/chat_list/chat_list_view.dart';
-import 'package:provider_start/ui/views/drawer/sidebar_view.dart';
 import 'package:provider_start/ui/views/main/main_view_model.dart';
 import 'package:provider_start/ui/views/player/play_list_view.dart';
 import 'package:provider_start/ui/views/settings/settings_view.dart';
@@ -21,6 +22,7 @@ class MainView extends StatelessWidget {
   final _views = <Widget>[
     FadeIn(child: HomeView()),
     FadeIn(child: PlayListView()),
+    FadeIn(child: MultipleThemesView()),
     FadeIn(child: SettingsView()),
     FadeIn(child: ChatListView()), // SettingsView()
   ];
@@ -31,52 +33,42 @@ class MainView extends StatelessWidget {
 
     return ViewModelBuilder<MainViewModel>.reactive(
       viewModelBuilder: () => MainViewModel(),
-      builder: (context, model, child) => PlatformScaffold(
-        material: (context, platform) {
-          return MaterialScaffoldData(
-            drawer: SidebarMenu(),
-          );
-        },
+      builder: (context, model, child) => Scaffold(
         body: LazyIndexedStack(
           reuse: true,
           index: model.index,
           itemCount: _views.length,
           itemBuilder: (_, index) => _views[index],
         ),
-        bottomNavBar: PlatformNavBar(
-          android: (context) {
-            return MaterialNavBarData(
-              type: BottomNavigationBarType.fixed, // 解决超过3个不显示颜色的问题
-              showSelectedLabels: true, // 显示选中的标题
-              showUnselectedLabels: false, // 隐藏未选中的标题
-            );
-          },
-          currentIndex: model.index,
-          items: <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
+        bottomNavigationBar: ConvexAppBar(
+          initialActiveIndex: 2, // 初始页面
+          items: [
+            TabItem(
               icon: CustomIcon(icon: AppIcon.home),
               activeIcon: CustomIcon(icon: AppIcon.homeFill),
-              title: Text('home'),
+              title: 'home',
             ),
-            BottomNavigationBarItem(
+            TabItem(
               icon: CustomIcon(icon: AppIcon.search),
               activeIcon: CustomIcon(icon: AppIcon.searchFill),
-              title: Text('search'),
+              title: 'search',
             ),
-            BottomNavigationBarItem(
+            TabItem(
+              icon: Icons.add,
+              title: 'test',
+            ),
+            TabItem(
               icon: CustomIcon(icon: AppIcon.notification),
               activeIcon: CustomIcon(icon: AppIcon.notificationFill),
-              title: Text('notify'),
+              title: 'notify',
             ),
-            BottomNavigationBarItem(
-              icon: CustomIcon(
-                icon: AppIcon.messageEmpty,
-              ),
+            TabItem(
+              icon: CustomIcon(icon: AppIcon.messageEmpty),
               activeIcon: CustomIcon(icon: AppIcon.messageFill),
-              title: Text('message'),
+              title: 'message',
             ),
           ],
-          itemChanged: model.changeTab,
+          onTap: model.changeTab,
         ),
       ),
     );

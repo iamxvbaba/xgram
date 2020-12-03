@@ -32,6 +32,7 @@ import 'package:provider_start/core/services/snackbar/snack_bar_service.dart';
 import 'package:provider_start/core/services/snackbar/snack_bar_service_impl.dart';
 import 'package:provider_start/core/services/socket_state/socket.dart';
 import 'package:provider_start/core/utils/file_helper.dart';
+import 'package:stacked_themes/stacked_themes.dart';
 
 GetIt locator = GetIt.instance;
 
@@ -86,6 +87,9 @@ Future<void> setupLocator() async {
 
   // player
   locator.registerLazySingleton<AssetsAudioPlayer>(() => AssetsAudioPlayer());
+
+  // 主题管理
+  locator.registerSingleton(ThemeService.getInstance());
 
   // 全局事件通知
   locator.registerSingleton<EventBus>(EventBus());

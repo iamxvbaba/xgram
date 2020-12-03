@@ -10,20 +10,21 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final local = AppLocalizations.of(context);
-
+    final theme = Theme.of(context);
     return ViewModelBuilder<HomeViewModel>.reactive(
       viewModelBuilder: () => HomeViewModel(),
       onModelReady: (model) => model.init(),
-      builder: (context, model, child) => PlatformScaffold(
-        appBar: PlatformAppBar(
+      builder: (context, model, child) => Scaffold(
+        backgroundColor: theme.backgroundColor,
+        appBar: AppBar(
+          backgroundColor: theme.backgroundColor,
           title: Text(local.homeViewTitle),
-          cupertino: (_, __) => CupertinoNavigationBarData(
-            transitionBetweenRoutes: false,
-          ),
         ),
         body: model.isBusy
             ? _LoadingAnimation()
-            : model.posts.isNotEmpty ? _Posts() : _NoPosts(),
+            : model.posts.isNotEmpty
+                ? _Posts()
+                : _NoPosts(),
       ),
     );
   }

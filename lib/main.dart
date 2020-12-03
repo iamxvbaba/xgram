@@ -13,10 +13,12 @@ import 'package:provider_start/core/services/navigation/navigation_service.dart'
 import 'package:provider_start/locator.dart';
 import 'package:provider_start/logger.dart';
 import 'package:provider_start/provider_setup.dart';
+import 'package:provider_start/theme.dart';
 import 'package:provider_start/ui/router.gr.dart';
 import 'package:provider_start/ui/shared/themes.dart' as themes;
 import 'package:provider_start/local_setup.dart';
 import 'package:provider_start/ui/views/startup/start_up_view.dart';
+import 'package:stacked_themes/stacked_themes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,6 +26,8 @@ void main() async {
 
   setupLogger();
   await setupLocator();
+  // 主题管理
+  await ThemeManager.initialise();
 
   runZoned(
     () => runApp(MyApp()),
@@ -35,32 +39,29 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   final navigationService = locator<NavigationService>();
-
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: providers,
       child: CoreManager(
-        child: PlatformApp(
-          debugShowCheckedModeBanner: false,
-          material: (_, __) => MaterialAppData(
-            theme: AppTheme.apptheme.copyWith(
-              textTheme: GoogleFonts.muliTextTheme(
-                Theme.of(context).textTheme,
-              ),
-            ), //themes.primaryMaterialTheme,
-            darkTheme: themes.darkMaterialTheme,
+        child: ThemeBuilder(
+          defaultThemeMode: ThemeMode.system,
+          themes: getThemes(),
+          statusBarColorBuilder: (theme) => theme.accentColor,
+          builder: (ctx,regularTheme,darkTheme,themeMode) => MaterialApp(
+            title: 'XGram',
+            theme: regularTheme,
+            darkTheme: darkTheme,
+            themeMode: themeMode,
+            debugShowCheckedModeBanner: false,
+            localizationsDelegates: localizationsDelegates,
+            supportedLocales: supportedLocales,
+            localeResolutionCallback: loadSupportedLocals,
+            onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
+            navigatorKey: navigationService.navigatorKey,
+            onGenerateRoute: Router().onGenerateRoute,
+            home: StartUpView(),
           ),
-          cupertino: (_, __) => CupertinoAppData(
-            theme: themes.primaryCupertinoTheme,
-          ),
-          localizationsDelegates: localizationsDelegates,
-          supportedLocales: supportedLocales,
-          localeResolutionCallback: loadSupportedLocals,
-          onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
-          navigatorKey: navigationService.navigatorKey,
-          onGenerateRoute: Router().onGenerateRoute,
-          home: StartUpView(),
         ),
       ),
     );
