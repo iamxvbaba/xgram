@@ -2,6 +2,7 @@ import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:flutter_screenutil/screenutil.dart';
 import 'package:provider_start/core/constant/app_icon.dart';
 import 'package:provider_start/core/localization/localization.dart';
 import 'package:provider_start/ui/theme/multiple_themes/multiple_themes_view.dart';
@@ -41,16 +42,15 @@ class MainView extends StatelessWidget {
           itemBuilder: (_, index) => _views[index],
         ),
         bottomNavigationBar: ConvexAppBar(
-          initialActiveIndex: 2, // 初始页面
+          height: ScreenUtil().setHeight(80),
+          initialActiveIndex: model.index, // 初始页面
           items: [
             TabItem(
-              icon: CustomIcon(icon: AppIcon.home),
-              activeIcon: CustomIcon(icon: AppIcon.homeFill),
+              icon: Icons.home,
               title: 'home',
             ),
             TabItem(
-              icon: CustomIcon(icon: AppIcon.search),
-              activeIcon: CustomIcon(icon: AppIcon.searchFill),
+              icon: Icons.search,
               title: 'search',
             ),
             TabItem(
@@ -58,13 +58,11 @@ class MainView extends StatelessWidget {
               title: 'test',
             ),
             TabItem(
-              icon: CustomIcon(icon: AppIcon.notification),
-              activeIcon: CustomIcon(icon: AppIcon.notificationFill),
+              icon: Icons.notifications,
               title: 'notify',
             ),
             TabItem(
-              icon: CustomIcon(icon: AppIcon.messageEmpty),
-              activeIcon: CustomIcon(icon: AppIcon.messageFill),
+              icon: Icons.message,
               title: 'message',
             ),
           ],

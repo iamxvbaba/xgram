@@ -17,7 +17,6 @@ class HomeView extends StatelessWidget {
       builder: (context, model, child) => Scaffold(
         backgroundColor: theme.backgroundColor,
         appBar: AppBar(
-          backgroundColor: theme.backgroundColor,
           title: Text(local.homeViewTitle),
         ),
         body: model.isBusy
