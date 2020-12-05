@@ -1,19 +1,15 @@
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_screenutil/screenutil.dart';
-import 'package:provider_start/core/constant/app_icon.dart';
 import 'package:provider_start/core/localization/localization.dart';
 import 'package:provider_start/ui/theme/multiple_themes/multiple_themes_view.dart';
 import 'package:provider_start/ui/views/chat_list/chat_list_view.dart';
 import 'package:provider_start/ui/views/main/main_view_model.dart';
-import 'package:provider_start/ui/views/player/play_list_view.dart';
 import 'package:provider_start/ui/views/settings/settings_view.dart';
 import 'package:provider_start/ui/views/home/home_view.dart';
 import 'package:provider_start/ui/widgets/animation/fade_in.dart';
 import 'package:provider_start/ui/widgets/stateful/lazy_index_stack.dart';
-import 'package:provider_start/ui/widgets/stateless/custom_widget.dart';
 import 'package:stacked/stacked.dart';
 
 /// Main view container that handles rendering pages according to which bottom
@@ -22,7 +18,7 @@ import 'package:stacked/stacked.dart';
 class MainView extends StatelessWidget {
   final _views = <Widget>[
     FadeIn(child: HomeView()),
-    FadeIn(child: PlayListView()),
+    FadeIn(child: Container()),
     FadeIn(child: MultipleThemesView()),
     FadeIn(child: SettingsView()),
     FadeIn(child: ChatListView()), // SettingsView()

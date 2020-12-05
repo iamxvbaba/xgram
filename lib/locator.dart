@@ -1,4 +1,3 @@
-import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
@@ -84,9 +83,6 @@ Future<void> setupLocator() async {
 
   // External
   locator.registerLazySingleton<HiveInterface>(() => Hive);
-
-  // player
-  locator.registerLazySingleton<AssetsAudioPlayer>(() => AssetsAudioPlayer());
 
   // 主题管理
   locator.registerSingleton(ThemeService.getInstance());

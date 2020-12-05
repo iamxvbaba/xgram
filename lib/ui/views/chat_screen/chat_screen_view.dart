@@ -2,11 +2,9 @@ import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screenutil.dart';
-import 'package:provider_start/core/constant/theme.dart';
 import 'package:provider_start/core/proto/protobuf_gen/message.pb.dart';
 import 'package:provider_start/ui/views/chat_screen/chat_screen_view_model.dart';
 import 'package:provider_start/ui/views/chat_screen/record_view.dart';
-import 'package:provider_start/ui/widgets/stateless/custom_widget.dart';
 import 'package:stacked/stacked.dart';
 import 'package:fixnum/fixnum.dart';
 
@@ -172,8 +170,8 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
                   title: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      UrlText(
-                        text: model.chatUser.nickname,
+                      Text(
+                        model.chatUser.nickname,
                         style: TextStyle(
                             color: Colors.black87,
                             fontSize: 20,
@@ -182,7 +180,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
                       Text(
                         model.chatUser.nickname,
                         style:
-                            TextStyle(color: AppColor.darkGrey, fontSize: 15),
+                            TextStyle(fontSize: 15),
                       )
                     ],
                   ),
@@ -190,7 +188,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
                   backgroundColor: Colors.white54,
                   actions: <Widget>[
                     IconButton(
-                        icon: Icon(Icons.info, color: AppColor.primary),
+                        icon: Icon(Icons.info),
                         onPressed: () {})
                   ],
                 ),

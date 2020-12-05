@@ -2,11 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart' hide Router;
 import 'package:flutter/widgets.dart' hide Router;
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_screenutil/screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:provider_start/core/constant/theme.dart';
 import 'package:provider_start/core/localization/localization.dart';
 import 'package:provider_start/core/managers/core_manager.dart';
 import 'package:provider_start/core/services/navigation/navigation_service.dart';
@@ -15,14 +12,12 @@ import 'package:provider_start/logger.dart';
 import 'package:provider_start/provider_setup.dart';
 import 'package:provider_start/theme.dart';
 import 'package:provider_start/ui/router.gr.dart';
-import 'package:provider_start/ui/shared/themes.dart' as themes;
 import 'package:provider_start/local_setup.dart';
 import 'package:provider_start/ui/views/startup/start_up_view.dart';
 import 'package:stacked_themes/stacked_themes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  ScreenUtil.init(designSize: Size(750, 1334), allowFontScaling: false);
 
   setupLogger();
   await setupLocator();

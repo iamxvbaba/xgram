@@ -48,7 +48,6 @@ dependencies:
   hive: ^1.4.2
   get: ^3.4.3
   dio: ^3.0.10
-  assets_audio_player: ^2.0.10
   google_fonts: ^0.3.9
   url_launcher:
   cached_network_image: ^2.2.0+1
@@ -98,9 +97,7 @@ flutter:
   assets:
     - assets/animations/
     - assets/fonts/
-    - assets/images/
     - assets/lang/
-    - assets/audios/
 
   fonts:
     - family: Open Sans
@@ -113,9 +110,6 @@ flutter:
           weight: 300
         - asset: assets/fonts/OpenSans-Regular.ttf
           weight: 400
-    - family: TwitterIcon
-      fonts:
-        - asset: assets/fonts/icons.ttf
     - family: HelveticaNeue
       fonts:
         - asset: assets/fonts/HelveticaNeue.ttf

@@ -13,7 +13,6 @@ import '../core/models/post/post.dart';
 import 'views/chat_screen/chat_screen_view.dart';
 import 'views/login/login_view.dart';
 import 'views/main/main_view.dart';
-import 'views/player/play_list_view.dart';
 import 'views/startup/start_up_view.dart';
 import 'widgets/stateful/post_details/post_details_view.dart';
 
@@ -22,14 +21,12 @@ class Routes {
   static const String loginView = '/login-view';
   static const String startUpView = '/';
   static const String postDetailsView = '/post-details-view';
-  static const String playListView = '/play-list-view';
   static const String chatScreenPage = '/chat-screen-page';
   static const all = <String>{
     mainView,
     loginView,
     startUpView,
     postDetailsView,
-    playListView,
     chatScreenPage,
   };
 }
@@ -42,7 +39,6 @@ class Router extends RouterBase {
     RouteDef(Routes.loginView, page: LoginView),
     RouteDef(Routes.startUpView, page: StartUpView),
     RouteDef(Routes.postDetailsView, page: PostDetailsView),
-    RouteDef(Routes.playListView, page: PlayListView),
     RouteDef(Routes.chatScreenPage, page: ChatScreenPage),
   ];
   @override
@@ -73,12 +69,6 @@ class Router extends RouterBase {
           key: args.key,
           post: args.post,
         ),
-        settings: data,
-      );
-    },
-    PlayListView: (data) {
-      return buildAdaptivePageRoute<dynamic>(
-        builder: (context) => PlayListView(),
         settings: data,
       );
     },

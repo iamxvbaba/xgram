@@ -1,5 +1,3 @@
-import 'package:provider_start/core/constant/theme.dart';
-
 class RelativeDateFormat {
   static final num ONE_MINUTE = 60000;
   static final num ONE_HOUR = 3600000;

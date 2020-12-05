@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider_start/core/utils/relative_date_format.dart';
-import 'package:provider_start/ui/widgets/stateless/custom_widget.dart';
 import 'package:provider_start/ui/widgets/stateless/loading_animation.dart';
 import 'package:stacked/stacked.dart';
 
@@ -22,7 +21,7 @@ class _ChatListViewState extends State<ChatListView> {
       onModelReady: (model) => model.init(),
       builder: (context, model, child) => PlatformScaffold(
         appBar: PlatformAppBar(
-          title: customTitleText('历史会话'),
+          title: Text('历史会话'),
           cupertino: (_, __) => CupertinoNavigationBarData(
             transitionBetweenRoutes: false,
           ),
@@ -133,28 +132,31 @@ class _ChatListBody extends ViewModelWidget<ChatListViewModel> {
                           maxLines: 1,
                         ),
                       ),
-                      Container(
-                        height: ScreenUtil().setHeight(30),
-                        padding: EdgeInsets.all(ScreenUtil().setHeight(4)),
-                        decoration: BoxDecoration(
-                          color: Color(0xFF9E9E9E), // 底色
-                          borderRadius: BorderRadius.circular(
-                              ScreenUtil().setHeight(15)), // 圆角度
-                          //borderRadius: BorderRadius.vertical(top: Radius.elliptical(20, 50)), // 也可控件一边圆角大小
-                        ),
-                        child: Container(
-                          width: ScreenUtil().setWidth(50),
-                          child: Text(
-                            model.session[index].badge < 99
-                                ? '${model.session[index].badge}'
-                                : '99+',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                color: Colors.white, // 底色
-                                fontSize: ScreenUtil().setWidth(20)),
-                          ),
-                        ),
-                      )
+                      model.session[index].badge == 0
+                          ? Container()
+                          : Container(
+                              height: ScreenUtil().setHeight(30),
+                              padding:
+                                  EdgeInsets.all(ScreenUtil().setHeight(4)),
+                              decoration: BoxDecoration(
+                                color: Color(0xFF9E9E9E), // 底色
+                                borderRadius: BorderRadius.circular(
+                                    ScreenUtil().setHeight(15)), // 圆角度
+                                //borderRadius: BorderRadius.vertical(top: Radius.elliptical(20, 50)), // 也可控件一边圆角大小
+                              ),
+                              child: Container(
+                                width: ScreenUtil().setWidth(50),
+                                child: Text(
+                                  model.session[index].badge < 99
+                                      ? '${model.session[index].badge}'
+                                      : '99+',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.white, // 底色
+                                      fontSize: ScreenUtil().setWidth(20)),
+                                ),
+                              ),
+                            )
                     ],
                   ),
                 ],
