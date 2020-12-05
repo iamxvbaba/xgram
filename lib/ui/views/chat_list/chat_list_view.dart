@@ -19,12 +19,9 @@ class _ChatListViewState extends State<ChatListView> {
     return ViewModelBuilder<ChatListViewModel>.reactive(
       viewModelBuilder: () => ChatListViewModel(),
       onModelReady: (model) => model.init(),
-      builder: (context, model, child) => PlatformScaffold(
-        appBar: PlatformAppBar(
+      builder: (context, model, child) => Scaffold(
+        appBar: AppBar(
           title: Text('历史会话'),
-          cupertino: (_, __) => CupertinoNavigationBarData(
-            transitionBetweenRoutes: false,
-          ),
         ),
         body: model.isBusy
             ? _LoadingAnimation()

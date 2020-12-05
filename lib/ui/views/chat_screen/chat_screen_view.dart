@@ -167,25 +167,13 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
               child: Scaffold(
                 key: _scaffoldKey,
                 appBar: AppBar(
-                  title: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        model.chatUser.nickname,
-                        style: TextStyle(
-                            color: Colors.black87,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        model.chatUser.nickname,
-                        style:
-                            TextStyle(fontSize: 15),
-                      )
-                    ],
+                  title: Text(
+                    model.chatUser.nickname,
+                    style: TextStyle(
+                        color: Colors.black87,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
                   ),
-                  iconTheme: IconThemeData(color: Colors.blue),
-                  backgroundColor: Colors.white54,
                   actions: <Widget>[
                     IconButton(
                         icon: Icon(Icons.info),
