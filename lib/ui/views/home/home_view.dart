@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/screenutil.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:provider_start/ui/views/home/article_list_Item.dart';
 import 'package:provider_start/ui/views/home/home_view_model.dart';
+import 'package:provider_start/ui/views/search/search_delegate.dart';
 import 'package:provider_start/ui/widgets/stateless/loading_animation.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:stacked/stacked.dart';
@@ -69,7 +70,7 @@ class HomeView extends StatelessWidget {
                                     onPressed: () {
                                       showSearch(
                                         context: context,
-                                        /*delegate: DefaultSearchDelegate()*/
+                                        delegate: DefaultSearchDelegate()
                                       );
                                     },
                                   ),
