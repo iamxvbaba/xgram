@@ -13,6 +13,7 @@ class ChatStateService {
   final _authService = locator<AuthService>();
   final EventBus _eventBus = locator<EventBus>();
   final _log = Logger('ChatScreenViewModel');
+  final SocketBloc _socket = locator<SocketBloc>();
 
   Function _notify;
   void setNotify(Function f) {
@@ -44,8 +45,7 @@ class ChatStateService {
     });
   }
 
-  // 全局socket 对象
-  final SocketBloc _socket = locator<SocketBloc>();
+
 
   User _chatUser;
   List<Message> _chatUserList;

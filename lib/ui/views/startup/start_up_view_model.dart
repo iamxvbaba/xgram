@@ -19,8 +19,8 @@ class StartUpViewModel extends BaseViewModel {
     final hasLoggedInUser = await _authService.isUserLoggedIn();
 
     await Future.wait([
-      postsLocalDataSource.init(),
-      usersLocalDataSource.init(),
+      //postsLocalDataSource.init(),
+      //usersLocalDataSource.init(),
       hardwareInfoService.init(),
     ]);
 

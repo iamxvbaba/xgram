@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart' hide Router;
 import 'package:flutter/widgets.dart' hide Router;
-import 'package:flutter_screenutil/screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:provider_start/core/localization/localization.dart';
 import 'package:provider_start/core/managers/core_manager.dart';

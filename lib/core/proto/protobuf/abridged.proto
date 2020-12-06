@@ -17,7 +17,7 @@ enum OP {
   logout = 9;
 
   session = 10; // 会话列表
-
+  home = 11;
   channelReady = -100;
   channelFinished = -200;
 
