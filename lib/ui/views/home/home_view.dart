@@ -69,9 +69,8 @@ class HomeView extends StatelessWidget {
                                     icon: Icon(Icons.search),
                                     onPressed: () {
                                       showSearch(
-                                        context: context,
-                                        delegate: DefaultSearchDelegate()
-                                      );
+                                          context: context,
+                                          delegate: DefaultSearchDelegate());
                                     },
                                   ),
                                 ),
@@ -90,13 +89,6 @@ class HomeView extends StatelessWidget {
                               expandedHeight: bannerHeight,
                               pinned: true,
                             ),
-                            /*if (homeModel.isEmpty)
-                              SliverToBoxAdapter(
-                                  child: Padding(
-                                padding: const EdgeInsets.only(top: 50),
-                                child: ViewStateEmptyWidget(
-                                    onPressed: homeModel.initData),
-                              )),*/
                             if (model.topArticles?.isNotEmpty ?? false)
                               HomeTopArticleList(),
                             HomeArticleList(),
@@ -104,6 +96,32 @@ class HomeView extends StatelessWidget {
                         )),
                   );
                 })),
+        floatingActionButton: ScaleAnimatedSwitcher(
+          child: model.showTopBtn &&
+                  model.refreshController.headerStatus !=
+                      RefreshStatus.twoLevelOpening
+              ? FloatingActionButton(
+                  heroTag: 'homeEmpty',
+                  key: ValueKey(Icons.vertical_align_top),
+                  onPressed: () {
+                    model.scrollToTop();
+                  },
+                  child: Icon(
+                    Icons.vertical_align_top,
+                  ),
+                )
+              : FloatingActionButton(
+                  heroTag: 'homeFab',
+                  key: ValueKey(Icons.search),
+                  onPressed: () {
+                    showSearch(
+                        context: context, delegate: DefaultSearchDelegate());
+                  },
+                  child: Icon(
+                    Icons.search,
+                  ),
+                ),
+        ),
       ),
     );
   }

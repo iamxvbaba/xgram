@@ -25,7 +25,7 @@ class HomeViewModel extends BaseViewModel {
   List<ABanner> banners = [];
   List<Article> list = [];
 
-  HomeViewModel(this._scrollController,{double height: 200}){
+  HomeViewModel(this._scrollController,{double height = 200}){
     _height = height;
   }
 
