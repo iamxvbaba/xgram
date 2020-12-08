@@ -1,17 +1,17 @@
-import 'package:event_bus/event_bus.dart';
 import 'package:logging/logging.dart';
 import 'package:provider_start/core/proto/protobuf_gen/abridged.pb.dart';
 import 'package:provider_start/core/proto/protobuf_gen/message.pb.dart';
 import 'package:provider_start/core/proto/protobuf_gen/session.pb.dart';
 import 'package:provider_start/core/proto/protobuf_gen/user.pb.dart';
 import 'package:provider_start/core/services/auth/auth_service.dart';
+import 'package:provider_start/core/services/event_hub/message.dart';
 import 'package:provider_start/core/services/socket_state/socket.dart';
 import 'package:provider_start/locator.dart';
 import 'package:fixnum/fixnum.dart';
 
 class ChatStateService {
   final _authService = locator<AuthService>();
-  final EventBus _eventBus = locator<EventBus>();
+  final MessageEvent _eventBus = locator<MessageEvent>();
   final _log = Logger('ChatScreenViewModel');
   final SocketBloc _socket = locator<SocketBloc>();
 
@@ -35,7 +35,7 @@ class ChatStateService {
     return _instance;
   }
   ChatStateService._() {
-    _eventBus.on<Message>().listen((model) {
+    _eventBus.eventBus.on<Message>().listen((model) {
       print('接受到消息:$model');
       sendOrReceiveMessage(model,false);
       // 回调

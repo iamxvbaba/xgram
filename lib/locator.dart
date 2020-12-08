@@ -7,6 +7,8 @@ import 'package:provider_start/core/data_sources/users/users_local_data_source.d
 import 'package:provider_start/core/data_sources/users/users_remote_data_source.dart';
 import 'package:provider_start/core/services/app_settings/app_settings_service.dart';
 import 'package:provider_start/core/services/app_settings/app_settings_service_impl.dart';
+import 'package:provider_start/core/services/drawguess/draw_service.dart';
+import 'package:provider_start/core/services/event_hub/draw.dart';
 import 'package:provider_start/core/services/socket_state/chat_service.dart';
 import 'package:provider_start/core/services/socket_state/chat_service.dart';
 import 'package:provider_start/core/services/http/http_service.dart';
@@ -32,6 +34,8 @@ import 'package:provider_start/core/services/snackbar/snack_bar_service_impl.dar
 import 'package:provider_start/core/services/socket_state/socket.dart';
 import 'package:provider_start/core/utils/file_helper.dart';
 import 'package:stacked_themes/stacked_themes.dart';
+
+import 'package:provider_start/core/services/event_hub/message.dart';
 
 GetIt locator = GetIt.instance;
 
@@ -86,14 +90,17 @@ Future<void> setupLocator() async {
 
   // 主题管理
   locator.registerSingleton(ThemeService.getInstance());
-
-  // 全局事件通知
-  locator.registerSingleton<EventBus>(EventBus());
-
   // 全局socket
   locator.registerSingleton<SocketBloc>(SocketBloc());
+
+  // 消息事件通知
+  locator.registerSingleton<MessageEvent>(MessageEvent(EventBus()));
   // 全局的聊天状态
   locator.registerSingleton<ChatStateService>(ChatStateService.instance);
+
+  // 画板消息通知
+  locator.registerSingleton<DrawEvent>(DrawEvent(EventBus()));
+  locator.registerSingleton<DrawService>(DrawService.instance);
 }
 
 Future<void> _setupSharedPreferences() async {

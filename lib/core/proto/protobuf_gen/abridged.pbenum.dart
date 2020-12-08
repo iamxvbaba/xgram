@@ -28,6 +28,8 @@ class OP extends $pb.ProtobufEnum {
   static const OP testDataResp = OP._(201, 'testDataResp');
   static const OP pushSingle = OP._(301, 'pushSingle');
   static const OP receiveSingle = OP._(302, 'receiveSingle');
+  static const OP drawS = OP._(401, 'drawS');
+  static const OP drawC = OP._(402, 'drawC');
   static const OP SystemNotifyC = OP._(100000001, 'SystemNotifyC');
   static const OP SystemNotifyD = OP._(100000002, 'SystemNotifyD');
 
@@ -50,6 +52,8 @@ class OP extends $pb.ProtobufEnum {
     testDataResp,
     pushSingle,
     receiveSingle,
+    drawS,
+    drawC,
     SystemNotifyC,
     SystemNotifyD,
   ];

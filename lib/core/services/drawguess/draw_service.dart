@@ -1,0 +1,205 @@
+import 'package:logging/logging.dart';
+import 'package:provider_start/core/proto/protobuf_gen/abridged.pb.dart';
+import 'package:provider_start/core/proto/protobuf_gen/abridged.pbenum.dart';
+import 'package:provider_start/core/proto/protobuf_gen/draw.pb.dart';
+import 'package:provider_start/core/services/event_hub/draw.dart';
+import 'package:provider_start/core/services/socket_state/socket.dart';
+import 'package:provider_start/locator.dart';
+import 'package:flutter/widgets.dart';
+import 'package:fixnum/fixnum.dart' as $fixnum;
+//基础实体
+class DrawEntity {
+  Offset offset;
+  String color;
+  double strokeWidth;
+  DrawEntity(this.offset, {this.color = 'default', this.strokeWidth = 5.0});
+}
+var rID = $fixnum.Int64(2);
+class DrawService {
+  final _log = Logger('DrawService');
+  final DrawEvent _eventBus = locator<DrawEvent>();
+  final SocketBloc _socket = locator<SocketBloc>();
+
+  static DrawService get instance => _getInstance();
+  static DrawService _instance;
+
+  static DrawService _getInstance() {
+    _instance ??= DrawService._();
+    return _instance;
+  }
+
+  DrawService._() {
+    _eventBus.eventBus.on<DrawParam>().listen((drawParam) {
+      print('收到draw通知:$drawParam');
+      switch (drawParam.op) {
+        case DrawOP.p_draw:
+          //正在连续绘制
+          if (points.isEmpty) {
+            points.add(<DrawEntity>[]);
+            points.add(<DrawEntity>[]);
+          }
+          pentColor = drawParam.pentColor;
+          pentSize = drawParam.pentSize;
+          //添加绘制
+          points[points.length - 2].add(DrawEntity(
+              Offset(drawParam.dx, drawParam.dy),
+              color: pentColor,
+              strokeWidth: pentSize));
+          break;
+        case DrawOP.p_drawNull:
+          //手抬起，添加占位
+          //添加绘制标识
+          points.add(<DrawEntity>[]);
+          break;
+        case DrawOP.p_clear:
+          //清空画板
+          points.clear();
+          break;
+        case DrawOP.p_undo:
+          //撤销，缓存到撤销容器
+          undoPoints.add(points[points.length - 3]); //添加到撤销的数据里
+          points.removeAt(points.length - 3); //移除数据
+          //通知更新
+          break;
+        case DrawOP.p_reverseUndo:
+          //反撤销数据
+          points.insert(points.length - 2, undoPoints.removeLast());
+          break;
+      }
+      // 回调 通知更新
+      if (_notify != null) {
+        _notify();
+      }
+    });
+  }
+
+  Function _notify;
+
+  void setNotify(Function f) {
+    _notify = f;
+  }
+
+  List<List<DrawEntity>> undoPoints = <List<DrawEntity>>[]; // 撤销的数据
+  List<List<DrawEntity>> points = <List<DrawEntity>>[]; // 存储要画的数据
+  List<DrawEntity> pointsList = <DrawEntity>[]; //预处理的数据，避免绘制时处理卡顿
+  String pentColor = 'default'; //默认颜色
+  double pentSize = 5; //默认字体大小
+
+
+  void _update() {
+    pointsList = <DrawEntity>[];
+    for (var i = 0; i < points.length - 1; i++) {
+      pointsList.addAll(points[i]);
+      pointsList.add(null);
+    }
+  }
+
+  void setState() {
+    _update();
+    if (_notify != null) {
+      _notify();
+    }
+  }
+  //清除数据
+  Future<void> clear() async {
+    //清除数据
+    points.clear();
+    //通知更新
+    setState();
+    //发送绘制消息给服务端
+    DrawParam param = DrawParam.create();
+    param.roomID = rID;
+    param.op = DrawOP.p_clear;
+    Response resp = await _socket.send(OP.drawS, param, _convertResponse);
+    if (resp.code != 200) {
+      _log.warning('发送draw事件失败:${resp.msg}');
+      return null;
+    }
+
+  }
+
+  //绘制数据
+  Future<void> sendDraw(Offset localPosition) async {
+    if (points.length == 0) {
+      points.add(List<DrawEntity>());
+      points.add(List<DrawEntity>());
+    }
+    //添加绘制
+    points[points.length - 2].add(
+        DrawEntity(localPosition, color: pentColor, strokeWidth: pentSize));
+
+    //通知更新
+    setState();
+
+    //发送绘制消息给服务端
+    DrawParam param = DrawParam.create();
+    param.roomID = rID;
+    param.op = DrawOP.p_draw;
+    param.pentColor = pentColor;
+    param.pentSize = pentSize;
+    param.dx = localPosition.dx;
+    param.dy = localPosition.dy;
+
+    Response resp = await _socket.send(OP.drawS, param, _convertResponse);
+    if (resp.code != 200) {
+      _log.warning('发送draw事件失败:${resp.msg}');
+      return null;
+    }
+  }
+
+  //绘制Null数据隔断标识
+  Future<void> sendDrawNull() async {
+    //添加绘制标识
+    points.add(List<DrawEntity>());
+    //通知更新
+    setState();
+
+    //发送绘制消息给服务端
+    DrawParam param = DrawParam.create();
+    param.roomID = rID;
+    param.op = DrawOP.p_drawNull;
+    Response resp = await _socket.send(OP.drawS, param, _convertResponse);
+    if (resp.code != 200) {
+      _log.warning('发送draw事件失败:${resp.msg}');
+      return null;
+    }
+  }
+
+  //撤销一条数据
+  Future<void> undoDate() async {
+    //撤销，缓存到撤销容器
+    undoPoints.add(points[points.length - 3]); //添加到撤销的数据里
+    points.removeAt(points.length - 3); //移除数据
+    setState();
+    DrawParam param = DrawParam.create();
+    param.roomID = rID;
+    param.op = DrawOP.p_undo;
+    Response resp = await _socket.send(OP.drawS, param, _convertResponse);
+    if (resp.code != 200) {
+      _log.warning('发送draw事件失败:${resp.msg}');
+      return null;
+    }
+  }
+
+  //反撤销一条数据
+  Future<void> reverseUndoDate() async {
+    var ss = undoPoints.removeLast();
+    points.insert(points.length - 2, ss);
+
+    setState();
+    DrawParam param = DrawParam.create();
+    param.roomID = rID;
+    param.op = DrawOP.p_reverseUndo;
+    Response resp = await _socket.send(OP.drawS, param, _convertResponse);
+    if (resp.code != 200) {
+      _log.warning('发送draw事件失败:${resp.msg}');
+      return null;
+    }
+  }
+
+  Response _convertResponse(Response resp) {
+    return resp;
+  }
+}
+
+

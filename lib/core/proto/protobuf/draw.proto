@@ -1,0 +1,20 @@
+syntax = "proto3";
+package api;
+option go_package = ".;api";
+
+enum DrawOP{
+    p_draw=0;  // 正在连续绘制
+    p_drawNull=1; // 手抬起，添加占位
+    p_clear=2;  // 清空画板
+    p_undo=3; // 撤销，缓存到撤销容器
+    p_reverseUndo=4; //反撤销数据
+}
+
+message DrawParam {
+    int64 roomID=1; // 所处房间id
+    DrawOP op=2; // 绘画操作
+    string pentColor=3; // 铅笔颜色
+    double pentSize=4; // 铅笔大小
+    double dx=5; // offset.dx
+    double dy=6; // offset.dy
+}

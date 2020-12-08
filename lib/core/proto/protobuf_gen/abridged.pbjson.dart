@@ -26,6 +26,8 @@ const OP$json = const {
     const {'1': 'testDataResp', '2': 201},
     const {'1': 'pushSingle', '2': 301},
     const {'1': 'receiveSingle', '2': 302},
+    const {'1': 'drawS', '2': 401},
+    const {'1': 'drawC', '2': 402},
     const {'1': 'SystemNotifyC', '2': 100000001},
     const {'1': 'SystemNotifyD', '2': 100000002},
   ],

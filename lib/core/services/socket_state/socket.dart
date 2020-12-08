@@ -6,20 +6,22 @@ import 'package:event_bus/event_bus.dart';
 import 'package:provider_start/core/proto/config.dart';
 import 'package:provider_start/core/proto/protobuf_gen/abridged.pb.dart';
 import 'package:provider_start/core/proto/protobuf_gen/auth_key.pb.dart';
+import 'package:provider_start/core/proto/protobuf_gen/draw.pb.dart';
 import 'package:provider_start/core/proto/protobuf_gen/message.pb.dart';
 import 'package:provider_start/core/proto/util.dart';
 import 'package:crypto/crypto.dart';
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
+import 'package:provider_start/core/services/event_hub/draw.dart';
+import 'package:provider_start/core/services/event_hub/message.dart';
 import 'package:provider_start/core/services/key_storage/key_storage_service.dart';
 import 'package:provider_start/locator.dart';
-
-import 'chat_service.dart';
 
 class SocketBloc {
   static const auth_key = 'auth_key';
   final _keyStorageService = locator<KeyStorageService>();
-  final EventBus _eventBus = locator<EventBus>();
+  final MessageEvent _msgEventBus = locator<MessageEvent>();
+  final DrawEvent _drawEventBus = locator<DrawEvent>();
 
   Map<int, Function(Response)> call = <int, Function(Response)>{};
 
@@ -188,7 +190,12 @@ class SocketBloc {
       case OP.receiveSingle:
         var msg = Message.fromBuffer(result.data);
         print('======socket 收到消息======$msg');
-        _eventBus.fire(msg);
+        _msgEventBus.eventBus.fire(msg);
+        return;
+      case OP.drawC:
+        var drawParam = DrawParam.fromBuffer(result.data);
+        print('======socket 收到绘画通知======$drawParam');
+        _drawEventBus.eventBus.fire(drawParam);
         return;
       default:
         var id = p.seq.toInt();

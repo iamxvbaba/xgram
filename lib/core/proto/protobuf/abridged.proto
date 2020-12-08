@@ -27,6 +27,8 @@ enum OP {
   pushSingle = 301; // 单聊消息推送, 参数: Message
   receiveSingle = 302; // 收到单聊消息, data结构为 Message
 
+  drawS = 401; // 画板通知
+  drawC = 402; // 画板接收通知
   // system notify
   SystemNotifyC = 100000001;
   SystemNotifyD = 100000002;
