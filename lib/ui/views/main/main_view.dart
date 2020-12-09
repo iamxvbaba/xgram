@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/screenutil.dart';
 import 'package:provider_start/core/localization/localization.dart';
 import 'package:provider_start/ui/theme/multiple_themes/multiple_themes_view.dart';
 import 'package:provider_start/ui/views/chat_list/chat_list_view.dart';
+import 'package:provider_start/ui/views/drawguess/draw_view.dart';
 import 'package:provider_start/ui/views/main/main_view_model.dart';
 import 'package:provider_start/ui/views/settings/settings_view.dart';
 import 'package:provider_start/ui/views/home/home_view.dart';
@@ -18,7 +19,7 @@ import 'package:stacked/stacked.dart';
 class MainView extends StatelessWidget {
   final _views = <Widget>[
     FadeIn(child: HomeView()),
-    FadeIn(child: Container()),
+    FadeIn(child: DrawPage()),
     FadeIn(child: MultipleThemesView()),
     FadeIn(child: SettingsView()),
     FadeIn(child: ChatListView()), // SettingsView()

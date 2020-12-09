@@ -90,16 +90,16 @@ Future<void> setupLocator() async {
 
   // 主题管理
   locator.registerSingleton(ThemeService.getInstance());
+  // 画板消息通知
+  locator.registerSingleton<DrawEvent>(DrawEvent(EventBus()));
+  // 消息事件通知
+  locator.registerSingleton<MessageEvent>(MessageEvent(EventBus()));
   // 全局socket
   locator.registerSingleton<SocketBloc>(SocketBloc());
 
-  // 消息事件通知
-  locator.registerSingleton<MessageEvent>(MessageEvent(EventBus()));
   // 全局的聊天状态
   locator.registerSingleton<ChatStateService>(ChatStateService.instance);
 
-  // 画板消息通知
-  locator.registerSingleton<DrawEvent>(DrawEvent(EventBus()));
   locator.registerSingleton<DrawService>(DrawService.instance);
 }
 

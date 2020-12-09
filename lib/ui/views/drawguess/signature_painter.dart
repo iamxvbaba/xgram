@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider_start/ui/views/drawguess/draw_entity.dart';
-import 'package:provider_start/ui/views/drawguess/draw_provider.dart';
+import 'package:provider_start/core/services/drawguess/draw_service.dart';
+import 'package:provider_start/ui/views/drawguess/draw_color.dart';
 
 
 //自定义 Canvas 画板

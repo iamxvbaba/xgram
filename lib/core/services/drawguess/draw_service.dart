@@ -30,7 +30,6 @@ class DrawService {
 
   DrawService._() {
     _eventBus.eventBus.on<DrawParam>().listen((drawParam) {
-      print('收到draw通知:$drawParam');
       switch (drawParam.op) {
         case DrawOP.p_draw:
           //正在连续绘制
@@ -67,9 +66,7 @@ class DrawService {
           break;
       }
       // 回调 通知更新
-      if (_notify != null) {
-        _notify();
-      }
+      setState();
     });
   }
 
