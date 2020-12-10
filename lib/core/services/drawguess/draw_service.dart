@@ -14,7 +14,8 @@ class DrawEntity {
   double strokeWidth;
   DrawEntity(this.offset, {this.color = 'default', this.strokeWidth = 5.0});
 }
-var rID = $fixnum.Int64(2);
+var roomID = $fixnum.Int64(1);
+
 class DrawService {
   final _log = Logger('DrawService');
   final DrawEvent _eventBus = locator<DrawEvent>();
@@ -83,6 +84,37 @@ class DrawService {
   double pentSize = 5; //默认字体大小
 
 
+  Future<void> joinRoom({$fixnum.Int64 rid}) async {
+    try {
+      ID id = ID.create();
+      if (rid != null) {
+        id.ids.add(rid);
+      } else {
+        id.ids.add(roomID);
+      }
+      Response resp = await _socket.send(OP.roomJoin, id, _convertResponse);
+      if (resp.code != 200) {
+        _log.warning('加入房间失败:${resp.msg}');
+        return null;
+      }
+    } catch(e){
+      print('什么叼错误$e');
+    }
+  }
+
+  void exitRoom({$fixnum.Int64 rid}) async {
+    ID id = ID.create();
+    if (rid != null) {
+      id.ids.add(rid);
+    } else {
+      id.ids.add(roomID);
+    }
+    Response resp = await _socket.send(OP.roomExit, id, _convertResponse);
+    if (resp.code != 200) {
+      _log.warning('退出房间失败:${resp.msg}');
+      return null;
+    }
+  }
   void _update() {
     pointsList = <DrawEntity>[];
     for (var i = 0; i < points.length - 1; i++) {
@@ -97,6 +129,7 @@ class DrawService {
       _notify();
     }
   }
+
   //清除数据
   Future<void> clear() async {
     //清除数据
@@ -105,7 +138,7 @@ class DrawService {
     setState();
     //发送绘制消息给服务端
     DrawParam param = DrawParam.create();
-    param.roomID = rID;
+    param.roomID = roomID;
     param.op = DrawOP.p_clear;
     Response resp = await _socket.send(OP.drawS, param, _convertResponse);
     if (resp.code != 200) {
@@ -130,7 +163,7 @@ class DrawService {
 
     //发送绘制消息给服务端
     DrawParam param = DrawParam.create();
-    param.roomID = rID;
+    param.roomID = roomID;
     param.op = DrawOP.p_draw;
     param.pentColor = pentColor;
     param.pentSize = pentSize;
@@ -153,7 +186,7 @@ class DrawService {
 
     //发送绘制消息给服务端
     DrawParam param = DrawParam.create();
-    param.roomID = rID;
+    param.roomID = roomID;
     param.op = DrawOP.p_drawNull;
     Response resp = await _socket.send(OP.drawS, param, _convertResponse);
     if (resp.code != 200) {
@@ -169,7 +202,7 @@ class DrawService {
     points.removeAt(points.length - 3); //移除数据
     setState();
     DrawParam param = DrawParam.create();
-    param.roomID = rID;
+    param.roomID = roomID;
     param.op = DrawOP.p_undo;
     Response resp = await _socket.send(OP.drawS, param, _convertResponse);
     if (resp.code != 200) {
@@ -185,7 +218,7 @@ class DrawService {
 
     setState();
     DrawParam param = DrawParam.create();
-    param.roomID = rID;
+    param.roomID = roomID;
     param.op = DrawOP.p_reverseUndo;
     Response resp = await _socket.send(OP.drawS, param, _convertResponse);
     if (resp.code != 200) {

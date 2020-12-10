@@ -28,7 +28,3 @@ const DrawParam$json = const {
   ],
 };
 
-const DrawOk$json = const {
-  '1': 'DrawOk',
-};
-

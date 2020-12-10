@@ -18,6 +18,10 @@ enum OP {
 
   session = 10; // 会话列表
   home = 11;
+
+  roomJoin = 12; // 参数:ID
+  roomExit = 13; // 参数:ID
+
   channelReady = -100;
   channelFinished = -200;
 

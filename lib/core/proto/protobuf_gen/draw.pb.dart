@@ -95,24 +95,3 @@ class DrawParam extends $pb.GeneratedMessage {
   void clearDy() => clearField(6);
 }
 
-class DrawOk extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo('DrawOk', package: const $pb.PackageName('api'), createEmptyInstance: create)
-    ..hasRequiredFields = false
-  ;
-
-  DrawOk._() : super();
-  factory DrawOk() => create();
-  factory DrawOk.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory DrawOk.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
-  DrawOk clone() => DrawOk()..mergeFromMessage(this);
-  DrawOk copyWith(void Function(DrawOk) updates) => super.copyWith((message) => updates(message as DrawOk));
-  $pb.BuilderInfo get info_ => _i;
-  @$core.pragma('dart2js:noInline')
-  static DrawOk create() => DrawOk._();
-  DrawOk createEmptyInstance() => create();
-  static $pb.PbList<DrawOk> createRepeated() => $pb.PbList<DrawOk>();
-  @$core.pragma('dart2js:noInline')
-  static DrawOk getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<DrawOk>(create);
-  static DrawOk _defaultInstance;
-}
-

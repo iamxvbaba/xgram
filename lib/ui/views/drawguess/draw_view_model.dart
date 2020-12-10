@@ -23,6 +23,9 @@ class DrawViewModel extends BaseViewModel {
 
   Future<void> init() async {
     _drawService.setNotify(notifyListeners);
+    print('=========start join========');
+    await _drawService.joinRoom();
+    print('=========end join========');
   }
 
   @override
