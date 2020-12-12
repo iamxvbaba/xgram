@@ -1,4 +1,5 @@
 import 'package:logging/logging.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:provider_start/core/proto/protobuf_gen/abridged.pb.dart';
 import 'package:provider_start/core/proto/protobuf_gen/message.pb.dart';
 import 'package:provider_start/core/proto/protobuf_gen/session.pb.dart';
@@ -104,7 +105,7 @@ class ChatStateService {
     if (send) {
       Response resp = await _socket.send(OP.pushSingle, model, _convertMessage);
       if (resp.code != 200) {
-        _log.warning('发送消息失败:${resp.msg}');
+        showToast('发送消息失败:${resp.msg}');
         return null;
       }
       if (_sessionMap != null) {
@@ -141,17 +142,17 @@ class ChatStateService {
     param.size = 50;
     _sessionMap = await _socket.send(OP.session, param,_convertSession).
     timeout(const Duration(seconds: 5)).catchError((e){
-      _log.warning('获取通讯录列表 FAILED:$e');
+      showToast('获取通讯录列表 FAILED:$e');
     });
   }
 
   Session _convertSession(Response resp) {
     if (resp.code != 200) {
-      _log.warning('获取会话列表失败:${resp.msg}');
+      showToast('获取会话列表失败:${resp.msg}');
       return null;
     }
     if (resp.data.isEmpty) {
-      _log.warning('未有会话');
+      showToast('未有会话');
       return null;
     }
     return Session.fromBuffer(resp.data);

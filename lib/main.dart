@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart' hide Router;
 import 'package:flutter/widgets.dart' hide Router;
+import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 import 'package:provider_start/core/localization/localization.dart';
 import 'package:provider_start/core/managers/core_manager.dart';
@@ -42,7 +43,7 @@ class MyApp extends StatelessWidget {
           defaultThemeMode: ThemeMode.system,
           themes: getThemes(),
           statusBarColorBuilder: (theme) => theme.accentColor,
-          builder: (ctx,regularTheme,darkTheme,themeMode) => MaterialApp(
+          builder: (ctx,regularTheme,darkTheme,themeMode) => OKToast(child: MaterialApp(
             title: 'XGram',
             theme: regularTheme,
             darkTheme: darkTheme,
@@ -55,7 +56,7 @@ class MyApp extends StatelessWidget {
             navigatorKey: navigationService.navigatorKey,
             onGenerateRoute: Router().onGenerateRoute,
             home: StartUpView(),
-          ),
+          )),
         ),
       ),
     );

@@ -63,10 +63,9 @@ class _DrawPageState extends State<DrawPage> {
                           ),
                         ),
                         CustomPaint(
-                            painter: SignaturePainter(model.pointsList),
-                            child: Container(
-                              child: Text(model.points.length.toString()),
-                            )),
+                          size: Size(100,100), //TODO: 尝试控制画布范围大小
+                          painter: SignaturePainter(model.pointsList),
+                        ),
                       ],
                     ),
                   ),

@@ -1,4 +1,5 @@
 import 'package:logging/logging.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:provider_start/core/proto/protobuf_gen/abridged.pb.dart';
 import 'package:provider_start/core/proto/protobuf_gen/abridged.pbenum.dart';
 import 'package:provider_start/core/proto/protobuf_gen/draw.pb.dart';
@@ -94,7 +95,7 @@ class DrawService {
       }
       Response resp = await _socket.send(OP.roomJoin, id, _convertResponse);
       if (resp.code != 200) {
-        _log.warning('加入房间失败:${resp.msg}');
+        showToast('加入房间失败:${resp.msg}');
         return null;
       }
     } catch(e){
@@ -111,7 +112,7 @@ class DrawService {
     }
     Response resp = await _socket.send(OP.roomExit, id, _convertResponse);
     if (resp.code != 200) {
-      _log.warning('退出房间失败:${resp.msg}');
+      showToast('退出房间失败:${resp.msg}');
       return null;
     }
   }
@@ -142,7 +143,7 @@ class DrawService {
     param.op = DrawOP.p_clear;
     Response resp = await _socket.send(OP.drawS, param, _convertResponse);
     if (resp.code != 200) {
-      _log.warning('发送draw事件失败:${resp.msg}');
+      showToast('发送draw事件失败:${resp.msg}');
       return null;
     }
 
@@ -172,7 +173,7 @@ class DrawService {
 
     Response resp = await _socket.send(OP.drawS, param, _convertResponse);
     if (resp.code != 200) {
-      _log.warning('发送draw事件失败:${resp.msg}');
+      showToast('发送draw事件失败:${resp.msg}');
       return null;
     }
   }
@@ -190,7 +191,7 @@ class DrawService {
     param.op = DrawOP.p_drawNull;
     Response resp = await _socket.send(OP.drawS, param, _convertResponse);
     if (resp.code != 200) {
-      _log.warning('发送draw事件失败:${resp.msg}');
+      showToast('发送draw事件失败:${resp.msg}');
       return null;
     }
   }
@@ -206,7 +207,7 @@ class DrawService {
     param.op = DrawOP.p_undo;
     Response resp = await _socket.send(OP.drawS, param, _convertResponse);
     if (resp.code != 200) {
-      _log.warning('发送draw事件失败:${resp.msg}');
+      showToast('发送draw事件失败:${resp.msg}');
       return null;
     }
   }
@@ -222,7 +223,7 @@ class DrawService {
     param.op = DrawOP.p_reverseUndo;
     Response resp = await _socket.send(OP.drawS, param, _convertResponse);
     if (resp.code != 200) {
-      _log.warning('发送draw事件失败:${resp.msg}');
+      showToast('发送draw事件失败:${resp.msg}');
       return null;
     }
   }

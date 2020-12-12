@@ -1,4 +1,5 @@
 import 'package:logging/logging.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:provider_start/core/proto/protobuf_gen/abridged.pb.dart';
 import 'package:provider_start/core/exceptions/auth_exception.dart';
 import 'package:provider_start/core/proto/protobuf_gen/account.pb.dart';
@@ -30,7 +31,7 @@ class AuthServiceImpl implements AuthService {
           .send(OP.loginOrRegister, param, _convertUser)
           .timeout(const Duration(seconds: 5))
           .catchError((e) {
-        print('登录超时:$e');
+        showToast('登录超时:$e');
       });
       // fetch current user from server
 
@@ -41,7 +42,6 @@ class AuthServiceImpl implements AuthService {
   }
 
   User _convertUser(Response resp) {
-    print('登录返回:$resp');
     return User.fromBuffer(resp.data);
   }
 

@@ -1,3 +1,4 @@
+import 'package:oktoast/oktoast.dart';
 import 'package:provider_start/core/services/drawguess/draw_service.dart';
 import 'package:provider_start/locator.dart';
 import 'package:stacked/stacked.dart';
@@ -10,12 +11,14 @@ class DrawViewModel extends BaseViewModel {
   List<DrawEntity> get pointsList => _drawService.pointsList;
 
   void setPentColor(String key) {
+    showToast('pentColor:$key');
     _drawService.pentColor = key;
     notifyListeners();
   }
   String get pentColor => _drawService.pentColor;
 
   set pentSize(double size) {
+    showToast('pentSize:$size');
     _drawService.pentSize = size;
     notifyListeners();
   }
