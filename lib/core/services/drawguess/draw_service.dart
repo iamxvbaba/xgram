@@ -1,3 +1,4 @@
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:logging/logging.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider_start/core/proto/protobuf_gen/abridged.pb.dart';
@@ -8,13 +9,16 @@ import 'package:provider_start/core/services/socket_state/socket.dart';
 import 'package:provider_start/locator.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fixnum/fixnum.dart' as $fixnum;
+
 //基础实体
 class DrawEntity {
   Offset offset;
   String color;
   double strokeWidth;
+
   DrawEntity(this.offset, {this.color = 'default', this.strokeWidth = 5.0});
 }
+
 var roomID = $fixnum.Int64(1);
 
 class DrawService {
@@ -43,7 +47,9 @@ class DrawService {
           pentSize = drawParam.pentSize;
           //添加绘制
           points[points.length - 2].add(DrawEntity(
-              Offset(drawParam.dx, drawParam.dy),
+              Offset(
+                  drawParam.dx / drawParam.scaleWidth * ScreenUtil().scaleWidth,
+                  drawParam.dy / drawParam.scaleHeight * ScreenUtil().scaleHeight),
               color: pentColor,
               strokeWidth: pentSize));
           break;
@@ -84,7 +90,6 @@ class DrawService {
   String pentColor = 'default'; //默认颜色
   double pentSize = 5; //默认字体大小
 
-
   Future<void> joinRoom({$fixnum.Int64 rid}) async {
     try {
       ID id = ID.create();
@@ -98,7 +103,7 @@ class DrawService {
         showToast('加入房间失败:${resp.msg}');
         return null;
       }
-    } catch(e){
+    } catch (e) {
       print('什么叼错误$e');
     }
   }
@@ -116,6 +121,7 @@ class DrawService {
       return null;
     }
   }
+
   void _update() {
     pointsList = <DrawEntity>[];
     for (var i = 0; i < points.length - 1; i++) {
@@ -146,7 +152,6 @@ class DrawService {
       showToast('发送draw事件失败:${resp.msg}');
       return null;
     }
-
   }
 
   //绘制数据
@@ -170,6 +175,8 @@ class DrawService {
     param.pentSize = pentSize;
     param.dx = localPosition.dx;
     param.dy = localPosition.dy;
+    param.scaleHeight = ScreenUtil().scaleHeight; // 传比例是为了屏幕大小适配
+    param.scaleWidth = ScreenUtil().scaleWidth;
 
     Response resp = await _socket.send(OP.drawS, param, _convertResponse);
     if (resp.code != 200) {
@@ -232,5 +239,3 @@ class DrawService {
     return resp;
   }
 }
-
-

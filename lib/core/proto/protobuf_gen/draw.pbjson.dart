@@ -25,6 +25,8 @@ const DrawParam$json = const {
     const {'1': 'pentSize', '3': 4, '4': 1, '5': 1, '10': 'pentSize'},
     const {'1': 'dx', '3': 5, '4': 1, '5': 1, '10': 'dx'},
     const {'1': 'dy', '3': 6, '4': 1, '5': 1, '10': 'dy'},
+    const {'1': 'scaleWidth', '3': 7, '4': 1, '5': 1, '10': 'scaleWidth'},
+    const {'1': 'scaleHeight', '3': 8, '4': 1, '5': 1, '10': 'scaleHeight'},
   ],
 };
 

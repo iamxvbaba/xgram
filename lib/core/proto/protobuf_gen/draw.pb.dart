@@ -22,6 +22,8 @@ class DrawParam extends $pb.GeneratedMessage {
     ..a<$core.double>(4, 'pentSize', $pb.PbFieldType.OD, protoName: 'pentSize')
     ..a<$core.double>(5, 'dx', $pb.PbFieldType.OD)
     ..a<$core.double>(6, 'dy', $pb.PbFieldType.OD)
+    ..a<$core.double>(7, 'scaleWidth', $pb.PbFieldType.OD, protoName: 'scaleWidth')
+    ..a<$core.double>(8, 'scaleHeight', $pb.PbFieldType.OD, protoName: 'scaleHeight')
     ..hasRequiredFields = false
   ;
 
@@ -93,5 +95,23 @@ class DrawParam extends $pb.GeneratedMessage {
   $core.bool hasDy() => $_has(5);
   @$pb.TagNumber(6)
   void clearDy() => clearField(6);
+
+  @$pb.TagNumber(7)
+  $core.double get scaleWidth => $_getN(6);
+  @$pb.TagNumber(7)
+  set scaleWidth($core.double v) { $_setDouble(6, v); }
+  @$pb.TagNumber(7)
+  $core.bool hasScaleWidth() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearScaleWidth() => clearField(7);
+
+  @$pb.TagNumber(8)
+  $core.double get scaleHeight => $_getN(7);
+  @$pb.TagNumber(8)
+  set scaleHeight($core.double v) { $_setDouble(7, v); }
+  @$pb.TagNumber(8)
+  $core.bool hasScaleHeight() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearScaleHeight() => clearField(8);
 }
 

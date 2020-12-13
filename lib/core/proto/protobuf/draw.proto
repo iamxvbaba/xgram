@@ -17,4 +17,6 @@ message DrawParam {
     double pentSize=4; // 铅笔大小
     double dx=5; // offset.dx
     double dy=6; // offset.dy
+    double scaleWidth=7; // 宽度比例
+    double scaleHeight=8; // 高度比例
 }
