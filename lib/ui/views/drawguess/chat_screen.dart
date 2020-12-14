@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screenutil.dart';
+import 'package:provider_start/ui/views/chat_screen/icon_button.dart';
 import 'package:provider_start/ui/views/drawguess/draw_view_model.dart';
 import 'package:stacked/stacked.dart';
 
@@ -19,8 +20,38 @@ class chatScreen extends ViewModelWidget<DrawViewModel> {
       reverse: true,
       physics: BouncingScrollPhysics(),
       itemCount: model.msg.length,
-      itemBuilder: (context, index) => Row(
-        children: [Text('sender:'), Text('msg')],
+      itemBuilder: (context, index) => Padding(
+        padding: EdgeInsets.all(ScreenUtil().setWidth(5)),
+        child: Row(
+          children: [
+            Container(
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(ScreenUtil().setWidth(20)),
+                gradient: LinearGradient(
+                    colors: [Colors.green, Colors.blue],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight),
+              ),
+              width: ScreenUtil().setWidth(120),
+              child: Text('昵称',
+                  maxLines: 1,
+                  style: TextStyle(
+                      fontSize: ScreenUtil().setWidth(25),
+                      color: Colors.black)),
+            ),
+            Container(
+              alignment: Alignment.center,
+              width: ScreenUtil().setWidth(400),
+              child: Text('卧虎藏龙',
+                  maxLines: 1,
+                  style: TextStyle(
+                      fontSize: ScreenUtil().setWidth(30),
+                      height: ScreenUtil().setHeight(2),
+                      color: Colors.brown)),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -37,6 +68,12 @@ class chatScreen extends ViewModelWidget<DrawViewModel> {
           ),
           Row(
             children: [
+              OutlinedIconButton(
+                icon: Icon(Icons.face),
+                onTap: () async {
+                  //发送表情
+                },
+              ),
               Expanded(
                 child: TextField(
                   onSubmitted: (val) async {
@@ -65,26 +102,21 @@ class chatScreen extends ViewModelWidget<DrawViewModel> {
     );
   }
 
-  Future<bool> _onWillPop(DrawViewModel model) async {}
-
   void submitMessage(DrawViewModel model) {}
 
   @override
   Widget build(BuildContext context, DrawViewModel model) {
-    return WillPopScope(
-      onWillPop: () => _onWillPop(model),
-      child: Stack(
-        children: <Widget>[
-          Align(
-            alignment: Alignment.topRight,
-            child: Padding(
-              padding: EdgeInsets.only(bottom: 50),
-              child: _chatScreenBody(model),
-            ),
+    return Stack(
+      children: <Widget>[
+        Align(
+          alignment: Alignment.topRight,
+          child: Padding(
+            padding: EdgeInsets.only(bottom: ScreenUtil().setHeight(110)),
+            child: _chatScreenBody(model),
           ),
-          _bottomEntryField(model),
-        ],
-      ),
+        ),
+        _bottomEntryField(model),
+      ],
     );
   }
 }

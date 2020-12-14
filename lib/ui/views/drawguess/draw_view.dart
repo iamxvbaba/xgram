@@ -138,6 +138,7 @@ class _DrawPageState extends State<DrawPage> {
 }
 
 class _drawWidget extends ViewModelWidget<DrawViewModel> {
+  var totalHeight = ScreenUtil().setHeight(620);
   @override
   Widget build(BuildContext context, DrawViewModel model) {
     return Stack(
@@ -151,7 +152,6 @@ class _drawWidget extends ViewModelWidget<DrawViewModel> {
             model.sendDraw(details.localPosition);
           },
           onPanUpdate: (DragUpdateDetails details) {
-            var totalHeight = ScreenUtil().setHeight(700);
             var offset = Offset(details.localPosition.dx,
                 details.localPosition.dy > totalHeight ? totalHeight : details
                     .localPosition.dy);
@@ -163,13 +163,12 @@ class _drawWidget extends ViewModelWidget<DrawViewModel> {
           },
 
           child: Container(
-            height: ScreenUtil().setHeight(700),
+            height: totalHeight,
             width: ScreenUtil().screenWidth,
             color: Colors.white, // 画板所在颜色
           ),
         ),
         CustomPaint(
-          //size: Size(100, 100), //TODO: 尝试控制画布范围大小
           painter: SignaturePainter(model.pointsList),
         ),
       ],
