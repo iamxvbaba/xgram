@@ -25,31 +25,25 @@ class chatScreen extends ViewModelWidget<DrawViewModel> {
         child: Row(
           children: [
             Container(
-              alignment: Alignment.center,
+              padding: EdgeInsets.all(ScreenUtil().setWidth(15)),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(ScreenUtil().setWidth(20)),
-                gradient: LinearGradient(
-                    colors: [Colors.green, Colors.blue],
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight),
+                borderRadius: BorderRadius.circular(ScreenUtil().setWidth(30)),
+                color: Color(0xffBFABFF),
               ),
-              width: ScreenUtil().setWidth(120),
-              child: Text('昵称',
-                  maxLines: 1,
-                  style: TextStyle(
-                      fontSize: ScreenUtil().setWidth(25),
-                      color: Colors.black)),
-            ),
-            Container(
-              alignment: Alignment.center,
-              width: ScreenUtil().setWidth(400),
-              child: Text('卧虎藏龙',
-                  maxLines: 1,
-                  style: TextStyle(
-                      fontSize: ScreenUtil().setWidth(30),
-                      height: ScreenUtil().setHeight(2),
-                      color: Colors.brown)),
-            ),
+              child: Row(
+                children: [
+                  Text('昵称',
+                      style: TextStyle(
+                          fontSize: ScreenUtil().setWidth(25),
+                          color: Color(0xff4396FF))),
+                  SizedBox(width: ScreenUtil().setWidth(22)),
+                  Text('just卧龙凤雏',
+                      style: TextStyle(
+                          fontSize: ScreenUtil().setWidth(25),
+                          color: Colors.black)),
+                ],
+              ),
+            )
           ],
         ),
       ),

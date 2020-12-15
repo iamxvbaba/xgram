@@ -23,8 +23,7 @@ class _DrawPageState extends State<DrawPage> {
     return ViewModelBuilder.reactive(
         viewModelBuilder: () => DrawViewModel(),
         onModelReady: (model) => model.init(),
-        builder: (context, model, child) =>
-            Scaffold(
+        builder: (context, model, child) => Scaffold(
               appBar: AppBar(
                 title: Text('你画我猜'),
                 actions: <Widget>[
@@ -45,10 +44,15 @@ class _DrawPageState extends State<DrawPage> {
                 ],
               ),
               body: Container(
-                color: Color(0x18262B33), // 整体背景色
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                      colors: [Color(0xffF5CBFF), Color(0xffBFABFF)],
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight),
+                ),
                 child: Column(
                   children: <Widget>[
-                    _drawWidget(),
+                    _DrawWidget(),
                     _userList(),
                     Expanded(
                       flex: 1,
@@ -137,8 +141,9 @@ class _DrawPageState extends State<DrawPage> {
   }
 }
 
-class _drawWidget extends ViewModelWidget<DrawViewModel> {
+class _DrawWidget extends ViewModelWidget<DrawViewModel> {
   var totalHeight = ScreenUtil().setHeight(620);
+
   @override
   Widget build(BuildContext context, DrawViewModel model) {
     return Stack(
@@ -152,9 +157,11 @@ class _drawWidget extends ViewModelWidget<DrawViewModel> {
             model.sendDraw(details.localPosition);
           },
           onPanUpdate: (DragUpdateDetails details) {
-            var offset = Offset(details.localPosition.dx,
-                details.localPosition.dy > totalHeight ? totalHeight : details
-                    .localPosition.dy);
+            var offset = Offset(
+                details.localPosition.dx,
+                details.localPosition.dy > totalHeight
+                    ? totalHeight
+                    : details.localPosition.dy);
             model.sendDraw(offset);
           },
           //抬起来
