@@ -51,7 +51,7 @@ dependencies:
   google_fonts: ^0.3.9
   url_launcher:
   cached_network_image: ^2.2.0+1
-
+  typed_data: '^1.1.6'
   # UI Utilities
   flutter_platform_widgets: ^0.60.1
   flutter_screenutil: ^3.0.1

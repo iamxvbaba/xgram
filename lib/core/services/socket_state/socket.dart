@@ -15,7 +15,9 @@ import 'package:protobuf/protobuf.dart' as $pb;
 import 'package:provider_start/core/services/event_hub/draw.dart';
 import 'package:provider_start/core/services/event_hub/message.dart';
 import 'package:provider_start/core/services/key_storage/key_storage_service.dart';
+import 'package:provider_start/core/services/socket_state/buffer.dart';
 import 'package:provider_start/locator.dart';
+import 'package:typed_data/typed_data.dart' as typed;
 
 class SocketBloc {
   static const auth_key = 'auth_key';
@@ -26,7 +28,6 @@ class SocketBloc {
   Map<int, Function(Response)> call = <int, Function(Response)>{};
 
   Socket _socket;
-  bool _socketReady = false;
   bool _encryptionReady = false;
 
   // 以下这些字段是 dh 密钥交换得到的
@@ -37,8 +38,8 @@ class SocketBloc {
   List<int> _authKeyHash;
   List<int> _tmplAuthKeyHash;
   List<int> _nonceHash1;
-  int _serverSalt;
-  Uint8List _unusedData; // 缓存不完整的数据
+
+  FByteBuffer messageStream;
 
   int _rid = 1;
 
@@ -62,7 +63,8 @@ class SocketBloc {
     print('初始化socket ===========================');
     Socket.connect(Config.socket_s, Config.socket_p).then((Socket sock) {
       _socket = sock;
-      sock.listen(_unpack, onError: _error, onDone: _done, cancelOnError: true);
+      messageStream = FByteBuffer(typed.Uint8Buffer());
+      sock.listen(_onData, onError: _error, onDone: _done, cancelOnError: true);
       //首次必须先发送 0xaa
       _firstByte();
       //gen auth_key
@@ -131,31 +133,33 @@ class SocketBloc {
     return id;
   }
 
-  //数据要先进行拆包
-  void _unpack(Uint8List data) {
-    if (_unusedData != null && _unusedData.isNotEmpty) {
-      final fdata = _unusedData + data;
-      data = Uint8List.fromList(fdata);
-      print('>>>>>有未使用的数据!!!!!');
-    }
+  void _onData(Uint8List data) {
 
-    if (data.lengthInBytes < 4) {
-      _unusedData = data;
-      return;
-    }
-    var dataBuffer = ByteData.view(data.buffer);
-    var start = 0;
-    var header = 4;
-    while (true) {
-      var length = dataBuffer.getUint32(start);
-      // 判断是否还有未读取出来的数据流
-      if (length > data.lengthInBytes) {
-        // 缓存起来
-        _unusedData = data;
-        break;
+    messageStream.addAll(data);
+
+    while (messageStream.isMessageAvailable()) {
+      var protoIsValid = true;
+      int length;
+      Proto p;
+      if (messageStream.length < 4) {
+        protoIsValid = false;
+      } else {
+        length = messageStream.readUInt32(); // ByteData.view(messageStream.read(4).buffer).getUint32(0);
+        if (messageStream.availableBytes < length) {
+          protoIsValid = false;
+        }
       }
-      var offset = header + length;
-      var p = Proto.fromBuffer(data.sublist(header, offset));
+      if (!protoIsValid) {
+        messageStream.reset();
+        print(
+            'Connection::waiting for more data ...');
+        return;
+      }
+
+      p = Proto.fromBuffer(messageStream.read(length));
+      if (protoIsValid) {
+        messageStream.shrink();
+      }
       // 解密
       if (p.msgKey.isNotEmpty && _authKey.isNotEmpty) {
         var aes = utils.GenerateAES(p.msgKey, _authKey, false);
@@ -163,14 +167,6 @@ class SocketBloc {
       }
       // 处理
       _handleResult(p);
-      // 读取完毕
-      if (data.lengthInBytes == offset) {
-        _unusedData = null;
-        break;
-      }
-      start = offset;
-      header = start + 4;
-      _unusedData = null;
     }
   }
 
@@ -215,14 +211,12 @@ class SocketBloc {
 
   // auth_key
   void _genAuthKey() async {
-    _socketReady = false;
     var _authKeyString = _keyStorageService.get(auth_key);
     if (_authKeyString != null) {
       _authKey = base64.decode(_authKeyString);
       _authKeyHash = sha1.convert(_authKey).bytes.sublist(12, 20);
       _encryptionReady = true;
       print('使用本地的authKey:$_authKeyHash');
-      _socketReady = true;
       return null;
     }
     var rpq = ReqPQ.create();
@@ -334,8 +328,6 @@ class SocketBloc {
     _nonceHash1 = sha1.convert(t4).bytes.sublist(4, 20);
     var saltBuf = _secondNonce.sublist(0, 8);
     saltBuf = utils.xor(saltBuf, _secondNonce);
-    _serverSalt = ByteData.sublistView(Uint8List.fromList(saltBuf))
-        .getInt64(0, Endian.little);
 
     //(encoding) client_DH_inner_data
     var clientDHInnerData = ClientDHInnerData.create();
@@ -392,7 +384,6 @@ class SocketBloc {
     _tmplAuthKeyHash = null;
     //此后所有与服务端之间的消息都需要加密
     _encryptionReady = true;
-    _socketReady = true;
     //测试登录
     return dhGenResult;
   }
