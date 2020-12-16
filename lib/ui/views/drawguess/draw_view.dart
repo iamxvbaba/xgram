@@ -53,63 +53,15 @@ class _DrawPageState extends State<DrawPage> {
                 ),
                 child: Column(
                   children: <Widget>[
-                    _DrawWidget(),
+                    Expanded(child: _DrawWidget(),flex: 2,),
                     _userList(),
                     Expanded(
                       flex: 1,
                       child: chatScreen(),
                     )
-                    /*
-                  Padding(
-                    padding: EdgeInsets.only(left: 10, right: 80, bottom: 20),
-                    child: Wrap(
-                      spacing: 5,
-                      runSpacing: 5,
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      children: <Widget>[
-                        buildInkWell(model, 2),
-                        buildInkWell(model, 5),
-                        buildInkWell(model, 8),
-                        buildInkWell(model, 10),
-                        buildInkWell(model, 15),
-                        buildInkWell(model, 17),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 10, right: 80, bottom: 20),
-                    child: Wrap(
-                      spacing: 5,
-                      runSpacing: 5,
-                      children: pintColor.keys.map((key) {
-                        var value = pintColor[key];
-                        return InkWell(
-                          onTap: () {
-                            model.setPentColor(key);
-                          },
-                          child: Container(
-                            width: 32,
-                            height: 32,
-                            color: value,
-                            child: model.pentColor == key
-                                ? Icon(
-                                    Icons.done,
-                                    color: Colors.white,
-                                  )
-                                : null,
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                  )*/
                   ],
                 ),
               ),
-              /*floatingActionButton: FloatingActionButton(
-              onPressed: model.clear,
-              tooltip: '清空',
-              child: Icon(Icons.clear),
-            )*/
             ));
   }
 
@@ -143,7 +95,7 @@ class _DrawPageState extends State<DrawPage> {
 }
 
 class _DrawWidget extends ViewModelWidget<DrawViewModel> {
-  var totalHeight = ScreenUtil().setHeight(620);
+  //var totalHeight = ScreenUtil().setHeight(620);
 
   @override
   Widget build(BuildContext context, DrawViewModel model) {
@@ -158,12 +110,12 @@ class _DrawWidget extends ViewModelWidget<DrawViewModel> {
             model.sendDraw(details.localPosition);
           },
           onPanUpdate: (DragUpdateDetails details) {
-            var offset = Offset(
+            /*var offset = Offset(
                 details.localPosition.dx,
                 details.localPosition.dy > totalHeight
                     ? totalHeight
-                    : details.localPosition.dy);
-            model.sendDraw(offset);
+                    : details.localPosition.dy)*/;
+            model.sendDraw(details.localPosition);
           },
           //抬起来
           onPanEnd: (DragEndDetails details) {
@@ -171,8 +123,8 @@ class _DrawWidget extends ViewModelWidget<DrawViewModel> {
           },
 
           child: Container(
-            height: totalHeight,
-            width: ScreenUtil().screenWidth,
+           // height: totalHeight,
+           // width: ScreenUtil().screenWidth,
             color: Colors.white, // 画板所在颜色
           ),
         ),

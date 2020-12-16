@@ -50,66 +50,52 @@ class chatScreen extends ViewModelWidget<DrawViewModel> {
     );
   }
 
-  Widget _bottomEntryField(DrawViewModel model) {
-    return Align(
-      alignment: Alignment.bottomLeft,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          Divider(
-            thickness: 0,
-            height: 1,
-          ),
-          Row(
-            children: [
-              OutlinedIconButton(
-                icon: Icon(Icons.face),
-                onTap: () async {
-                  //发送表情
-                },
-              ),
-              Expanded(
-                child: TextField(
-                  onSubmitted: (val) async {
-                    submitMessage(model);
-                  },
-                  controller: model.messageController,
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(
-                        horizontal: ScreenUtil().setWidth(10),
-                        vertical: ScreenUtil().setHeight(28)),
-                    border: InputBorder.none,
-                    alignLabelWithHint: true,
-                    hintText: '发送消息',
-                    suffixIcon: IconButton(
-                        icon: Icon(Icons.send),
-                        color: Colors.grey,
-                        onPressed: () => submitMessage(model)),
-                    // fillColor: Colors.black12, filled: true
-                  ),
-                ),
-              )
-            ],
-          ),
-        ],
-      ),
+  void _showAlertDialog(BuildContext context) {
+    //设置对话框
+    var alert = AlertDialog(
+      backgroundColor: Color.fromRGBO(255, 255, 255, 0.3),
+      title: Text('输入答案'),
+      content: TextField(),
+      actions: [
+        FlatButton(
+          child: Text('取消'),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        FlatButton(
+          child: Text('确认'),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      ],
+    );
+
+    //显示对话框
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
-
-  void submitMessage(DrawViewModel model) {}
 
   @override
   Widget build(BuildContext context, DrawViewModel model) {
     return Stack(
       children: <Widget>[
-        Align(
-          alignment: Alignment.topRight,
-          child: Padding(
-            padding: EdgeInsets.only(bottom: ScreenUtil().setHeight(110)),
-            child: _chatScreenBody(model),
-          ),
-        ),
-        _bottomEntryField(model),
+        _chatScreenBody(model),
+        Positioned(
+            bottom: ScreenUtil().setHeight(20),
+            right: ScreenUtil().setWidth(20),
+            child: RaisedButton(
+              onPressed: () {
+                _showAlertDialog(context);
+              },
+              color: Color(0xffD6D5B7),
+              child: Text('输入答案'),
+            )),
       ],
     );
   }

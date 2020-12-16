@@ -1,7 +1,5 @@
-import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/screenutil.dart';
 import 'package:provider_start/core/localization/localization.dart';
 import 'package:provider_start/ui/theme/multiple_themes/multiple_themes_view.dart';
 import 'package:provider_start/ui/views/chat_list/chat_list_view.dart';
@@ -38,29 +36,29 @@ class MainView extends StatelessWidget {
           itemCount: _views.length,
           itemBuilder: (_, index) => _views[index],
         ),
-        bottomNavigationBar: ConvexAppBar(
-          height: ScreenUtil().setHeight(80),
-          initialActiveIndex: model.index, // 初始页面
+        bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          currentIndex: model.index,
           items: [
-            TabItem(
-              icon: Icons.home,
-              title: 'home',
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'home',
             ),
-            TabItem(
-              icon: Icons.search,
-              title: 'search',
+            BottomNavigationBarItem(
+              icon: Icon(Icons.search),
+              label: 'search',
             ),
-            TabItem(
-              icon: Icons.add,
-              title: 'test',
+            BottomNavigationBarItem(
+              icon: Icon(Icons.add),
+              label: 'test',
             ),
-            TabItem(
-              icon: Icons.notifications,
-              title: 'notify',
+            BottomNavigationBarItem(
+              icon: Icon(Icons.notifications),
+              label: 'notify',
             ),
-            TabItem(
-              icon: Icons.message,
-              title: 'message',
+            BottomNavigationBarItem(
+              icon: Icon(Icons.message),
+              label: 'message',
             ),
           ],
           onTap: model.changeTab,

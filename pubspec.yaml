@@ -70,8 +70,6 @@ dependencies:
   crypto: ^2.1.5
   encrypt: ^4.0.2
 
-  # bottom util
-  convex_bottom_bar: ^2.6.0
   # theme
   stacked_themes:
 dev_dependencies:
