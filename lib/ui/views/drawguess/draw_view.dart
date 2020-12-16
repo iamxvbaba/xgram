@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
+import 'package:provider_start/core/proto/protobuf_gen/user.pb.dart';
 import 'package:provider_start/ui/views/drawguess/chat_screen.dart';
 import 'package:provider_start/ui/views/drawguess/draw_view_model.dart';
 import 'package:provider_start/ui/views/drawguess/signature_painter.dart';
@@ -22,7 +23,7 @@ class _DrawPageState extends State<DrawPage> {
   Widget build(BuildContext context) {
     return ViewModelBuilder.reactive(
         viewModelBuilder: () => DrawViewModel(),
-        onModelReady: (model) => model.init(),
+        onModelReady: (DrawViewModel model) => model.init(),
         builder: (context, model, child) => Scaffold(
               appBar: AppBar(
                 title: Text('你画我猜'),
@@ -184,29 +185,29 @@ class _DrawWidget extends ViewModelWidget<DrawViewModel> {
 }
 
 class _userList extends ViewModelWidget<DrawViewModel> {
-  Widget _item(DrawViewModel model, int index) {
+  Widget _item(User user) {
     return InkWell(
       onTap: () {
-        showToast('点击用户:$index');
+        showToast('点击用户:${user.id}');
       },
       child: Column(
         children: [
           CircleAvatar(
             backgroundImage: CachedNetworkImageProvider(
-              'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=717634992,2776618738&fm=26&gp=0.jpg',
+              user.avatar,
             ),
             radius: ScreenUtil().setWidth(45),
           ),
-          Text('昵称')
+          Text(user.nickname)
         ],
       ),
     );
   }
 
   Widget _buildRow(DrawViewModel model) {
-    var children = List<Widget>(6);
-    for (var i = 0; i < 6; i++) {
-      children[i] = _item(model, i);
+    var children = List<Widget>(model.users.length);
+    for (var i = 0; i < model.users.length; i++) {
+      children[i] = _item(model.users[i]);
     }
     return Padding(
       padding: EdgeInsets.only(
@@ -214,6 +215,7 @@ class _userList extends ViewModelWidget<DrawViewModel> {
       child: Wrap(
         spacing: ScreenUtil().setWidth(30),
         runSpacing: ScreenUtil().setWidth(10),
+        alignment: WrapAlignment.end,
         crossAxisAlignment: WrapCrossAlignment.center,
         children: children,
       ),

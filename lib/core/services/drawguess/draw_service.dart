@@ -4,6 +4,7 @@ import 'package:oktoast/oktoast.dart';
 import 'package:provider_start/core/proto/protobuf_gen/abridged.pb.dart';
 import 'package:provider_start/core/proto/protobuf_gen/abridged.pbenum.dart';
 import 'package:provider_start/core/proto/protobuf_gen/draw.pb.dart';
+import 'package:provider_start/core/proto/protobuf_gen/user.pb.dart';
 import 'package:provider_start/core/services/event_hub/draw.dart';
 import 'package:provider_start/core/services/socket_state/socket.dart';
 import 'package:provider_start/locator.dart';
@@ -33,6 +34,9 @@ class DrawService {
     _instance ??= DrawService._();
     return _instance;
   }
+
+  UserList _userList;
+  List<User> get users => _userList.users;
 
   DrawService._() {
     _eventBus.eventBus.on<DrawParam>().listen((drawParam) {
@@ -71,6 +75,9 @@ class DrawService {
         case DrawOP.p_reverseUndo:
           //反撤销数据
           points.insert(points.length - 2, undoPoints.removeLast());
+          break;
+        case DrawOP.p_userChange:
+          _userList = drawParam.list;
           break;
       }
       // 回调 通知更新

@@ -1,6 +1,7 @@
 import 'package:flutter_screenutil/screenutil.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider_start/core/proto/protobuf_gen/message.pb.dart';
+import 'package:provider_start/core/proto/protobuf_gen/user.pb.dart';
 import 'package:provider_start/core/services/drawguess/draw_service.dart';
 import 'package:provider_start/locator.dart';
 import 'package:stacked/stacked.dart';
@@ -18,6 +19,7 @@ class DrawViewModel extends BaseViewModel {
   List<Message> get msg {
     return List<Message>(10);
   }
+  List<User> get users => _drawService.users;
 
   void setPentColor(String key) {
     showToast('pentColor:$key');
@@ -35,9 +37,7 @@ class DrawViewModel extends BaseViewModel {
 
   Future<void> init() async {
     _drawService.setNotify(notifyListeners);
-    print('=========start join========');
     await _drawService.joinRoom();
-    print('=========end join========');
     controller = ScrollController();
   }
 

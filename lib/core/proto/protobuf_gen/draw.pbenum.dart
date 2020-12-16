@@ -15,6 +15,8 @@ class DrawOP extends $pb.ProtobufEnum {
   static const DrawOP p_clear = DrawOP._(2, 'p_clear');
   static const DrawOP p_undo = DrawOP._(3, 'p_undo');
   static const DrawOP p_reverseUndo = DrawOP._(4, 'p_reverseUndo');
+  static const DrawOP p_userChange = DrawOP._(5, 'p_userChange');
+  static const DrawOP p_msg = DrawOP._(6, 'p_msg');
 
   static const $core.List<DrawOP> values = <DrawOP> [
     p_draw,
@@ -22,6 +24,8 @@ class DrawOP extends $pb.ProtobufEnum {
     p_clear,
     p_undo,
     p_reverseUndo,
+    p_userChange,
+    p_msg,
   ];
 
   static final $core.Map<$core.int, DrawOP> _byValue = $pb.ProtobufEnum.initByValue(values);

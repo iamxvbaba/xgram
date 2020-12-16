@@ -10,7 +10,7 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'user.pb.dart' as $3;
+import 'user.pb.dart' as $1;
 
 import 'message.pbenum.dart';
 import 'account_enum.pbenum.dart' as $0;
@@ -19,8 +19,8 @@ export 'message.pbenum.dart';
 
 class GiftMessageInfo extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('GiftMessageInfo', package: const $pb.PackageName('api'), createEmptyInstance: create)
-    ..aOM<$3.User>(1, 'Sender', protoName: 'Sender', subBuilder: $3.User.create)
-    ..pc<$3.User>(2, 'Receiver', $pb.PbFieldType.PM, protoName: 'Receiver', subBuilder: $3.User.create)
+    ..aOM<$1.User>(1, 'Sender', protoName: 'Sender', subBuilder: $1.User.create)
+    ..pc<$1.User>(2, 'Receiver', $pb.PbFieldType.PM, protoName: 'Receiver', subBuilder: $1.User.create)
     ..a<$core.int>(3, 'giftID', $pb.PbFieldType.O3, protoName: 'giftID')
     ..a<$core.int>(4, 'giftNum', $pb.PbFieldType.O3, protoName: 'giftNum')
     ..hasRequiredFields = false
@@ -42,18 +42,18 @@ class GiftMessageInfo extends $pb.GeneratedMessage {
   static GiftMessageInfo _defaultInstance;
 
   @$pb.TagNumber(1)
-  $3.User get sender => $_getN(0);
+  $1.User get sender => $_getN(0);
   @$pb.TagNumber(1)
-  set sender($3.User v) { setField(1, v); }
+  set sender($1.User v) { setField(1, v); }
   @$pb.TagNumber(1)
   $core.bool hasSender() => $_has(0);
   @$pb.TagNumber(1)
   void clearSender() => clearField(1);
   @$pb.TagNumber(1)
-  $3.User ensureSender() => $_ensure(0);
+  $1.User ensureSender() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  $core.List<$3.User> get receiver => $_getList(1);
+  $core.List<$1.User> get receiver => $_getList(1);
 
   @$pb.TagNumber(3)
   $core.int get giftID => $_getIZ(2);
@@ -149,8 +149,8 @@ class MessageBody extends $pb.GeneratedMessage {
 
 class MessageUser extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('MessageUser', package: const $pb.PackageName('api'), createEmptyInstance: create)
-    ..aOM<$3.User>(1, 'sender', subBuilder: $3.User.create)
-    ..pc<$3.User>(2, 'receiver', $pb.PbFieldType.PM, subBuilder: $3.User.create)
+    ..aOM<$1.User>(1, 'sender', subBuilder: $1.User.create)
+    ..pc<$1.User>(2, 'receiver', $pb.PbFieldType.PM, subBuilder: $1.User.create)
     ..hasRequiredFields = false
   ;
 
@@ -170,18 +170,18 @@ class MessageUser extends $pb.GeneratedMessage {
   static MessageUser _defaultInstance;
 
   @$pb.TagNumber(1)
-  $3.User get sender => $_getN(0);
+  $1.User get sender => $_getN(0);
   @$pb.TagNumber(1)
-  set sender($3.User v) { setField(1, v); }
+  set sender($1.User v) { setField(1, v); }
   @$pb.TagNumber(1)
   $core.bool hasSender() => $_has(0);
   @$pb.TagNumber(1)
   void clearSender() => clearField(1);
   @$pb.TagNumber(1)
-  $3.User ensureSender() => $_ensure(0);
+  $1.User ensureSender() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  $core.List<$3.User> get receiver => $_getList(1);
+  $core.List<$1.User> get receiver => $_getList(1);
 }
 
 class Message extends $pb.GeneratedMessage {

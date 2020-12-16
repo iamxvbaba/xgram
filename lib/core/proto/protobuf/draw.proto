@@ -1,13 +1,16 @@
 syntax = "proto3";
 package api;
 option go_package = ".;api";
-
+import "user.proto";
 enum DrawOP{
     p_draw=0;  // 正在连续绘制
     p_drawNull=1; // 手抬起，添加占位
     p_clear=2;  // 清空画板
     p_undo=3; // 撤销，缓存到撤销容器
     p_reverseUndo=4; //反撤销数据
+
+    p_userChange=5; // 在线用户变动
+    p_msg=6; // 发送消息
 }
 
 message DrawParam {
@@ -19,4 +22,6 @@ message DrawParam {
     double dy=6; // offset.dy
     double scaleWidth=7; // 宽度比例
     double scaleHeight=8; // 高度比例
+
+    UserList list=9; // 在线用户列表
 }

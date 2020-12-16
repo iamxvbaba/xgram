@@ -13,6 +13,8 @@ const DrawOP$json = const {
     const {'1': 'p_clear', '2': 2},
     const {'1': 'p_undo', '2': 3},
     const {'1': 'p_reverseUndo', '2': 4},
+    const {'1': 'p_userChange', '2': 5},
+    const {'1': 'p_msg', '2': 6},
   ],
 };
 
@@ -27,6 +29,7 @@ const DrawParam$json = const {
     const {'1': 'dy', '3': 6, '4': 1, '5': 1, '10': 'dy'},
     const {'1': 'scaleWidth', '3': 7, '4': 1, '5': 1, '10': 'scaleWidth'},
     const {'1': 'scaleHeight', '3': 8, '4': 1, '5': 1, '10': 'scaleHeight'},
+    const {'1': 'list', '3': 9, '4': 1, '5': 11, '6': '.api.UserList', '10': 'list'},
   ],
 };
 

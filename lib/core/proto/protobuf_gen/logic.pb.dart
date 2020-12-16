@@ -11,15 +11,15 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'abridged.pb.dart' as $1;
+import 'abridged.pb.dart' as $2;
 import 'message.pb.dart' as $4;
 
-import 'abridged.pbenum.dart' as $1;
+import 'abridged.pbenum.dart' as $2;
 import 'account_enum.pbenum.dart' as $0;
 
 class LogicArg extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('LogicArg', package: const $pb.PackageName('api'), createEmptyInstance: create)
-    ..aOM<$1.Proto>(1, 'p', subBuilder: $1.Proto.create)
+    ..aOM<$2.Proto>(1, 'p', subBuilder: $2.Proto.create)
     ..aInt64(2, 'userID', protoName: 'userID')
     ..a<$fixnum.Int64>(3, 'authKeyID', $pb.PbFieldType.OU6, protoName: 'authKeyID', defaultOrMaker: $fixnum.Int64.ZERO)
     ..aOS(4, 'IP', protoName: 'IP')
@@ -45,15 +45,15 @@ class LogicArg extends $pb.GeneratedMessage {
   static LogicArg _defaultInstance;
 
   @$pb.TagNumber(1)
-  $1.Proto get p => $_getN(0);
+  $2.Proto get p => $_getN(0);
   @$pb.TagNumber(1)
-  set p($1.Proto v) { setField(1, v); }
+  set p($2.Proto v) { setField(1, v); }
   @$pb.TagNumber(1)
   $core.bool hasP() => $_has(0);
   @$pb.TagNumber(1)
   void clearP() => clearField(1);
   @$pb.TagNumber(1)
-  $1.Proto ensureP() => $_ensure(0);
+  $2.Proto ensureP() => $_ensure(0);
 
   @$pb.TagNumber(2)
   $fixnum.Int64 get userID => $_getI64(1);
@@ -113,10 +113,10 @@ class LogicArg extends $pb.GeneratedMessage {
 class LogicResponse extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('LogicResponse', package: const $pb.PackageName('api'), createEmptyInstance: create)
     ..aOB(1, 'changeOP', protoName: 'changeOP')
-    ..e<$1.OP>(2, 'op', $pb.PbFieldType.OE, defaultOrMaker: $1.OP.needDH, valueOf: $1.OP.valueOf, enumValues: $1.OP.values)
+    ..e<$2.OP>(2, 'op', $pb.PbFieldType.OE, defaultOrMaker: $2.OP.needDH, valueOf: $2.OP.valueOf, enumValues: $2.OP.values)
     ..e<$0.AccountStatus>(3, 'accountStatus', $pb.PbFieldType.OE, protoName: 'accountStatus', defaultOrMaker: $0.AccountStatus.user_ac_none, valueOf: $0.AccountStatus.valueOf, enumValues: $0.AccountStatus.values)
     ..e<$0.AuthStatus>(4, 'authStatus', $pb.PbFieldType.OE, protoName: 'authStatus', defaultOrMaker: $0.AuthStatus.success, valueOf: $0.AuthStatus.valueOf, enumValues: $0.AuthStatus.values)
-    ..aOM<$1.Response>(5, 'resp', subBuilder: $1.Response.create)
+    ..aOM<$2.Response>(5, 'resp', subBuilder: $2.Response.create)
     ..aInt64(6, 'roomID', protoName: 'roomID')
     ..aInt64(7, 'userID', protoName: 'userID')
     ..a<$core.int>(8, 'os', $pb.PbFieldType.O3)
@@ -150,9 +150,9 @@ class LogicResponse extends $pb.GeneratedMessage {
   void clearChangeOP() => clearField(1);
 
   @$pb.TagNumber(2)
-  $1.OP get op => $_getN(1);
+  $2.OP get op => $_getN(1);
   @$pb.TagNumber(2)
-  set op($1.OP v) { setField(2, v); }
+  set op($2.OP v) { setField(2, v); }
   @$pb.TagNumber(2)
   $core.bool hasOp() => $_has(1);
   @$pb.TagNumber(2)
@@ -177,15 +177,15 @@ class LogicResponse extends $pb.GeneratedMessage {
   void clearAuthStatus() => clearField(4);
 
   @$pb.TagNumber(5)
-  $1.Response get resp => $_getN(4);
+  $2.Response get resp => $_getN(4);
   @$pb.TagNumber(5)
-  set resp($1.Response v) { setField(5, v); }
+  set resp($2.Response v) { setField(5, v); }
   @$pb.TagNumber(5)
   $core.bool hasResp() => $_has(4);
   @$pb.TagNumber(5)
   void clearResp() => clearField(5);
   @$pb.TagNumber(5)
-  $1.Response ensureResp() => $_ensure(4);
+  $2.Response ensureResp() => $_ensure(4);
 
   @$pb.TagNumber(6)
   $fixnum.Int64 get roomID => $_getI64(5);
