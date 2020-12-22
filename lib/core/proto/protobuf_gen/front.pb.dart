@@ -11,7 +11,7 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'abridged.pb.dart' as $2;
+import 'abridged.pb.dart' as $3;
 
 import 'front.pbenum.dart';
 
@@ -96,7 +96,7 @@ class RoomUserPushInfo extends $pb.GeneratedMessage {
 
 class NotifyArg extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('NotifyArg', package: const $pb.PackageName('api'), createEmptyInstance: create)
-    ..aOM<$2.Proto>(1, 'p', subBuilder: $2.Proto.create)
+    ..aOM<$3.Proto>(1, 'p', subBuilder: $3.Proto.create)
     ..a<$fixnum.Int64>(2, 'authKey', $pb.PbFieldType.OU6, protoName: 'authKey', defaultOrMaker: $fixnum.Int64.ZERO)
     ..aInt64(3, 'roomID', protoName: 'roomID')
     ..e<NotifyArg_PushType>(4, 'pushType', $pb.PbFieldType.OE, protoName: 'pushType', defaultOrMaker: NotifyArg_PushType.SingleChannel, valueOf: NotifyArg_PushType.valueOf, enumValues: NotifyArg_PushType.values)
@@ -123,15 +123,15 @@ class NotifyArg extends $pb.GeneratedMessage {
   static NotifyArg _defaultInstance;
 
   @$pb.TagNumber(1)
-  $2.Proto get p => $_getN(0);
+  $3.Proto get p => $_getN(0);
   @$pb.TagNumber(1)
-  set p($2.Proto v) { setField(1, v); }
+  set p($3.Proto v) { setField(1, v); }
   @$pb.TagNumber(1)
   $core.bool hasP() => $_has(0);
   @$pb.TagNumber(1)
   void clearP() => clearField(1);
   @$pb.TagNumber(1)
-  $2.Proto ensureP() => $_ensure(0);
+  $3.Proto ensureP() => $_ensure(0);
 
   @$pb.TagNumber(2)
   $fixnum.Int64 get authKey => $_getI64(1);

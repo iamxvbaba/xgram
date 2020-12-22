@@ -30,6 +30,7 @@ const DrawParam$json = const {
     const {'1': 'scaleWidth', '3': 7, '4': 1, '5': 1, '10': 'scaleWidth'},
     const {'1': 'scaleHeight', '3': 8, '4': 1, '5': 1, '10': 'scaleHeight'},
     const {'1': 'list', '3': 9, '4': 1, '5': 11, '6': '.api.UserList', '10': 'list'},
+    const {'1': 'msg', '3': 10, '4': 1, '5': 11, '6': '.api.Message', '10': 'msg'},
   ],
 };
 

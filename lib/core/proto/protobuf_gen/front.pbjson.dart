@@ -5,7 +5,7 @@
 // @dart = 2.3
 // ignore_for_file: camel_case_types,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name,return_of_invalid_type
 
-import 'abridged.pbjson.dart' as $2;
+import 'abridged.pbjson.dart' as $3;
 
 const EmptyArg$json = const {
   '1': 'EmptyArg',
@@ -62,7 +62,7 @@ const FrontNotifyServiceBase$json = const {
 
 const FrontNotifyServiceBase$messageJson = const {
   '.api.NotifyArg': NotifyArg$json,
-  '.api.Proto': $2.Proto$json,
+  '.api.Proto': $3.Proto$json,
   '.api.RoomUserPushInfo': RoomUserPushInfo$json,
   '.api.EmptyResponse': EmptyResponse$json,
 };

@@ -11,12 +11,12 @@ import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 import 'user.pb.dart' as $1;
-import 'message.pb.dart' as $4;
+import 'message.pb.dart' as $2;
 
 class Session_content extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('Session.content', package: const $pb.PackageName('api'), createEmptyInstance: create)
     ..aOM<$1.User>(1, 'user', subBuilder: $1.User.create)
-    ..aOM<$4.Message>(2, 'msg', subBuilder: $4.Message.create)
+    ..aOM<$2.Message>(2, 'msg', subBuilder: $2.Message.create)
     ..a<$core.int>(3, 'badge', $pb.PbFieldType.O3)
     ..aOB(5, 'isOnline', protoName: 'isOnline')
     ..hasRequiredFields = false
@@ -49,15 +49,15 @@ class Session_content extends $pb.GeneratedMessage {
   $1.User ensureUser() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  $4.Message get msg => $_getN(1);
+  $2.Message get msg => $_getN(1);
   @$pb.TagNumber(2)
-  set msg($4.Message v) { setField(2, v); }
+  set msg($2.Message v) { setField(2, v); }
   @$pb.TagNumber(2)
   $core.bool hasMsg() => $_has(1);
   @$pb.TagNumber(2)
   void clearMsg() => clearField(2);
   @$pb.TagNumber(2)
-  $4.Message ensureMsg() => $_ensure(1);
+  $2.Message ensureMsg() => $_ensure(1);
 
   @$pb.TagNumber(3)
   $core.int get badge => $_getIZ(2);

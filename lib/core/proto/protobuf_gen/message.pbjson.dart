@@ -13,16 +13,6 @@ const ContentType$json = const {
   ],
 };
 
-const GiftMessageInfo$json = const {
-  '1': 'GiftMessageInfo',
-  '2': const [
-    const {'1': 'Sender', '3': 1, '4': 1, '5': 11, '6': '.api.User', '10': 'Sender'},
-    const {'1': 'Receiver', '3': 2, '4': 3, '5': 11, '6': '.api.User', '10': 'Receiver'},
-    const {'1': 'giftID', '3': 3, '4': 1, '5': 5, '10': 'giftID'},
-    const {'1': 'giftNum', '3': 4, '4': 1, '5': 5, '10': 'giftNum'},
-  ],
-};
-
 const MessageBody$json = const {
   '1': 'MessageBody',
   '2': const [
@@ -30,7 +20,6 @@ const MessageBody$json = const {
     const {'1': 'msgID', '3': 3, '4': 1, '5': 3, '10': 'msgID'},
     const {'1': 'msg', '3': 4, '4': 1, '5': 9, '10': 'msg'},
     const {'1': 'sendTime', '3': 5, '4': 1, '5': 3, '10': 'sendTime'},
-    const {'1': 'giftInfo', '3': 6, '4': 1, '5': 11, '6': '.api.GiftMessageInfo', '10': 'giftInfo'},
   ],
 };
 

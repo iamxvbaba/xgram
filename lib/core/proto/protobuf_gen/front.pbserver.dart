@@ -10,25 +10,25 @@ import 'dart:async' as $async;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 import 'dart:core' as $core;
-import 'front.pb.dart' as $3;
+import 'front.pb.dart' as $4;
 import 'front.pbjson.dart';
 
 export 'front.pb.dart';
 
 abstract class FrontNotifyServiceBase extends $pb.GeneratedService {
-  $async.Future<$3.EmptyResponse> push($pb.ServerContext ctx, $3.NotifyArg request);
-  $async.Future<$3.EmptyResponse> pushRoom($pb.ServerContext ctx, $3.NotifyArg request);
-  $async.Future<$3.EmptyResponse> broadcast($pb.ServerContext ctx, $3.NotifyArg request);
-  $async.Future<$3.EmptyResponse> cPush($pb.ServerContext ctx, $3.NotifyArg request);
-  $async.Future<$3.EmptyResponse> dPush($pb.ServerContext ctx, $3.NotifyArg request);
+  $async.Future<$4.EmptyResponse> push($pb.ServerContext ctx, $4.NotifyArg request);
+  $async.Future<$4.EmptyResponse> pushRoom($pb.ServerContext ctx, $4.NotifyArg request);
+  $async.Future<$4.EmptyResponse> broadcast($pb.ServerContext ctx, $4.NotifyArg request);
+  $async.Future<$4.EmptyResponse> cPush($pb.ServerContext ctx, $4.NotifyArg request);
+  $async.Future<$4.EmptyResponse> dPush($pb.ServerContext ctx, $4.NotifyArg request);
 
   $pb.GeneratedMessage createRequest($core.String method) {
     switch (method) {
-      case 'Push': return $3.NotifyArg();
-      case 'PushRoom': return $3.NotifyArg();
-      case 'Broadcast': return $3.NotifyArg();
-      case 'CPush': return $3.NotifyArg();
-      case 'DPush': return $3.NotifyArg();
+      case 'Push': return $4.NotifyArg();
+      case 'PushRoom': return $4.NotifyArg();
+      case 'Broadcast': return $4.NotifyArg();
+      case 'CPush': return $4.NotifyArg();
+      case 'DPush': return $4.NotifyArg();
       default: throw $core.ArgumentError('Unknown method: $method');
     }
   }

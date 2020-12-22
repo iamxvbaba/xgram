@@ -2,6 +2,7 @@ import 'package:flutter_screenutil/screenutil.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider_start/core/proto/protobuf_gen/message.pb.dart';
 import 'package:provider_start/core/proto/protobuf_gen/user.pb.dart';
+import 'package:provider_start/core/services/auth/auth_service.dart';
 import 'package:provider_start/core/services/drawguess/draw_service.dart';
 import 'package:provider_start/locator.dart';
 import 'package:stacked/stacked.dart';
@@ -10,15 +11,27 @@ import 'package:flutter/widgets.dart';
 
 class DrawViewModel extends BaseViewModel {
   final _drawService = locator<DrawService>();
+  final _authService = locator<AuthService>();
+
   List<List<DrawEntity>> get points => _drawService.points;
   List<DrawEntity> get pointsList => _drawService.pointsList;
 
-  final messageController = TextEditingController();
+  final answerController = TextEditingController();
   ScrollController controller;
 
-  List<Message> get msg {
-    return List<Message>(10);
+  User get currentUser {
+    return _authService.currentUser;
   }
+  
+  List<Message> get msg {
+    return _drawService.getMsgs();
+  }
+
+  void sendMsg(Message message,bool send) {
+    _drawService.sendOrReceiveMessage(message,true);
+    notifyListeners();
+  }
+
   List<User> get users => _drawService.users;
 
   void setPentColor(String key) {
@@ -45,7 +58,7 @@ class DrawViewModel extends BaseViewModel {
   void dispose() {
     super.dispose();
     _drawService.setNotify(null);
-    messageController.dispose();
+    answerController.dispose();
     controller.dispose();
   }
 

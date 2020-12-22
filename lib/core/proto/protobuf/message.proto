@@ -10,19 +10,11 @@ enum ContentType{
 }
 
 
-message GiftMessageInfo {
-  User Sender = 1;
-  repeated User Receiver = 2;
-  int32 giftID = 3;
-  int32 giftNum = 4;
-}
-
 message MessageBody {
   ContentType contentType = 2; // 消息类型
   int64 msgID = 3;
   string msg = 4;
   int64 sendTime = 5;
-  GiftMessageInfo giftInfo = 6; // 礼物详情
 }
 
 // Message中需要使用的双方用户信息

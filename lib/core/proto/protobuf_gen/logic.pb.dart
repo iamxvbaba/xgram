@@ -11,15 +11,15 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'abridged.pb.dart' as $2;
-import 'message.pb.dart' as $4;
+import 'abridged.pb.dart' as $3;
+import 'message.pb.dart' as $2;
 
-import 'abridged.pbenum.dart' as $2;
+import 'abridged.pbenum.dart' as $3;
 import 'account_enum.pbenum.dart' as $0;
 
 class LogicArg extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('LogicArg', package: const $pb.PackageName('api'), createEmptyInstance: create)
-    ..aOM<$2.Proto>(1, 'p', subBuilder: $2.Proto.create)
+    ..aOM<$3.Proto>(1, 'p', subBuilder: $3.Proto.create)
     ..aInt64(2, 'userID', protoName: 'userID')
     ..a<$fixnum.Int64>(3, 'authKeyID', $pb.PbFieldType.OU6, protoName: 'authKeyID', defaultOrMaker: $fixnum.Int64.ZERO)
     ..aOS(4, 'IP', protoName: 'IP')
@@ -45,15 +45,15 @@ class LogicArg extends $pb.GeneratedMessage {
   static LogicArg _defaultInstance;
 
   @$pb.TagNumber(1)
-  $2.Proto get p => $_getN(0);
+  $3.Proto get p => $_getN(0);
   @$pb.TagNumber(1)
-  set p($2.Proto v) { setField(1, v); }
+  set p($3.Proto v) { setField(1, v); }
   @$pb.TagNumber(1)
   $core.bool hasP() => $_has(0);
   @$pb.TagNumber(1)
   void clearP() => clearField(1);
   @$pb.TagNumber(1)
-  $2.Proto ensureP() => $_ensure(0);
+  $3.Proto ensureP() => $_ensure(0);
 
   @$pb.TagNumber(2)
   $fixnum.Int64 get userID => $_getI64(1);
@@ -113,10 +113,10 @@ class LogicArg extends $pb.GeneratedMessage {
 class LogicResponse extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('LogicResponse', package: const $pb.PackageName('api'), createEmptyInstance: create)
     ..aOB(1, 'changeOP', protoName: 'changeOP')
-    ..e<$2.OP>(2, 'op', $pb.PbFieldType.OE, defaultOrMaker: $2.OP.needDH, valueOf: $2.OP.valueOf, enumValues: $2.OP.values)
+    ..e<$3.OP>(2, 'op', $pb.PbFieldType.OE, defaultOrMaker: $3.OP.needDH, valueOf: $3.OP.valueOf, enumValues: $3.OP.values)
     ..e<$0.AccountStatus>(3, 'accountStatus', $pb.PbFieldType.OE, protoName: 'accountStatus', defaultOrMaker: $0.AccountStatus.user_ac_none, valueOf: $0.AccountStatus.valueOf, enumValues: $0.AccountStatus.values)
     ..e<$0.AuthStatus>(4, 'authStatus', $pb.PbFieldType.OE, protoName: 'authStatus', defaultOrMaker: $0.AuthStatus.success, valueOf: $0.AuthStatus.valueOf, enumValues: $0.AuthStatus.values)
-    ..aOM<$2.Response>(5, 'resp', subBuilder: $2.Response.create)
+    ..aOM<$3.Response>(5, 'resp', subBuilder: $3.Response.create)
     ..aInt64(6, 'roomID', protoName: 'roomID')
     ..aInt64(7, 'userID', protoName: 'userID')
     ..a<$core.int>(8, 'os', $pb.PbFieldType.O3)
@@ -150,9 +150,9 @@ class LogicResponse extends $pb.GeneratedMessage {
   void clearChangeOP() => clearField(1);
 
   @$pb.TagNumber(2)
-  $2.OP get op => $_getN(1);
+  $3.OP get op => $_getN(1);
   @$pb.TagNumber(2)
-  set op($2.OP v) { setField(2, v); }
+  set op($3.OP v) { setField(2, v); }
   @$pb.TagNumber(2)
   $core.bool hasOp() => $_has(1);
   @$pb.TagNumber(2)
@@ -177,15 +177,15 @@ class LogicResponse extends $pb.GeneratedMessage {
   void clearAuthStatus() => clearField(4);
 
   @$pb.TagNumber(5)
-  $2.Response get resp => $_getN(4);
+  $3.Response get resp => $_getN(4);
   @$pb.TagNumber(5)
-  set resp($2.Response v) { setField(5, v); }
+  set resp($3.Response v) { setField(5, v); }
   @$pb.TagNumber(5)
   $core.bool hasResp() => $_has(4);
   @$pb.TagNumber(5)
   void clearResp() => clearField(5);
   @$pb.TagNumber(5)
-  $2.Response ensureResp() => $_ensure(4);
+  $3.Response ensureResp() => $_ensure(4);
 
   @$pb.TagNumber(6)
   $fixnum.Int64 get roomID => $_getI64(5);
@@ -424,7 +424,7 @@ class CNotifyArg extends $pb.GeneratedMessage {
     ..a<$core.int>(3, 'os', $pb.PbFieldType.O3)
     ..aInt64(4, 'notifyID', protoName: 'notifyID')
     ..aInt64(5, 'frontID', protoName: 'frontID')
-    ..aOM<$4.Message>(6, 'message', subBuilder: $4.Message.create)
+    ..aOM<$2.Message>(6, 'message', subBuilder: $2.Message.create)
     ..aInt64(7, 'roomID', protoName: 'roomID')
     ..aOB(8, 'store')
     ..aOB(9, 'broadcast')
@@ -492,15 +492,15 @@ class CNotifyArg extends $pb.GeneratedMessage {
   void clearFrontID() => clearField(5);
 
   @$pb.TagNumber(6)
-  $4.Message get message => $_getN(5);
+  $2.Message get message => $_getN(5);
   @$pb.TagNumber(6)
-  set message($4.Message v) { setField(6, v); }
+  set message($2.Message v) { setField(6, v); }
   @$pb.TagNumber(6)
   $core.bool hasMessage() => $_has(5);
   @$pb.TagNumber(6)
   void clearMessage() => clearField(6);
   @$pb.TagNumber(6)
-  $4.Message ensureMessage() => $_ensure(5);
+  $2.Message ensureMessage() => $_ensure(5);
 
   @$pb.TagNumber(7)
   $fixnum.Int64 get roomID => $_getI64(6);

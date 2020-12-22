@@ -5,8 +5,8 @@
 // @dart = 2.3
 // ignore_for_file: camel_case_types,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name,return_of_invalid_type
 
-import 'abridged.pbjson.dart' as $2;
-import 'message.pbjson.dart' as $4;
+import 'abridged.pbjson.dart' as $3;
+import 'message.pbjson.dart' as $2;
 import 'user.pbjson.dart' as $1;
 
 const LogicArg$json = const {
@@ -100,19 +100,18 @@ const LogicServiceBase$json = const {
 
 const LogicServiceBase$messageJson = const {
   '.api.LogicArg': LogicArg$json,
-  '.api.Proto': $2.Proto$json,
+  '.api.Proto': $3.Proto$json,
   '.api.LogicResponse': LogicResponse$json,
-  '.api.Response': $2.Response$json,
+  '.api.Response': $3.Response$json,
   '.api.NewConnArg': NewConnArg$json,
   '.api.NewConnResponse': NewConnResponse$json,
   '.api.DisconnectArg': DisconnectArg$json,
   '.api.DisconnectResponse': DisconnectResponse$json,
   '.api.CNotifyArg': CNotifyArg$json,
-  '.api.Message': $4.Message$json,
-  '.api.MessageBody': $4.MessageBody$json,
-  '.api.GiftMessageInfo': $4.GiftMessageInfo$json,
+  '.api.Message': $2.Message$json,
+  '.api.MessageBody': $2.MessageBody$json,
+  '.api.MessageUser': $2.MessageUser$json,
   '.api.User': $1.User$json,
-  '.api.MessageUser': $4.MessageUser$json,
   '.api.CNotifyReply': CNotifyReply$json,
 };
 

@@ -2,6 +2,8 @@ syntax = "proto3";
 package api;
 option go_package = ".;api";
 import "user.proto";
+import "message.proto";
+
 enum DrawOP{
     p_draw=0;  // 正在连续绘制
     p_drawNull=1; // 手抬起，添加占位
@@ -24,4 +26,5 @@ message DrawParam {
     double scaleHeight=8; // 高度比例
 
     UserList list=9; // 在线用户列表
+    Message msg=10; // 消息
 }

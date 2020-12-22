@@ -17,70 +17,12 @@ import 'account_enum.pbenum.dart' as $0;
 
 export 'message.pbenum.dart';
 
-class GiftMessageInfo extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo('GiftMessageInfo', package: const $pb.PackageName('api'), createEmptyInstance: create)
-    ..aOM<$1.User>(1, 'Sender', protoName: 'Sender', subBuilder: $1.User.create)
-    ..pc<$1.User>(2, 'Receiver', $pb.PbFieldType.PM, protoName: 'Receiver', subBuilder: $1.User.create)
-    ..a<$core.int>(3, 'giftID', $pb.PbFieldType.O3, protoName: 'giftID')
-    ..a<$core.int>(4, 'giftNum', $pb.PbFieldType.O3, protoName: 'giftNum')
-    ..hasRequiredFields = false
-  ;
-
-  GiftMessageInfo._() : super();
-  factory GiftMessageInfo() => create();
-  factory GiftMessageInfo.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory GiftMessageInfo.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
-  GiftMessageInfo clone() => GiftMessageInfo()..mergeFromMessage(this);
-  GiftMessageInfo copyWith(void Function(GiftMessageInfo) updates) => super.copyWith((message) => updates(message as GiftMessageInfo));
-  $pb.BuilderInfo get info_ => _i;
-  @$core.pragma('dart2js:noInline')
-  static GiftMessageInfo create() => GiftMessageInfo._();
-  GiftMessageInfo createEmptyInstance() => create();
-  static $pb.PbList<GiftMessageInfo> createRepeated() => $pb.PbList<GiftMessageInfo>();
-  @$core.pragma('dart2js:noInline')
-  static GiftMessageInfo getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<GiftMessageInfo>(create);
-  static GiftMessageInfo _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $1.User get sender => $_getN(0);
-  @$pb.TagNumber(1)
-  set sender($1.User v) { setField(1, v); }
-  @$pb.TagNumber(1)
-  $core.bool hasSender() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearSender() => clearField(1);
-  @$pb.TagNumber(1)
-  $1.User ensureSender() => $_ensure(0);
-
-  @$pb.TagNumber(2)
-  $core.List<$1.User> get receiver => $_getList(1);
-
-  @$pb.TagNumber(3)
-  $core.int get giftID => $_getIZ(2);
-  @$pb.TagNumber(3)
-  set giftID($core.int v) { $_setSignedInt32(2, v); }
-  @$pb.TagNumber(3)
-  $core.bool hasGiftID() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearGiftID() => clearField(3);
-
-  @$pb.TagNumber(4)
-  $core.int get giftNum => $_getIZ(3);
-  @$pb.TagNumber(4)
-  set giftNum($core.int v) { $_setSignedInt32(3, v); }
-  @$pb.TagNumber(4)
-  $core.bool hasGiftNum() => $_has(3);
-  @$pb.TagNumber(4)
-  void clearGiftNum() => clearField(4);
-}
-
 class MessageBody extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('MessageBody', package: const $pb.PackageName('api'), createEmptyInstance: create)
     ..e<ContentType>(2, 'contentType', $pb.PbFieldType.OE, protoName: 'contentType', defaultOrMaker: ContentType.normalText, valueOf: ContentType.valueOf, enumValues: ContentType.values)
     ..aInt64(3, 'msgID', protoName: 'msgID')
     ..aOS(4, 'msg')
     ..aInt64(5, 'sendTime', protoName: 'sendTime')
-    ..aOM<GiftMessageInfo>(6, 'giftInfo', protoName: 'giftInfo', subBuilder: GiftMessageInfo.create)
     ..hasRequiredFields = false
   ;
 
@@ -134,17 +76,6 @@ class MessageBody extends $pb.GeneratedMessage {
   $core.bool hasSendTime() => $_has(3);
   @$pb.TagNumber(5)
   void clearSendTime() => clearField(5);
-
-  @$pb.TagNumber(6)
-  GiftMessageInfo get giftInfo => $_getN(4);
-  @$pb.TagNumber(6)
-  set giftInfo(GiftMessageInfo v) { setField(6, v); }
-  @$pb.TagNumber(6)
-  $core.bool hasGiftInfo() => $_has(4);
-  @$pb.TagNumber(6)
-  void clearGiftInfo() => clearField(6);
-  @$pb.TagNumber(6)
-  GiftMessageInfo ensureGiftInfo() => $_ensure(4);
 }
 
 class MessageUser extends $pb.GeneratedMessage {

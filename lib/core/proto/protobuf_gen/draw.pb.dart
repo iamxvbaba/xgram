@@ -11,6 +11,7 @@ import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 import 'user.pb.dart' as $1;
+import 'message.pb.dart' as $2;
 
 import 'draw.pbenum.dart';
 
@@ -27,6 +28,7 @@ class DrawParam extends $pb.GeneratedMessage {
     ..a<$core.double>(7, 'scaleWidth', $pb.PbFieldType.OD, protoName: 'scaleWidth')
     ..a<$core.double>(8, 'scaleHeight', $pb.PbFieldType.OD, protoName: 'scaleHeight')
     ..aOM<$1.UserList>(9, 'list', subBuilder: $1.UserList.create)
+    ..aOM<$2.Message>(10, 'msg', subBuilder: $2.Message.create)
     ..hasRequiredFields = false
   ;
 
@@ -127,5 +129,16 @@ class DrawParam extends $pb.GeneratedMessage {
   void clearList() => clearField(9);
   @$pb.TagNumber(9)
   $1.UserList ensureList() => $_ensure(8);
+
+  @$pb.TagNumber(10)
+  $2.Message get msg => $_getN(9);
+  @$pb.TagNumber(10)
+  set msg($2.Message v) { setField(10, v); }
+  @$pb.TagNumber(10)
+  $core.bool hasMsg() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearMsg() => clearField(10);
+  @$pb.TagNumber(10)
+  $2.Message ensureMsg() => $_ensure(9);
 }
 

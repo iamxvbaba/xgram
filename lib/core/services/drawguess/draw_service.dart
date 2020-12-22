@@ -4,6 +4,7 @@ import 'package:oktoast/oktoast.dart';
 import 'package:provider_start/core/proto/protobuf_gen/abridged.pb.dart';
 import 'package:provider_start/core/proto/protobuf_gen/abridged.pbenum.dart';
 import 'package:provider_start/core/proto/protobuf_gen/draw.pb.dart';
+import 'package:provider_start/core/proto/protobuf_gen/message.pb.dart';
 import 'package:provider_start/core/proto/protobuf_gen/user.pb.dart';
 import 'package:provider_start/core/services/event_hub/draw.dart';
 import 'package:provider_start/core/services/socket_state/socket.dart';
@@ -79,6 +80,9 @@ class DrawService {
         case DrawOP.p_userChange:
           _userList = drawParam.list;
           break;
+        case DrawOP.p_msg:
+          sendOrReceiveMessage(drawParam.msg, false,roomID: roomID);
+          break;
       }
       // 回调 通知更新
       setState();
@@ -97,6 +101,33 @@ class DrawService {
   String pentColor = 'default'; //默认颜色
   double pentSize = 5; //默认字体大小
 
+  Map<$fixnum.Int64, List<Message>> _msgMap = Map<$fixnum.Int64, List<Message>>();
+
+  // 返回msg
+  List<Message> getMsgs({$fixnum.Int64 roomID}) {
+    return _msgMap[roomID];
+  }
+
+  Future<void> sendOrReceiveMessage(Message msg, bool send,{$fixnum.Int64 roomID}) async {
+    roomID ??= roomID;
+    if (_msgMap[roomID] == null) {
+      _msgMap[roomID] = <Message>[];
+    }
+    _msgMap[roomID].insert(0,msg);
+
+    if (send) {
+      //发送绘制消息给服务端
+      DrawParam param = DrawParam.create();
+      param.roomID = roomID;
+      param.op = DrawOP.p_msg;
+      param.msg = msg;
+      Response resp = await _socket.send(OP.drawS, param, _convertResponse);
+      if (resp.code != 200) {
+        showToast('发送答案${resp.msg}');
+        return null;
+      }
+    }
+  }
   Future<void> joinRoom({$fixnum.Int64 rid}) async {
     try {
       ID id = ID.create();
