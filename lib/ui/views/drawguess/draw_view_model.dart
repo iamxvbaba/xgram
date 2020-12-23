@@ -13,6 +13,7 @@ class DrawViewModel extends BaseViewModel {
   final _drawService = locator<DrawService>();
   final _authService = locator<AuthService>();
 
+
   List<List<DrawEntity>> get points => _drawService.points;
   List<DrawEntity> get pointsList => _drawService.pointsList;
 
@@ -22,8 +23,9 @@ class DrawViewModel extends BaseViewModel {
   User get currentUser {
     return _authService.currentUser;
   }
-  
-  List<Message> get msg {
+
+  List<Message> get msg{
+    print('哇哦 重新加载数据！！！！！！！！');
     return _drawService.getMsgs();
   }
 

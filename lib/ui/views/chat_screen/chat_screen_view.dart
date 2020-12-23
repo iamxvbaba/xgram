@@ -38,7 +38,8 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
   }
 
   Widget _chatScreenBody(ChatScreenViewModel model) {
-    if (model.msg == null || model.msg.isEmpty) {
+    var msg = model.msg;
+    if (msg == null || msg.isEmpty) {
       return Center(
         child: Text(
           'No message found',
@@ -51,13 +52,13 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
       shrinkWrap: true,
       reverse: true,
       physics: BouncingScrollPhysics(),
-      itemCount: model.msg.length,
+      itemCount: msg.length,
       itemBuilder: (context, index) => TextRecordRow(
-          avatar: model.msg[index].senderID == model.currentUser.id
+          avatar: msg[index].senderID == model.currentUser.id
               ? model.currentUser.avatar
               : model.chatUser.avatar,
-          msg: model.msg[index].body.msg,
-          self: model.msg[index].senderID == model.currentUser.id),
+          msg: msg[index].body.msg,
+          self: msg[index].senderID == model.currentUser.id),
     );
   }
 

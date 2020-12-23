@@ -13,7 +13,10 @@ class ChatScreenViewModel extends BaseViewModel {
 
   User get currentUser => _chatStateService.currentUser;
   User get chatUser => _chatStateService.chatUser;
-  List<Message> get msg => _chatStateService.msg;
+  List<Message> get msg {
+    print('有更新消息!!!!!!!!!!!!!!!!!!!!!!!');
+    return _chatStateService.msg;
+  }
   set changeChatUser(User model) {
     _chatStateService.setChatUser(model);
   }

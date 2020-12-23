@@ -37,7 +37,12 @@ class DrawService {
   }
 
   UserList _userList;
-  List<User> get users => _userList.users;
+  List<User> get users {
+    if (_userList == null){
+      return null;
+    }
+    return  _userList.users;
+  }
 
   DrawService._() {
     _eventBus.eventBus.on<DrawParam>().listen((drawParam) {
@@ -81,7 +86,7 @@ class DrawService {
           _userList = drawParam.list;
           break;
         case DrawOP.p_msg:
-          sendOrReceiveMessage(drawParam.msg, false,roomID: roomID);
+          sendOrReceiveMessage(drawParam.msg, false,id: roomID);
           break;
       }
       // 回调 通知更新
@@ -104,11 +109,11 @@ class DrawService {
   Map<$fixnum.Int64, List<Message>> _msgMap = Map<$fixnum.Int64, List<Message>>();
 
   // 返回msg
-  List<Message> getMsgs({$fixnum.Int64 roomID}) {
+  List<Message> getMsgs({$fixnum.Int64 id}) {
     return _msgMap[roomID];
   }
 
-  Future<void> sendOrReceiveMessage(Message msg, bool send,{$fixnum.Int64 roomID}) async {
+  Future<void> sendOrReceiveMessage(Message msg, bool send,{$fixnum.Int64 id}) async {
     roomID ??= roomID;
     if (_msgMap[roomID] == null) {
       _msgMap[roomID] = <Message>[];
@@ -171,6 +176,7 @@ class DrawService {
   void setState() {
     _update();
     if (_notify != null) {
+      print('哦吼 有新通知!!!!!!!!!!!!!!!');
       _notify();
     }
   }

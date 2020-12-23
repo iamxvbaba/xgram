@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screenutil.dart';
 import 'package:provider_start/core/proto/protobuf_gen/message.pb.dart';
-import 'package:provider_start/ui/views/chat_screen/icon_button.dart';
 import 'package:provider_start/ui/views/drawguess/draw_view_model.dart';
-import 'package:stacked/stacked.dart';
 
-class chatScreen extends ViewModelWidget<DrawViewModel> {
+class ChatScreen extends StatelessWidget {
+  final DrawViewModel model;
+  const ChatScreen(this.model);
+
   Widget _chatScreenBody(DrawViewModel model) {
-    if (model.msg == null || model.msg.isEmpty) {
+    var msg = model.msg;
+    if (msg == null || msg.isEmpty) {
       return Center(
         child: Text(
           'No message found',
@@ -20,7 +22,7 @@ class chatScreen extends ViewModelWidget<DrawViewModel> {
       shrinkWrap: true,
       reverse: true,
       physics: BouncingScrollPhysics(),
-      itemCount: model.msg.length,
+      itemCount: msg.length,
       itemBuilder: (context, index) => Padding(
         padding: EdgeInsets.all(ScreenUtil().setWidth(5)),
         child: Row(
@@ -33,12 +35,12 @@ class chatScreen extends ViewModelWidget<DrawViewModel> {
               ),
               child: Row(
                 children: [
-                  Text(model.msg[index].eachInfo.sender.nickname,
+                  Text(msg[index].eachInfo.sender.nickname,
                       style: TextStyle(
                           fontSize: ScreenUtil().setWidth(25),
                           color: Color(0xff4396FF))),
                   SizedBox(width: ScreenUtil().setWidth(22)),
-                  Text(model.msg[index].body.msg,
+                  Text(msg[index].body.msg,
                       style: TextStyle(
                           fontSize: ScreenUtil().setWidth(25),
                           color: Colors.black)),
@@ -89,17 +91,21 @@ class chatScreen extends ViewModelWidget<DrawViewModel> {
     if (model.answerController.text.isEmpty) {
       return;
     }
-    Message msg = Message.create();
-    msg.body = MessageBody.create();
-    msg.eachInfo.sender = model.currentUser;
-    msg.body.contentType = ContentType.normalText;
-    msg.body.msg = model.answerController.text;
-    model.sendMsg(msg, true);
+    Message message = Message.create();
+    message.senderID = model.currentUser.id;
+
+    message.eachInfo = MessageUser.create();
+    message.eachInfo.sender = model.currentUser;
+
+    message.body = MessageBody.create();
+    message.body.contentType = ContentType.normalText;
+    message.body.msg = model.answerController.text;
+    model.sendMsg(message, true);
     model.answerController.clear();
   }
 
   @override
-  Widget build(BuildContext context, DrawViewModel model) {
+  Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
         _chatScreenBody(model),

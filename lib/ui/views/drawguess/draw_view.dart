@@ -8,6 +8,7 @@ import 'package:provider_start/core/proto/protobuf_gen/user.pb.dart';
 import 'package:provider_start/ui/views/drawguess/chat_screen.dart';
 import 'package:provider_start/ui/views/drawguess/draw_view_model.dart';
 import 'package:provider_start/ui/views/drawguess/signature_painter.dart';
+import 'package:provider_start/ui/widgets/stateless/loading_animation.dart';
 import 'package:stacked/stacked.dart';
 
 import 'draw_color.dart';
@@ -57,7 +58,7 @@ class _DrawPageState extends State<DrawPage> {
                     _userList(),
                     Expanded(
                       flex: 1,
-                      child: chatScreen(),
+                      child: ChatScreen(model),
                     )
                   ],
                 ),
@@ -157,6 +158,13 @@ class _userList extends ViewModelWidget<DrawViewModel> {
   }
 
   Widget _buildRow(DrawViewModel model) {
+
+    if (model.users == null) {
+      return Center(
+        child: LoadingAnimation(),
+      );
+    }
+
     var children = List<Widget>(model.users.length);
     for (var i = 0; i < model.users.length; i++) {
       children[i] = _item(model.users[i]);
