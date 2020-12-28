@@ -1,7 +1,7 @@
 import 'package:stacked/stacked.dart';
 
 class MainViewModel extends BaseViewModel {
-  int _index = 2;
+  int _index = 0;
   int get index => _index;
 
   void changeTab(int index) {

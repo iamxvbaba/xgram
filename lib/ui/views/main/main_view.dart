@@ -16,11 +16,11 @@ import 'package:stacked/stacked.dart';
 ///   - can be replaced with a [TabView]
 class MainView extends StatelessWidget {
   final _views = <Widget>[
+    FadeIn(child: ChatListView()), // SettingsView()
     FadeIn(child: HomeView()),
     FadeIn(child: DrawPage()),
     FadeIn(child: MultipleThemesView()),
     FadeIn(child: SettingsView()),
-    FadeIn(child: ChatListView()), // SettingsView()
   ];
 
   @override
@@ -41,6 +41,10 @@ class MainView extends StatelessWidget {
           currentIndex: model.index,
           items: [
             BottomNavigationBarItem(
+              icon: Icon(Icons.message),
+              label: 'message',
+            ),
+            BottomNavigationBarItem(
               icon: Icon(Icons.home),
               label: 'home',
             ),
@@ -55,10 +59,6 @@ class MainView extends StatelessWidget {
             BottomNavigationBarItem(
               icon: Icon(Icons.notifications),
               label: 'notify',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.message),
-              label: 'message',
             ),
           ],
           onTap: model.changeTab,

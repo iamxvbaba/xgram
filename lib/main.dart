@@ -41,6 +41,12 @@ class MyApp extends StatelessWidget {
       child: CoreManager(
         child: ThemeBuilder(
           defaultThemeMode: ThemeMode.system,
+          darkTheme: ThemeData(
+            brightness: Brightness.dark,
+            backgroundColor: Colors.blue[700],
+            accentColor: Colors.yellow[700],
+          ),
+
           themes: getThemes(),
           statusBarColorBuilder: (theme) => theme.accentColor,
           builder: (ctx,regularTheme,darkTheme,themeMode) => OKToast(child: MaterialApp(

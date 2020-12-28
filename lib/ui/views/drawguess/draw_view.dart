@@ -28,6 +28,7 @@ class _DrawPageState extends State<DrawPage> {
         builder: (context, model, child) => Scaffold(
               appBar: AppBar(
                 title: Text('你画我猜'),
+                elevation: 0, //去掉Appbar底部阴影
                 actions: <Widget>[
                   IconButton(
                     icon: Icon(Icons.call_missed_outgoing),

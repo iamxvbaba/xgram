@@ -21,7 +21,8 @@ class _ChatListViewState extends State<ChatListView> {
       onModelReady: (model) => model.init(),
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
-          title: Text('历史会话'),
+          title: Text('消息'),
+          elevation: 0, //去掉Appbar底部阴影
         ),
         body: model.isBusy
             ? _LoadingAnimation()
@@ -48,20 +49,10 @@ class _ChatListBody extends ViewModelWidget<ChatListViewModel> {
           children: <Widget>[
             Container(
               padding: EdgeInsets.all(2),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    spreadRadius: 2,
-                    blurRadius: 5,
-                  ),
-                ],
-              ),
-              child: CircleAvatar(
-                radius: ScreenUtil().setHeight(56),
-                backgroundImage: CachedNetworkImageProvider(
-                    model.session[index].user.avatar),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(ScreenUtil().setHeight(20)),
+                child: CachedNetworkImage(
+                    imageUrl: model.session[index].user.avatar,width: ScreenUtil().setHeight(100),),
               ),
             ),
             Container(
