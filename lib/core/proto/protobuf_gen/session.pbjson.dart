@@ -20,6 +20,7 @@ const Session_content$json = const {
     const {'1': 'msg', '3': 2, '4': 1, '5': 11, '6': '.api.Message', '10': 'msg'},
     const {'1': 'badge', '3': 3, '4': 1, '5': 5, '10': 'badge'},
     const {'1': 'isOnline', '3': 5, '4': 1, '5': 8, '10': 'isOnline'},
+    const {'1': 'rank', '3': 6, '4': 1, '5': 5, '10': 'rank'},
   ],
 };
 

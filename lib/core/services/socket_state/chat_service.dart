@@ -135,14 +135,43 @@ class ChatStateService {
     return null;
   }
 
+  Future<List<Session_content>> refreshSession() async {
+    // 获取通讯录列表
+    var param = Pagination.create();
+    param.page = 1;
+    param.size = 30;
+    _sessionMap = await _socket.send(OP.session, param,_convertSession).
+    timeout(const Duration(seconds: 7)).catchError((e){
+      showToast('刷新session列表 FAILED:$e');
+    });
+    if (_sessionMap != null && _sessionMap.list.isNotEmpty) {
+      return _sessionMap.list.values.toList();
+    }
+    return null;
+  }
+
+  Future<List<Session_content>> moreSession(int page) async {
+    var param = Pagination.create();
+    param.page = page;
+    param.size = 30;
+    Session _moreSessionMap = await _socket.send(OP.session, param,_convertSession).
+    timeout(const Duration(seconds: 7)).catchError((e){
+      showToast('下滑加载session列表 FAILED:$e');
+    });
+    if (_moreSessionMap != null && _moreSessionMap.list.isNotEmpty) {
+      return _moreSessionMap.list.values.toList();
+    }
+    return null;
+  }
+
   Future<void> initSession() async {
     // 获取通讯录列表
     var param = Pagination.create();
     param.page = 1;
-    param.size = 50;
+    param.size = 30;
     _sessionMap = await _socket.send(OP.session, param,_convertSession).
     timeout(const Duration(seconds: 5)).catchError((e){
-      showToast('获取通讯录列表 FAILED:$e');
+      showToast('初始化session列表 FAILED:$e');
     });
   }
 

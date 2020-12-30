@@ -19,6 +19,7 @@ class Session_content extends $pb.GeneratedMessage {
     ..aOM<$2.Message>(2, 'msg', subBuilder: $2.Message.create)
     ..a<$core.int>(3, 'badge', $pb.PbFieldType.O3)
     ..aOB(5, 'isOnline', protoName: 'isOnline')
+    ..a<$core.int>(6, 'rank', $pb.PbFieldType.O3)
     ..hasRequiredFields = false
   ;
 
@@ -76,6 +77,15 @@ class Session_content extends $pb.GeneratedMessage {
   $core.bool hasIsOnline() => $_has(3);
   @$pb.TagNumber(5)
   void clearIsOnline() => clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.int get rank => $_getIZ(4);
+  @$pb.TagNumber(6)
+  set rank($core.int v) { $_setSignedInt32(4, v); }
+  @$pb.TagNumber(6)
+  $core.bool hasRank() => $_has(4);
+  @$pb.TagNumber(6)
+  void clearRank() => clearField(6);
 }
 
 class Session extends $pb.GeneratedMessage {

@@ -16,7 +16,7 @@ import 'package:stacked/stacked.dart';
 ///   - can be replaced with a [TabView]
 class MainView extends StatelessWidget {
   final _views = <Widget>[
-    FadeIn(child: ChatListView()), // SettingsView()
+    FadeIn(child: SessionView()),
     FadeIn(child: HomeView()),
     FadeIn(child: DrawPage()),
     FadeIn(child: MultipleThemesView()),

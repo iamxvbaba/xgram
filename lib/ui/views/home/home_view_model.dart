@@ -29,8 +29,7 @@ class HomeViewModel extends BaseViewModel {
     _height = height;
   }
 
-  // ignore: always_declare_return_types
-  scrollToTop() {
+  void scrollToTop() {
     _scrollController.animateTo(0,
         duration: Duration(milliseconds: 300), curve: Curves.easeOutCubic);
   }

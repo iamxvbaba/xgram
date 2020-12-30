@@ -11,7 +11,8 @@ message Session {
     User user = 1;
     Message msg = 2;
     int32 badge = 3; // 角标
-    bool isOnline=5;  // 是否关注
+    bool isOnline = 5;  // 是否关注
+    int32 rank = 6; // 排序值
   }
-  map<int64,content> list = 1; // 消息列表
+  map<int64, content> list = 1; // 消息列表
 }
