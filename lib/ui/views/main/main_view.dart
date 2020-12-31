@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider_start/core/localization/localization.dart';
 import 'package:provider_start/ui/theme/multiple_themes/multiple_themes_view.dart';
-import 'package:provider_start/ui/views/chat_list/chat_list_view.dart';
+import 'package:provider_start/ui/views/session/session_view.dart';
 import 'package:provider_start/ui/views/drawguess/draw_view.dart';
 import 'package:provider_start/ui/views/main/main_view_model.dart';
 import 'package:provider_start/ui/views/settings/settings_view.dart';

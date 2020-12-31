@@ -13,36 +13,19 @@ class RelativeDateFormat {
 
   //时间转换
   static String format(int t) {
-    var date = DateTime.fromMillisecondsSinceEpoch(t);
-    var delta =
-        DateTime.now().millisecondsSinceEpoch - date.millisecondsSinceEpoch;
-    if (delta < 1 * ONE_MINUTE) {
-      var seconds = toSeconds(delta);
-      print('传入的时间戳为:$t seconds:$seconds');
-      return (seconds <= 0 ? 1 : seconds).toInt().toString() + ONE_SECOND_AGO;
-    }
-    if (delta < 60 * ONE_MINUTE) {
-      var minutes = toMinutes(delta);
-      return (minutes <= 0 ? 1 : minutes).toInt().toString() + ONE_MINUTE_AGO;
-    }
-    if (delta < 24 * ONE_HOUR) {
-      var hours = toHours(delta);
-      return (hours <= 0 ? 1 : hours).toInt().toString() + ONE_HOUR_AGO;
-    }
-    if (delta < 48 * ONE_HOUR) {
-      return '昨天';
-    }
-    if (delta < 30 * ONE_DAY) {
-      var days = toDays(delta);
-      return (days <= 0 ? 1 : days).toInt().toString() + ONE_DAY_AGO;
-    }
-    if (delta < 12 * 4 * ONE_WEEK) {
-      var months = toMonths(delta);
-      return (months <= 0 ? 1 : months).toInt().toString() + ONE_MONTH_AGO;
-    } else {
-      var years = toYears(delta);
-      return (years <= 0 ? 1 : years).toInt().toString() + ONE_YEAR_AGO;
-    }
+    var dateTime = DateTime.fromMillisecondsSinceEpoch(t);
+
+    String hourParse = '0${dateTime.hour}';
+    var minuteParse = "0${dateTime.minute}";
+
+    var hour = dateTime.hour.toString().length == 1
+        ? hourParse
+        : dateTime.hour.toString();
+    var minute = dateTime.minute.toString().length == 1
+        ? minuteParse
+        : dateTime.minute.toString();
+
+    return '$hour:$minute';
   }
 
   static num toSeconds(num date) {
