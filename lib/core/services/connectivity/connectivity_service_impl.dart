@@ -4,13 +4,15 @@ import 'package:connectivity/connectivity.dart';
 import 'package:logging/logging.dart';
 import 'package:provider_start/core/enums/connectivity_status.dart';
 import 'package:provider_start/core/services/connectivity/connectivity_service.dart';
+import 'package:provider_start/core/services/socket_state/socket.dart';
+import 'package:provider_start/locator.dart';
 
 class ConnectivityServiceImpl implements ConnectivityService {
   final _log = Logger('ConnectivityServiceImpl');
-
   final _connectivityResultController = StreamController<ConnectivityStatus>();
   final _connectivity = Connectivity();
-
+  final SocketBloc _socket = locator<SocketBloc>();
+  bool _changed = false;
   StreamSubscription<ConnectivityResult> _subscription;
   ConnectivityResult _lastResult;
   bool _serviceStopped = false;
@@ -62,6 +64,12 @@ class ConnectivityServiceImpl implements ConnectivityService {
     if (event == _lastResult) return;
 
     _log.finer('Connectivity status changed to $event');
+    if (_changed) {
+      _socket.reconnect();
+    } else {
+      _changed = true;
+    }
+
     _connectivityResultController.add(_convertResult(event));
     _lastResult = event;
   }

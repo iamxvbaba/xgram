@@ -31,10 +31,12 @@ class AuthServiceImpl implements AuthService {
           .send(OP.loginOrRegister, param, _convertUser)
           .timeout(const Duration(seconds: 5))
           .catchError((e) {
-        showToast('登录超时:$e');
+        throw AuthException('login timeout!!!');
       });
       // fetch current user from server
-
+      if (_currentUser == null) {
+        throw AuthException('账号不存在');
+      }
     } on Exception {
       _log.severe('AuthService: Error signing up');
       throw AuthException('Error signing up');

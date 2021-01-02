@@ -1,4 +1,5 @@
 import 'package:logging/logging.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:pedantic/pedantic.dart';
 import 'package:provider_start/core/exceptions/auth_exception.dart';
 import 'package:provider_start/core/mixins/validators.dart';
@@ -20,7 +21,8 @@ class LoginViewModel extends BaseViewModel with Validators {
       unawaited(_navigationService.popAllAndPushNamed(Routes.mainView));
     } on AuthException catch (e) {
       _log.shout(e.message);
-      setBusy(false);
+      showToast('${e.message}');
     }
+    setBusy(false);
   }
 }

@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:event_bus/event_bus.dart';
 import 'package:provider_start/core/proto/config.dart';
 import 'package:provider_start/core/proto/protobuf_gen/abridged.pb.dart';
 import 'package:provider_start/core/proto/protobuf_gen/auth_key.pb.dart';
@@ -15,20 +14,25 @@ import 'package:protobuf/protobuf.dart' as $pb;
 import 'package:provider_start/core/services/event_hub/draw.dart';
 import 'package:provider_start/core/services/event_hub/message.dart';
 import 'package:provider_start/core/services/key_storage/key_storage_service.dart';
+import 'package:provider_start/core/services/navigation/navigation_service.dart';
 import 'package:provider_start/core/services/socket_state/buffer.dart';
 import 'package:provider_start/locator.dart';
+import 'package:provider_start/ui/router.gr.dart';
 import 'package:typed_data/typed_data.dart' as typed;
-
 class SocketBloc {
   static const auth_key = 'auth_key';
   final _keyStorageService = locator<KeyStorageService>();
   final MessageEvent _msgEventBus = locator<MessageEvent>();
   final DrawEvent _drawEventBus = locator<DrawEvent>();
+  final _navigationService = locator<NavigationService>();
 
+
+  final Duration timeout = Duration(seconds: 7);
   Map<int, Function(Response)> call = <int, Function(Response)>{};
 
   Socket _socket;
   bool _encryptionReady = false;
+  bool _inGenKey = false;
 
   // 以下这些字段是 dh 密钥交换得到的
   List<int> _firstNonce;
@@ -57,10 +61,29 @@ class SocketBloc {
     // 初始化
     _initConnect();
   }
+  int _errorReconnect=0;
+  // 0: change network
+  // 1: error reconnect
+  void reconnect({int reconnectType=0}){
+    if (reconnectType == 1) {
+      if (_errorReconnect >= 5) {
+        print('socket error reconnect 5 times!!!!');
+        return;
+      }
+      _errorReconnect++;
+    }
+    print('socket 进行重连!!! reconnectType:$reconnectType');
+    _initConnect();
+  }
 
   //连接
   void _initConnect() {
-    print('初始化socket ===========================');
+    _socket?.close();
+    if (_socket != null ) {
+      _socket = null;
+    }
+    call.clear();
+
     Socket.connect(Config.socket_s, Config.socket_p).then((Socket sock) {
       _socket = sock;
       messageStream = FByteBuffer(typed.Uint8Buffer());
@@ -69,6 +92,9 @@ class SocketBloc {
       _firstByte();
       //gen auth_key
       _genAuthKey();
+    }).catchError((err){
+      print('connection error:$err');
+      reconnect(reconnectType: 1);
     });
   }
 
@@ -87,10 +113,22 @@ class SocketBloc {
 
   Future<$pb.GeneratedMessage> send(OP op, $pb.GeneratedMessage obj,
       $pb.GeneratedMessage Function(Response resp) handler) async {
-    var id = _send(op, obj);
-    print('send op id:$id');
+
+    var id = _requestID;
+    _send($fixnum.Int64(id),op, obj);
+
     Completer<$pb.GeneratedMessage> c = Completer();
+
+    Timer timeoutTimer;
+    if (timeout != null) {
+      timeoutTimer = Timer(timeout, () {
+        print('请求超时 移除回调:$id');
+        call.remove(id);
+      });
+    }
+
     call[id] = (Response resp) {
+      timeoutTimer?.cancel();
       var result = handler(resp);
       c.complete(result);
     };
@@ -98,12 +136,11 @@ class SocketBloc {
   }
 
   /// 发送数据
-  int _send(OP op, $pb.GeneratedMessage obj) {
+  void _send($fixnum.Int64 id,OP op, $pb.GeneratedMessage obj) {
     var p = Proto.create();
     p.from = 1; // 1 表示客户端向服务器发送消息
     p.op = op; // 登录注册
-    var id = _requestID;
-    p.seq = $fixnum.Int64(id); // 此次请求的ID
+    p.seq = id; // 此次请求的ID
     if (_authKeyHash != null) {
       p.authKeyHash = _authKeyHash; // dh
     }
@@ -129,7 +166,6 @@ class SocketBloc {
     List data =
         lengthSizeBuf.buffer.asUint8List() + dataByte.buffer.asUint8List();
     _socket.add(data);
-    return id;
   }
 
   void _onData(Uint8List data) {
@@ -173,14 +209,16 @@ class SocketBloc {
     var result = Response.fromBuffer(p.data);
     switch (p.op) {
       case OP.needDH:
-        print('authKey过期了,退出');
-        _socket.close();
-        _socket = null;
+        if (_inGenKey) {
+          return;
+        }
+        _navigationService.popAllAndPushNamed(Routes.loginView);
         _keyStorageService.del(auth_key);
         _initConnect();
         return;
       case OP.needLogin:
-        // TODO: 需要登录,跳转到登录页
+        // 需要登录,跳转到登录页
+        _navigationService.popAllAndPushNamed(Routes.loginView);
         return;
       case OP.receiveSingle:
         var msg = Message.fromBuffer(result.data);
@@ -194,28 +232,41 @@ class SocketBloc {
         return;
       default:
         var id = p.seq.toInt();
-        call[id](result);
-        call.remove(id);
-        print('call callback success');
+        var cb = call[id];
+        if (cb != null) {
+          cb(result);
+          call.remove(id);
+          print('call callback success $id');
+        }
     }
   }
 
   void _error(error, StackTrace trace) {
     print('连接失败: $error');
+    reconnect(reconnectType: 1);
   }
 
   void _done() {
-    _socket.destroy();
+    _socket?.destroy();
   }
 
   // auth_key
   void _genAuthKey() async {
+    _inGenKey = true;
+    _encryptionReady = false;
+    if (_authKey != null) {
+      _authKey = null;
+    }
+    if (_authKeyHash != null ){
+      _authKeyHash = null;
+    }
     var _authKeyString = _keyStorageService.get(auth_key);
     if (_authKeyString != null) {
       _authKey = base64.decode(_authKeyString);
       _authKeyHash = sha1.convert(_authKey).bytes.sublist(12, 20);
       _encryptionReady = true;
       print('使用本地的authKey:$_authKeyHash');
+      _inGenKey = false;
       return null;
     }
     var rpq = ReqPQ.create();
@@ -232,6 +283,7 @@ class SocketBloc {
     // 3.
     DH_GEN dhGen = await send(OP.clientDHParams, dhParamOK, _dhResult);
     print('gen auth_key result:$dhGen');
+    _inGenKey = false;
   }
 
   //2. res pq
