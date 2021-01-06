@@ -12,10 +12,16 @@ import 'package:protobuf/protobuf.dart' as $pb;
 class ContentType extends $pb.ProtobufEnum {
   static const ContentType normalText = ContentType._(0, 'normalText');
   static const ContentType image = ContentType._(1, 'image');
+  static const ContentType voice = ContentType._(2, 'voice');
+  static const ContentType emoji = ContentType._(3, 'emoji');
+  static const ContentType extra = ContentType._(4, 'extra');
 
   static const $core.List<ContentType> values = <ContentType> [
     normalText,
     image,
+    voice,
+    emoji,
+    extra,
   ];
 
   static final $core.Map<$core.int, ContentType> _byValue = $pb.ProtobufEnum.initByValue(values);

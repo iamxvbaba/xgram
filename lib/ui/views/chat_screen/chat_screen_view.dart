@@ -1,14 +1,16 @@
 import 'dart:ffi';
+import 'dart:io';
+import 'dart:ui' as ui show Codec, FrameInfo, Image;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/screenutil.dart';
 import 'package:provider_start/core/proto/protobuf_gen/message.pb.dart';
 import 'package:provider_start/ui/views/chat_screen/chat_screen_view_model.dart';
-import 'package:provider_start/ui/views/chat_screen/record_view.dart';
 import 'package:stacked/stacked.dart';
 import 'package:fixnum/fixnum.dart';
 
-import 'icon_button.dart';
+import 'chat_bottom.dart';
+import 'expanded_viewport.dart';
+import 'message_item.dart';
 
 class ChatScreenPage extends StatefulWidget {
   ChatScreenPage({Key key, this.userProfileId}) : super(key: key);
@@ -20,46 +22,17 @@ class ChatScreenPage extends StatefulWidget {
 }
 
 class _ChatScreenPageState extends State<ChatScreenPage> {
-  final messageController = TextEditingController();
-  ScrollController _controller;
   GlobalKey<ScaffoldState> _scaffoldKey;
 
   @override
   void dispose() {
-    messageController.dispose();
     super.dispose();
   }
 
   @override
   void initState() {
     _scaffoldKey = GlobalKey<ScaffoldState>();
-    _controller = ScrollController();
     super.initState();
-  }
-
-  Widget _chatScreenBody(ChatScreenViewModel model) {
-    var msg = model.msg;
-    if (msg == null || msg.isEmpty) {
-      return Center(
-        child: Text(
-          'No message found',
-          style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
-        ),
-      );
-    }
-    return ListView.builder(
-      controller: _controller,
-      shrinkWrap: true,
-      reverse: true,
-      physics: BouncingScrollPhysics(),
-      itemCount: msg.length,
-      itemBuilder: (context, index) => TextRecordRow(
-          avatar: msg[index].senderID == model.currentUser.id
-              ? model.currentUser.avatar
-              : model.chatUser.avatar,
-          msg: msg[index].body.msg,
-          self: msg[index].senderID == model.currentUser.id),
-    );
   }
 
   BorderRadius getBorder(bool myMessage) {
@@ -71,91 +44,10 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
     );
   }
 
-  Widget _bottomEntryField(ChatScreenViewModel model) {
-    return Align(
-      alignment: Alignment.bottomLeft,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          Divider(
-            thickness: 0,
-            height: 1,
-          ),
-          Row(
-            children: [
-              OutlinedIconButton(
-                icon: Icon(Icons.face),
-                onTap: () async {
-                  //发送表情
-                },
-              ),
-              OutlinedIconButton(
-                icon: Icon(Icons.add),
-                onTap: () async {
-                  //发送文件
-                },
-              ),
-              Expanded(
-                child: TextField(
-                  onSubmitted: (val) async {
-                    submitMessage(model);
-                  },
-                  controller: messageController,
-                  decoration: InputDecoration(
-                    contentPadding:
-                    EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(10), vertical: ScreenUtil().setHeight(28)),
-                    border: InputBorder.none,
-                    alignLabelWithHint: true,
-                    hintText: 'Start with a message...',
-                    suffixIcon: IconButton(
-                        icon: Icon(Icons.send),
-                        color: Colors.grey,
-                        onPressed: () => submitMessage(model)),
-                    // fillColor: Colors.black12, filled: true
-                  ),
-                ),
-              )
-            ],
-          ),
-
-        ],
-      ),
-    );
-  }
-
   Future<bool> _onWillPop(ChatScreenViewModel model) async {
-    // final chatState = Provider.of<ChatState>(context,listen: false);
-    model.setIsChatScreenOpen = false;
+    FocusScope.of(context).requestFocus(FocusNode());
+    model.changeNotifier.sink.add(null);
     return true;
-  }
-
-  void submitMessage(ChatScreenViewModel model) {
-    if (messageController.text.isEmpty) {
-      return;
-    }
-    Message message = Message.create();
-    message.senderID = model.currentUser.id;
-    message.userID = model.chatUser.id;
-    message.body = MessageBody.create();
-
-    message.body.sendTime = Int64(DateTime.now().millisecondsSinceEpoch);
-    message.body.msg = messageController.text;
-    model.onAddMessage(message, true);
-    Future.delayed(Duration(milliseconds: 50)).then((_) {
-      messageController.clear();
-    });
-    try {
-      // final state = Provider.of<ChatState>(context,listen: false);
-      if (model.msg != null && model.msg.length > 1 && _controller.offset > 0) {
-        _controller.animateTo(
-          0.0,
-          curve: Curves.easeOut,
-          duration: const Duration(milliseconds: 300),
-        );
-      }
-    } catch (e) {
-      print('[Error] $e');
-    }
   }
 
   @override
@@ -176,22 +68,123 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
                         fontWeight: FontWeight.bold),
                   ),
                   actions: <Widget>[
-                    IconButton(
-                        icon: Icon(Icons.info),
-                        onPressed: () {})
+                    IconButton(icon: Icon(Icons.info), onPressed: () {})
                   ],
                 ),
                 body: SafeArea(
-                  child: Stack(
+                  child: Column(
                     children: <Widget>[
-                      Align(
-                        alignment: Alignment.topRight,
-                        child: Padding(
-                          padding: EdgeInsets.only(bottom: 50),
-                          child: _chatScreenBody(model),
+                      Expanded(
+                        child: GestureDetector(
+                          behavior: HitTestBehavior.translucent,
+                          onTap: () {
+                            //  点击顶部空白处触摸收起键盘
+                            FocusScope.of(context).requestFocus(FocusNode());
+                          },
+                          child: Scrollable(
+                              physics: AlwaysScrollableScrollPhysics(),
+                              controller: model.listScrollController,
+                              axisDirection: AxisDirection.up,
+                              viewportBuilder: (context, offset) {
+                                return ExpandedViewport(
+                                  offset: offset,
+                                  axisDirection: AxisDirection.up,
+                                  slivers: <Widget>[
+                                    SliverExpanded(),
+                                    SliverList(
+                                      delegate: SliverChildBuilderDelegate(
+                                        (c, i) {
+                                          return model.msg == null
+                                              ? Container(
+                                                  child: Text('暂无消息'),
+                                                )
+                                              : ChatMessageItem(
+                                                  message: model.msg[i],
+                                                  onAudioTap: (String str) {},
+                                                );
+                                        },
+                                        childCount: model.msg == null
+                                            ? 1
+                                            : model.msg.length,
+                                      ),
+                                    ),
+                                    SliverToBoxAdapter(
+                                      child: model.isShowLoading
+                                          ? Container(
+                                              margin: EdgeInsets.only(top: 5),
+                                              height: 50,
+                                              child: Center(
+                                                child: SizedBox(
+                                                  width: 25.0,
+                                                  height: 25.0,
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                    strokeWidth: 3,
+                                                  ),
+                                                ),
+                                              ),
+                                            )
+                                          : Container(),
+                                    ),
+                                  ],
+                                );
+                              }),
                         ),
                       ),
-                      _bottomEntryField(model),
+                      ChatBottomInputWidget(
+                          shouldTriggerChange: model.changeNotifier.stream,
+                          onSendCallBack: (value) {
+                            print('发送的文字:' + value);
+                            Message message = Message.create();
+                            message.senderID = model.currentUser.id;
+                            message.userID = model.chatUser.id;
+                            message.body = MessageBody.create();
+
+                            message.body.sendTime =
+                                Int64(DateTime.now().millisecondsSinceEpoch);
+                            message.body.msgID = message.body.sendTime;
+                            message.body.contentType = ContentType.normalText;
+                            message.body.msg = value;
+                            model.onAddMessage(message, true);
+
+                            model.listScrollController.animateTo(0.00,
+                                duration: Duration(seconds: 1),
+                                curve: Curves.easeOut);
+
+                            Future.delayed(Duration(seconds: 1), () {
+
+                            });
+                          },
+                          onImageSelectCallBack: (value) {
+                            File image = new File(value
+                                .path); // Or any other way to get a File instance.
+                            Future<ui.Image> decodedImage =
+                                decodeImageFromList(image.readAsBytesSync());
+
+                            decodedImage.then((result) {
+                              print('图片的宽: ${result.width}');
+                              print('图片的高:${result.height}');
+                            });
+
+                            Message message = Message.create();
+                            message.senderID = model.currentUser.id;
+                            message.userID = model.chatUser.id;
+                            message.body = MessageBody.create();
+
+                            message.body.sendTime =
+                                Int64(DateTime.now().millisecondsSinceEpoch);
+                            message.body.contentType = ContentType.image;
+                            message.body.msgID = message.body.sendTime;
+                            message.body.msg = '图片路径';
+                            model.onAddMessage(message, true);
+
+                            model.listScrollController.animateTo(0.00,
+                                duration: Duration(milliseconds: 1),
+                                curve: Curves.easeOut);
+                          },
+                          onAudioCallBack: (value, duration) {
+                            print('发送语音');
+                          })
                     ],
                   ),
                 ),

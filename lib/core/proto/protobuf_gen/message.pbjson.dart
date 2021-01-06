@@ -10,6 +10,9 @@ const ContentType$json = const {
   '2': const [
     const {'1': 'normalText', '2': 0},
     const {'1': 'image', '2': 1},
+    const {'1': 'voice', '2': 2},
+    const {'1': 'emoji', '2': 3},
+    const {'1': 'extra', '2': 4},
   ],
 };
 
