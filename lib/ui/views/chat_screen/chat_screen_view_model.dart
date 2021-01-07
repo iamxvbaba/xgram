@@ -33,7 +33,7 @@ class ChatScreenViewModel extends BaseViewModel {
     _chatStateService.setNotify(notifyListeners);
     setBusy(true);
     setBusy(false);
-    isShowLoading = false;
+    //isShowLoading = false;
   }
 
   void onAddMessage(Message message,bool send) {

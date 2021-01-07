@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/screenutil.dart';
 import 'package:provider_start/core/proto/protobuf_gen/message.pb.dart';
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:stacked/stacked.dart';
@@ -33,35 +34,10 @@ class ChatMessageItem extends ViewModelWidget<ChatScreenViewModel> {
     id = uid;
   }
 
-  Widget getmImageLayout(Message message) {
-    Widget child;
-    /*
-    if (mMessgae.thumbPath != null && (!mMessgae.thumbPath.isEmpty)) {
-      child =
-          Image.file(File('${(widget.mMessage as HrlImageMessage).thumbPath}'));
-    } else {
-      child = Image.network(
-        '${(widget.mMessage as HrlImageMessage).thumbUrl}',
-        fit: BoxFit.fill,
-      );
-    }*/
-    child = Text('getmImageLayout');
-    return child;
-  }
+
 
   Widget getItemContent() {
     switch (message.body.contentType) {
-      case ContentType.image:
-        return Container(
-          /* width:mImgWidth,
-          height: mImgHeight,*/
-          constraints: BoxConstraints(
-            maxWidth: 400,
-            maxHeight: 150,
-          ),
-          child: getmImageLayout(message),
-        );
-        break;
       case ContentType.normalText:
         return Text(
           '${message.body.msg}',
@@ -69,51 +45,12 @@ class ChatMessageItem extends ViewModelWidget<ChatScreenViewModel> {
           style: TextStyle(fontSize: 14.0, color: Colors.black),
         );
         break;
+      case ContentType.image:
+        break;
       case ContentType.voice:
-        var isStop = true;
-        if (id == message.body.msgID) {
-          if (!mIsPlayint) {
-            isStop = true;
-          } else {
-            isStop = false;
-          }
-        } else {
-          isStop = true;
-        }
-        //    print("是否停止:"+isStop.toString()+"widget.mUUid=:"+widget.mUUid );
-        return GestureDetector(
-          onTap: () {
-            //  int result = await mAudioPlayer.play((widget.mMessage as HrlVoiceMessage).path, isLocal: true);
-            onAudioTap('');
-          },
-          /*
-          child: VoiceAnimationImage(
-            isSelf ? mAudioAssetRightList : mAudioAssetLeftList,
-            width: 100,
-            height: 30,
-            isStop: isStop,
-            //&&(widget.mUUid==widget.mMessage.uuid)
-          ),*/
-        );
         break;
     }
   }
-
-  /*playLocal() async {
-    int result = await mAudioPlayer.play((widget.mMessage as HrlVoiceMessage).path, isLocal: true);
-    //  int result = await mAudioPlayer.play("https://github.com/luanpotter/audioplayers");
-    print("播放的路径："+"${(widget.mMessage as HrlVoiceMessage).path}"+"播放的结果:"+"${result}");
-    mAudioPlayer.onPlayerCompletion.listen((event) {
-      setState(() {
-         isPalying = false;
-       });
-    });
-    setState(() {
-      isPalying = true;
-    });
-
-
-  }*/
 
   BubbleStyle getItemBundleStyle() {
     var styleSendText = BubbleStyle(
@@ -122,8 +59,7 @@ class ChatMessageItem extends ViewModelWidget<ChatScreenViewModel> {
       nipOffset: 5,
       nipWidth: 10,
       nipHeight: 10,
-      margin: BubbleEdges.only(left: 50.0),
-      padding: BubbleEdges.only(top: 8, bottom: 10, left: 15, right: 10),
+      padding: BubbleEdges.only(top: 8, bottom: 8, left: 8, right: 8),
     );
 
     var styleSendImg = BubbleStyle(
@@ -175,17 +111,6 @@ class ChatMessageItem extends ViewModelWidget<ChatScreenViewModel> {
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Visibility(
-              visible: message.body.contentType == ContentType.voice,
-              child: Container(
-                child: message.body.contentType == ContentType.voice
-                    ? Text(
-                        "12s'",
-                        style: TextStyle(fontSize: 14, color: Colors.black),
-                      )
-                    : Container(),
-              ),
-            ),
             Container(
               constraints: BoxConstraints(
                 maxWidth: MediaQuery.of(context).size.width * 0.8,

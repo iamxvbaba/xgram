@@ -151,9 +151,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
                                 duration: Duration(seconds: 1),
                                 curve: Curves.easeOut);
 
-                            Future.delayed(Duration(seconds: 1), () {
-
-                            });
+                            Future.delayed(Duration(seconds: 1), () {});
                           },
                           onImageSelectCallBack: (value) {
                             File image = new File(value

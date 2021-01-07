@@ -3,13 +3,10 @@ import 'dart:ui' as ui;
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:keyboard_visibility/keyboard_visibility.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider_start/constant/constant.dart';
 import 'package:provider_start/core/proto/protobuf_gen/message.pb.dart';
-import 'package:provider_start/ui/views/chat_screen/sp_util.dart';
-import 'emoji_widget.dart';
-import 'extra_widget.dart';
 import 'image_button.dart';
 import 'record_button.dart';
 
@@ -42,6 +39,7 @@ class ChatBottomInputWidget extends StatefulWidget {
 
 class _ChatBottomInputWidgetState extends State<ChatBottomInputWidget>
     with WidgetsBindingObserver, TickerProviderStateMixin {
+
   ContentType mCurrentType = _initType;
 
   FocusNode focusNode = FocusNode();
@@ -53,19 +51,12 @@ class _ChatBottomInputWidgetState extends State<ChatBottomInputWidget>
 
   Stream<String> get inputContentStream => inputContentStreamController.stream;
 
-  double _softKeyHeight = SpUtil.getDouble(Constant.SP_KEYBOARD_HEGIHT, 0);
-
   final GlobalKey globalKey = GlobalKey();
 
-  bool mBottomLayoutShow = false;
-
-  bool mAddLayoutShow = false;
-
-  bool mEmojiLayoutShow = false;
-
+  /*
   KeyboardVisibilityNotification _keyboardVisibility =
       KeyboardVisibilityNotification();
-
+  */
   StreamSubscription streamSubscription;
 
   void _getWH() {
@@ -76,12 +67,9 @@ class _ChatBottomInputWidgetState extends State<ChatBottomInputWidget>
 
   @override
   void didChangeMetrics() {
+    // 此处得到键盘高度
     final mediaQueryData = MediaQueryData.fromWindow(ui.window);
     final keyHeight = mediaQueryData?.viewInsets?.bottom;
-    if (keyHeight != 0) {
-      _softKeyHeight = keyHeight;
-      print('-------->keyHeight:$keyHeight');
-    }
   }
 
   @override
@@ -101,12 +89,7 @@ class _ChatBottomInputWidgetState extends State<ChatBottomInputWidget>
   }
 
   void hideBottomLayout() {
-    setState(() {
-      this.mCurrentType = ContentType.normalText;
-      mBottomLayoutShow = false;
-      mAddLayoutShow = false;
-      mEmojiLayoutShow = false;
-    });
+    setState(() {});
   }
 
   @override
@@ -119,29 +102,13 @@ class _ChatBottomInputWidgetState extends State<ChatBottomInputWidget>
       inputContentStreamController.add(mEditController.text);
     });
 
+    /*
     _keyboardVisibility.addNewListener(
       onChange: (bool visible) {
-        if (visible) {
-          mBottomLayoutShow = true;
-          if (mEmojiLayoutShow) {
-            mCurrentType = ContentType.normalText;
-            setState(() {});
-          } else {
-            setState(() {});
-          }
-        } else {
-          if (mBottomLayoutShow) {
-            if (mAddLayoutShow) {
-            } else {
-              if (!mEmojiLayoutShow) {
-                mBottomLayoutShow = false;
-                setState(() {});
-              }
-            }
-          }
-        }
+
       },
     );
+     */
   }
 
   Future requestPermission() async {
@@ -165,14 +132,13 @@ class _ChatBottomInputWidgetState extends State<ChatBottomInputWidget>
 
   @override
   Widget build(BuildContext context) {
-    requestPermission();
-
     return Container(
-      // height: keyHeight+60,
       color: Color(0xffF8F8F8),
       padding: const EdgeInsets.only(left: 8, right: 8),
       child: Column(
         children: <Widget>[
+          // 各种选项
+          _buildExtraContainer(child: _buildBottomItems()),
           Row(
             children: <Widget>[
               buildLeftButton(),
@@ -181,23 +147,21 @@ class _ChatBottomInputWidgetState extends State<ChatBottomInputWidget>
               buildRightButton(),
             ],
           ),
-          _buildBottomContainer(child: _buildBottomItems()),
         ],
       ),
     );
   }
 
   Widget buildLeftButton() {
-    return mCurrentType == ContentType.voice ? mKeyBoardButton() : mRecordButton();
+    return mCurrentType == ContentType.voice
+        ? mKeyBoardButton()
+        : mRecordButton();
   }
 
   Widget mRecordButton() {
     return ImageButton(
       onPressed: () {
-        mCurrentType = ContentType.voice;
         hideSoftKey();
-        mBottomLayoutShow = false;
-        mEmojiLayoutShow = false;
         setState(() {});
       },
       image: AssetImage(Constant.ASSETS_IMG + 'ic_audio.png'),
@@ -248,7 +212,7 @@ class _ChatBottomInputWidgetState extends State<ChatBottomInputWidget>
               EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 10),
           enabledBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: Colors.white, width: 0.0),
-            borderRadius: BorderRadius.all(const Radius.circular(5.0)),
+            borderRadius: BorderRadius.all(Radius.circular(5.0)),
           ),
           disabledBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: Colors.grey, width: 0.0),
@@ -285,7 +249,9 @@ class _ChatBottomInputWidgetState extends State<ChatBottomInputWidget>
   }
 
   Widget buildEmojiButton() {
-    return mCurrentType != ContentType.emoji ? mEmojiButton() : mEmojiKeyBoardButton();
+    return mCurrentType != ContentType.emoji
+        ? mEmojiButton()
+        : mEmojiKeyBoardButton();
   }
 
   Widget mEmojiButton() {
@@ -293,10 +259,7 @@ class _ChatBottomInputWidgetState extends State<ChatBottomInputWidget>
       onPressed: () {
         mCurrentType = ContentType.emoji;
         _getWH();
-        setState(() {
-          mBottomLayoutShow = false;
-          mEmojiLayoutShow = true;
-        });
+        setState(() {});
         hideSoftKey();
         _getWH();
       },
@@ -308,9 +271,8 @@ class _ChatBottomInputWidgetState extends State<ChatBottomInputWidget>
     return ImageButton(
       onPressed: () {
         _getWH();
-        this.mCurrentType = ContentType.normalText;
-        mBottomLayoutShow = true;
-        mEmojiLayoutShow = false;
+        mCurrentType = ContentType.normalText;
+
         setState(() {});
         showSoftKey();
       },
@@ -322,81 +284,41 @@ class _ChatBottomInputWidgetState extends State<ChatBottomInputWidget>
     return StreamBuilder<String>(
       stream: inputContentStream,
       builder: (context, snapshot) {
-        final sendButton = buildSend();
-        final extraButton = ImageButton(
-            image: AssetImage(Constant.ASSETS_IMG + 'ic_add.png'),
-            onPressed: () {
-              mCurrentType = ContentType.extra;
-              if (mBottomLayoutShow) {
-                if (mAddLayoutShow) {
-                  showSoftKey();
-                  mAddLayoutShow = false;
-                  setState(() {});
-                } else {
-                  hideSoftKey();
-                  mAddLayoutShow = true;
-                  setState(() {});
-                }
-              } else {
-                if (focusNode.hasFocus) {
-                  hideSoftKey();
-                  Future.delayed(const Duration(milliseconds: 50), () {
-                    setState(() {
-                      mBottomLayoutShow = true;
-                      mAddLayoutShow = true;
-                    });
-                  });
-                } else {
-                  mBottomLayoutShow = true;
-                  mAddLayoutShow = true;
-                  setState(() {});
-                }
-              }
-            });
-        var crossFadeState =
-            checkShowSendButton(mEditController.text)
-                ? CrossFadeState.showFirst
-                : CrossFadeState.showSecond;
+        var crossFadeState;
+        if (!snapshot.hasData) {
+          crossFadeState =  CrossFadeState.showFirst;
+        } else {
+          crossFadeState = snapshot.data?.trim()?.isNotEmpty
+            ? CrossFadeState.showFirst
+            : CrossFadeState.showSecond;
+        }
+
         return AnimatedCrossFade(
           duration: const Duration(milliseconds: 300),
           crossFadeState: crossFadeState,
-          firstChild: sendButton,
-          secondChild: extraButton,
+          firstChild: Container(
+            width: ScreenUtil().setWidth(80),
+            height: ScreenUtil().setWidth(80),
+            child: IconButton(
+                icon: Icon(Icons.send),
+                onPressed: () {
+                  mCurrentType = ContentType.normalText;
+                  widget.onSendCallBack?.call(mEditController.text.trim());
+                  mEditController.clear();
+                }),
+          ),
+          secondChild: ImageButton(
+              image: AssetImage(Constant.ASSETS_IMG + 'ic_add.png'),
+              onPressed: () {
+                hideSoftKey(); // 隐藏软
+              }),
         );
       },
     );
   }
 
-  Widget buildSend() {
-    return Container(
-      width: 60,
-      height: 30,
-      child: RaisedButton(
-        padding: EdgeInsets.all(0),
-        color: Color(0xffFF8200),
-        textColor: Colors.white,
-        disabledTextColor: Colors.white,
-        disabledColor: Color(0xffFFD8AF),
-        elevation: 0,
-        disabledElevation: 0,
-        highlightElevation: 0,
-        onPressed: () {
-          mCurrentType = ContentType.normalText;
-          widget.onSendCallBack?.call(mEditController.text.trim());
-          mEditController.clear();
-        },
-        child: Text(
-          '发送',
-          style: TextStyle(fontSize: 16.0),
-        ),
-      ),
-    );
-  }
 
   bool checkShowSendButton(String text) {
-    if (mCurrentType == ContentType.voice) {
-      return false;
-    }
     if (text.trim().isNotEmpty) {
       return true;
     }
@@ -411,40 +333,25 @@ class _ChatBottomInputWidgetState extends State<ChatBottomInputWidget>
     focusNode.unfocus();
   }
 
-
-  Widget _buildBottomContainer({Widget child}) {
+  Widget _buildExtraContainer({Widget child}) {
     return Visibility(
-      visible: mBottomLayoutShow,
+      visible: false, //mBottomLayoutShow,
       child: Container(
         key: globalKey,
         child: child,
-        height: mCurrentType==ContentType.extra?_softKeyHeight:0,
       ),
     );
   }
 
   Widget _buildBottomItems() {
-    if (mCurrentType == ContentType.extra) {
-      return Visibility(
-          visible: mAddLayoutShow,
-          child: DefaultExtraWidget(onImageSelectBack: (value) {
-            widget.onImageSelectCallBack?.call(value);
-          }));
-    } else if (mCurrentType == ContentType.emoji) {
-      return Visibility(
-        visible: mEmojiLayoutShow,
-        child: EmojiWidget(onEmojiClockBack: (value) {
-          if (0 == value) {
-            mEditController.clear();
-          } else {
-            mEditController.text =
-                mEditController.text + String.fromCharCode(value);
-          }
-        }),
-      );
-    } else {
-      return Container();
-    }
+    return Container(
+      child: Row(
+        children: [
+          Text('1'),
+          Text('2'),
+        ],
+      ),
+    );
   }
 }
 

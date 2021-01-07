@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ImageButton extends StatefulWidget {
   final ImageProvider image;
@@ -20,13 +21,13 @@ class _ImageButtonState extends State<ImageButton> {
     return GestureDetector(
       onTap: widget.onPressed,
       child: Container(
-        width: 44,
-        height: 44,
+        width: ScreenUtil().setWidth(80),
+        height: ScreenUtil().setWidth(80),
         alignment: Alignment.center,
         child: Image(
           image: widget.image,
-          width: 35,
-          height: 35,
+          width: ScreenUtil().setWidth(70),
+          height: ScreenUtil().setWidth(70),
         ),
       ),
     );

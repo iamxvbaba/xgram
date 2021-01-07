@@ -215,26 +215,12 @@ class BubbleClipper extends CustomClipper<Path> {
       case BubbleNip.rightText  :
       case BubbleNip.noRight  :
       path.addRRect(RRect.fromLTRBR(_endOffset  , 0, size.width - _startOffset, size.height, radius));
-
         Path path2 = Path();
         path2.moveTo(size.width - _startOffset - radiusX, nipOffset);
         path2.lineTo(size.width - _startOffset - radiusX, nipOffset + nipHeight*2 );
         path2.lineTo(size.width - _startOffset+5, nipOffset + nipHeight);
 
-         print("起点坐标1:"+"x:"+"${size.width - _startOffset - radiusX}"+"y:"+"${nipOffset}");
-         print("起点坐标2:"+"x:"+"${size.width - _startOffset - radiusX}"+"y:"+"${nipOffset + nipHeight*2}");
-         print("起点坐标3:"+"x:"+"${size.width - _startOffset+5}"+"y:"+"${nipOffset + nipHeight}");
-         /*   if (nipRadius == 0) {
-          path2.lineTo(size.width, nipOffset);
-         } else {
-          path2.lineTo(size.width - _nipPX, nipOffset + _nipPY);
-          path2.arcToPoint(Offset(size.width - _nipCX, nipOffset),
-              radius: Radius.circular(nipRadius), clockwise: false);
-         }*/
-      /*  path2.arcToPoint(Offset(size.width - _nipCX, nipOffset),
-            radius: Radius.circular(nipRadius), clockwise: false);*/
         path2.close();
-
         path.addPath(path2, Offset(0, 0));
         path.addPath(path2, Offset(0, 0)); // Magic!
         break;
@@ -318,6 +304,7 @@ class Bubble extends StatelessWidget {
   final Alignment alignment;
   final BubbleClipper bubbleClipper;
 
+  @override
   Widget build(context) {
     return Container(
         alignment: alignment,
