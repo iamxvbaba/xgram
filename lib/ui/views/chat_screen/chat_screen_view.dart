@@ -152,37 +152,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
                                 curve: Curves.easeOut);
 
                             Future.delayed(Duration(seconds: 1), () {});
-                          },
-                          onImageSelectCallBack: (value) {
-                            File image = new File(value
-                                .path); // Or any other way to get a File instance.
-                            Future<ui.Image> decodedImage =
-                                decodeImageFromList(image.readAsBytesSync());
-
-                            decodedImage.then((result) {
-                              print('图片的宽: ${result.width}');
-                              print('图片的高:${result.height}');
-                            });
-
-                            Message message = Message.create();
-                            message.senderID = model.currentUser.id;
-                            message.userID = model.chatUser.id;
-                            message.body = MessageBody.create();
-
-                            message.body.sendTime =
-                                Int64(DateTime.now().millisecondsSinceEpoch);
-                            message.body.contentType = ContentType.image;
-                            message.body.msgID = message.body.sendTime;
-                            message.body.msg = '图片路径';
-                            model.onAddMessage(message, true);
-
-                            model.listScrollController.animateTo(0.00,
-                                duration: Duration(milliseconds: 1),
-                                curve: Curves.easeOut);
-                          },
-                          onAudioCallBack: (value, duration) {
-                            print('发送语音');
-                          })
+                          },)
                     ],
                   ),
                 ),
