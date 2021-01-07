@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screenutil.dart';
 import 'package:provider_start/core/proto/protobuf_gen/message.pb.dart';
@@ -21,8 +22,8 @@ class ChatMessageItem extends ViewModelWidget<ChatScreenViewModel> {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10.0),
       child: isSelf
-          ? getSentMessageLayout(context)
-          : getReceivedMessageLayout(context),
+          ? getSentMessageLayout(context,model)
+          : getReceivedMessageLayout(context,model),
     );
   }
 
@@ -104,7 +105,7 @@ class ChatMessageItem extends ViewModelWidget<ChatScreenViewModel> {
     return styleReceiveText;
   }
 
-  Widget getSentMessageLayout(BuildContext context) {
+  Widget getSentMessageLayout(BuildContext context,ChatScreenViewModel model) {
     return Container(
         alignment: Alignment.centerRight,
         child: Row(
@@ -127,16 +128,16 @@ class ChatMessageItem extends ViewModelWidget<ChatScreenViewModel> {
             Padding(
               padding: const EdgeInsets.only(right: 10.0, left: 5),
               child: CircleAvatar(
-                backgroundImage: NetworkImage(
-                    'https://c-ssl.duitang.com/uploads/item/201208/30/20120830173930_PBfJE.thumb.700_0.jpeg'),
-                radius: 16.0,
+                backgroundImage: CachedNetworkImageProvider(
+                  model.currentUser.avatar,),
+                radius:  ScreenUtil().setWidth(40),
               ),
             ),
           ],
         ));
   }
 
-  Widget getReceivedMessageLayout(BuildContext context) {
+  Widget getReceivedMessageLayout(BuildContext context,ChatScreenViewModel model) {
     return Container(
         alignment: Alignment.centerLeft,
         child: Row(
@@ -146,9 +147,9 @@ class ChatMessageItem extends ViewModelWidget<ChatScreenViewModel> {
             Padding(
               padding: const EdgeInsets.only(right: 5.0, left: 10),
               child: CircleAvatar(
-                backgroundImage: NetworkImage(
-                    'https://c-ssl.duitang.com/uploads/item/201208/30/20120830173930_PBfJE.thumb.700_0.jpeg'),
-                radius: 16.0,
+                backgroundImage: CachedNetworkImageProvider(
+                    model.chatUser.avatar),
+                radius: ScreenUtil().setWidth(40),
               ),
             ),
             Container(
