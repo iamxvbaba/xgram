@@ -132,27 +132,29 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
                         ),
                       ),
                       ChatBottomInputWidget(
-                          shouldTriggerChange: model.changeNotifier.stream,
-                          onSendCallBack: (value) {
-                            print('发送的文字:' + value);
-                            Message message = Message.create();
-                            message.senderID = model.currentUser.id;
-                            message.userID = model.chatUser.id;
-                            message.body = MessageBody.create();
+                        model: model,
+                        shouldTriggerChange: model.changeNotifier.stream,
+                        onSendCallBack: (value) {
+                          print('发送的文字:' + value);
+                          Message message = Message.create();
+                          message.senderID = model.currentUser.id;
+                          message.userID = model.chatUser.id;
+                          message.body = MessageBody.create();
 
-                            message.body.sendTime =
-                                Int64(DateTime.now().millisecondsSinceEpoch);
-                            message.body.msgID = message.body.sendTime;
-                            message.body.contentType = ContentType.normalText;
-                            message.body.msg = value;
-                            model.onAddMessage(message, true);
+                          message.body.sendTime =
+                              Int64(DateTime.now().millisecondsSinceEpoch);
+                          message.body.msgID = message.body.sendTime;
+                          message.body.contentType = ContentType.normalText;
+                          message.body.msg = value;
+                          model.onAddMessage(message, true);
 
-                            model.listScrollController.animateTo(0.00,
-                                duration: Duration(seconds: 1),
-                                curve: Curves.easeOut);
+                          model.listScrollController.animateTo(0.00,
+                              duration: Duration(seconds: 1),
+                              curve: Curves.easeOut);
 
-                            Future.delayed(Duration(seconds: 1), () {});
-                          },)
+                          Future.delayed(Duration(seconds: 1), () {});
+                        },
+                      )
                     ],
                   ),
                 ),

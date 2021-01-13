@@ -5,10 +5,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider_start/core/proto/protobuf_gen/message.pb.dart';
-import 'package:provider_start/ui/widgets/menu/circular_menu.dart';
-import 'package:provider_start/ui/widgets/menu/circular_menu_item.dart';
+import 'package:provider_start/ui/views/chat_screen/chat_screen_view_model.dart';
 
 ContentType _initType = ContentType.normalText;
 
@@ -21,8 +21,11 @@ class ChatBottomInputWidget extends StatefulWidget {
 
   final Stream shouldTriggerChange;
 
+  final ChatScreenViewModel model;
+
   const ChatBottomInputWidget({
     Key key,
+    @required this.model,
     @required this.shouldTriggerChange,
     this.onSendCallBack,
   }) : super(key: key);
@@ -50,8 +53,8 @@ class _ChatBottomInputWidgetState extends State<ChatBottomInputWidget>
   @override
   void didChangeMetrics() {
     // 此处得到键盘高度
-    final mediaQueryData = MediaQueryData.fromWindow(ui.window);
-    final keyHeight = mediaQueryData?.viewInsets?.bottom;
+    // final mediaQueryData = MediaQueryData.fromWindow(ui.window);
+    // final keyHeight = mediaQueryData?.viewInsets?.bottom;
   }
 
   @override
@@ -91,21 +94,17 @@ class _ChatBottomInputWidgetState extends State<ChatBottomInputWidget>
   }
 
   Future requestPermission() async {
+    print('申请权限');
     // 申请权限
     Map<PermissionGroup, PermissionStatus> permissions =
-        await PermissionHandler().requestPermissions(
-            [PermissionGroup.storage, PermissionGroup.microphone]);
-
+        await PermissionHandler().requestPermissions([PermissionGroup.storage]);
     // 申请结果
     PermissionStatus permission = await PermissionHandler()
         .checkPermissionStatus(PermissionGroup.storage);
-
     if (permission == PermissionStatus.granted) {
-      //  Fluttertoast.showToast(msg: "权限申请通过");
-
+      showToast('权限申请通过');
     } else {
-      //Fluttertoast.showToast(msg: "权限申请被拒绝");
-
+      showToast('权限申请被拒绝');
     }
   }
 
@@ -116,7 +115,7 @@ class _ChatBottomInputWidgetState extends State<ChatBottomInputWidget>
       padding: const EdgeInsets.only(left: 2),
       child: Row(
         children: <Widget>[
-          buildAddButton(),
+          buildAddButton(widget.model),
           Expanded(child: buildInputButton()),
           sendButton(),
         ],
@@ -130,7 +129,6 @@ class _ChatBottomInputWidgetState extends State<ChatBottomInputWidget>
         maxHeight: 80.0,
         minHeight: 40.0,
       ),
-
       child: TextField(
         maxLines: null,
         keyboardType: TextInputType.multiline,
@@ -178,49 +176,16 @@ class _ChatBottomInputWidgetState extends State<ChatBottomInputWidget>
     );
   }
 
-  Widget buildAddButton() {
-    return CircularMenu(
-      toggleButtonAnimatedIconData: AnimatedIcons.add_event,
-      toggleButtonColor: Colors.grey,
-      alignment: Alignment.center,
-      backgroundWidget: Container(
-        width: ScreenUtil().setWidth(70),
-        height: ScreenUtil().setWidth(70),
-      ),
-      toggleButtonMargin: 0,
-      toggleButtonPadding: 0,
-      toggleButtonSize: ScreenUtil().setWidth(60),
-      radius: ScreenUtil().setWidth(190),
-      startingAngleInRadian: ScreenUtil().setWidth(9.8),
-      endingAngleInRadian: ScreenUtil().setWidth(12.2),
-      items: [
-        CircularMenuItem(
-            iconSize: ScreenUtil().setWidth(50),
-            margin: 0,
-            icon: Icons.search,
-            color: Colors.black54,
-            onTap: () {} ),
-        CircularMenuItem(
-            iconSize: ScreenUtil().setWidth(50),
-            margin: 0,
-            icon: Icons.notifications,
-            color: Colors.brown,
-            onTap: () {}),
-        CircularMenuItem(
-            iconSize: ScreenUtil().setWidth(50),
-            margin: 0,
-            icon: Icons.add_a_photo,
-            color: Colors.black54,
-            onTap: () {}),
-        CircularMenuItem(
-            iconSize: ScreenUtil().setWidth(50),
-            margin: 0,
-            icon: Icons.mic,
-            color: Colors.brown,
-            onTap: () {}),
-      ],
-    );
+  Widget buildAddButton(ChatScreenViewModel model) {
+    return IconButton(
+        icon: Icon(Icons.add_a_photo),
+        iconSize: ScreenUtil().setWidth(60),
+        onPressed: () {
+          requestPermission();
+          model.pushSelectImage();
+        });
   }
+
 
   Widget sendButton() {
     return IconButton(
