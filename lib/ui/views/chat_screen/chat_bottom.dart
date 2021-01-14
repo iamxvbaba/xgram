@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 import 'dart:ui' as ui;
 import 'dart:io';
-
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider_start/core/proto/protobuf_gen/message.pb.dart';
@@ -13,8 +15,7 @@ import 'package:provider_start/ui/views/chat_screen/chat_screen_view_model.dart'
 ContentType _initType = ContentType.normalText;
 
 typedef OnSend = void Function(String text);
-typedef OnImageSelect = void Function(File mFile);
-typedef OnAudioCallBack = void Function(File mAudioFile, int duration);
+typedef OnImageSelect = void Function(String path);
 
 class ChatBottomInputWidget extends StatefulWidget {
   final OnSend onSendCallBack;
@@ -23,10 +24,13 @@ class ChatBottomInputWidget extends StatefulWidget {
 
   final ChatScreenViewModel model;
 
+  final OnImageSelect onImageSelectBack;
+
   const ChatBottomInputWidget({
     Key key,
     @required this.model,
     @required this.shouldTriggerChange,
+    @required this.onImageSelectBack,
     this.onSendCallBack,
   }) : super(key: key);
 
@@ -43,6 +47,7 @@ class _ChatBottomInputWidgetState extends State<ChatBottomInputWidget>
   TextEditingController mEditController = TextEditingController();
 
   final GlobalKey globalKey = GlobalKey();
+  final ImagePicker _picker = ImagePicker();
 
   /*
   KeyboardVisibilityNotification _keyboardVisibility =
@@ -94,16 +99,13 @@ class _ChatBottomInputWidgetState extends State<ChatBottomInputWidget>
   }
 
   Future requestPermission() async {
-    print('申请权限');
     // 申请权限
     Map<PermissionGroup, PermissionStatus> permissions =
         await PermissionHandler().requestPermissions([PermissionGroup.storage]);
     // 申请结果
     PermissionStatus permission = await PermissionHandler()
         .checkPermissionStatus(PermissionGroup.storage);
-    if (permission == PermissionStatus.granted) {
-      showToast('权限申请通过');
-    } else {
+    if (permission != PermissionStatus.granted) {
       showToast('权限申请被拒绝');
     }
   }
@@ -115,7 +117,7 @@ class _ChatBottomInputWidgetState extends State<ChatBottomInputWidget>
       padding: const EdgeInsets.only(left: 2),
       child: Row(
         children: <Widget>[
-          buildAddButton(widget.model),
+          imageButton(widget.model),
           Expanded(child: buildInputButton()),
           sendButton(),
         ],
@@ -176,16 +178,56 @@ class _ChatBottomInputWidgetState extends State<ChatBottomInputWidget>
     );
   }
 
-  Widget buildAddButton(ChatScreenViewModel model) {
+  Widget imageButton(ChatScreenViewModel model) {
     return IconButton(
         icon: Icon(Icons.add_a_photo),
+        iconSize: ScreenUtil().setWidth(60),
+        onPressed: () {
+          // 请求权限
+          requestPermission();
+          // 获取图片地址
+          _onImageButtonPressed(ImageSource.gallery)
+              .then((PickedFile pickedFile) async {
+            String path = await _uploadImage(pickedFile.path);
+            widget.onImageSelectBack(path);
+          });
+        });
+  }
+
+  Future<PickedFile> _onImageButtonPressed(ImageSource source) async {
+    return await _picker.getImage(
+      source: source,
+    );
+  }
+
+  //上传图片到服务器
+  Future<String> _uploadImage(String path) async {
+    FormData formData = FormData.fromMap({
+      //"": "", //这里写其他需要传递的参数
+      "file": await MultipartFile.fromFile(path)
+    });
+    Dio dio = new Dio();
+    var respone = await dio
+        .post<String>('http://192.168.101.13:7181/file/upload', data: formData);
+    if (respone.statusCode != 200) {
+      showToast('图片上传失败:${respone.data}');
+      return null;
+    }
+    Map<String, dynamic> data = json.decode(respone.data);
+
+    return data['filepath'];
+  }
+
+  /*
+  Widget imageTestButton(ChatScreenViewModel model) {
+    return IconButton(
+        icon: Icon(Icons.add),
         iconSize: ScreenUtil().setWidth(60),
         onPressed: () {
           requestPermission();
           model.pushSelectImage();
         });
-  }
-
+  }*/
 
   Widget sendButton() {
     return IconButton(

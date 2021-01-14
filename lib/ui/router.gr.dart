@@ -11,7 +11,7 @@ import 'package:flutter/cupertino.dart';
 
 import '../core/models/post/post.dart';
 import 'views/chat_screen/chat_screen_view.dart';
-import 'views/chat_screen/select_image.dart';
+import 'views/chat_screen/select_image_demo.dart';
 import 'views/login/login_view.dart';
 import 'views/main/main_view.dart';
 import 'views/startup/start_up_view.dart';

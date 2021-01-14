@@ -135,7 +135,6 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
                         model: model,
                         shouldTriggerChange: model.changeNotifier.stream,
                         onSendCallBack: (value) {
-                          print('发送的文字:' + value);
                           Message message = Message.create();
                           message.senderID = model.currentUser.id;
                           message.userID = model.chatUser.id;
@@ -153,6 +152,9 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
                               curve: Curves.easeOut);
 
                           Future.delayed(Duration(seconds: 1), () {});
+                        },
+                        onImageSelectBack: (path) {
+                          print('选中的图片路径:${path}');
                         },
                       )
                     ],
