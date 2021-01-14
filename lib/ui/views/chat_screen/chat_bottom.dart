@@ -188,6 +188,7 @@ class _ChatBottomInputWidgetState extends State<ChatBottomInputWidget>
           // 获取图片地址
           _onImageButtonPressed(ImageSource.gallery)
               .then((PickedFile pickedFile) async {
+                // 上传图片，得到网络地址
             String path = await _uploadImage(pickedFile.path);
             widget.onImageSelectBack(path);
           });

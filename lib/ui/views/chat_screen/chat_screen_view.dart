@@ -154,7 +154,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
                           Future.delayed(Duration(seconds: 1), () {});
                         },
                         onImageSelectBack: (path) {
-                          print('选中的图片路径:${path}');
+                          print('选中图片上传完的网络路径:${path}');
                         },
                       )
                     ],
