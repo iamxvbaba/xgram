@@ -14,7 +14,6 @@ class ChatMessageItem extends ViewModelWidget<ChatScreenViewModel> {
 
   ChatMessageItem({Key key, this.message, this.onAudioTap});
 
-
   @override
   Widget build(BuildContext context, ChatScreenViewModel model) {
     isSelf = message.senderID == model.currentUser.id;
@@ -22,8 +21,8 @@ class ChatMessageItem extends ViewModelWidget<ChatScreenViewModel> {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10.0),
       child: isSelf
-          ? getSentMessageLayout(context,model)
-          : getReceivedMessageLayout(context,model),
+          ? getSentMessageLayout(context, model)
+          : getReceivedMessageLayout(context, model),
     );
   }
 
@@ -35,8 +34,6 @@ class ChatMessageItem extends ViewModelWidget<ChatScreenViewModel> {
     id = uid;
   }
 
-
-
   Widget getItemContent() {
     switch (message.body.contentType) {
       case ContentType.normalText:
@@ -47,6 +44,13 @@ class ChatMessageItem extends ViewModelWidget<ChatScreenViewModel> {
         );
         break;
       case ContentType.image:
+        return Container(
+          child: CachedNetworkImage(
+            imageUrl: message.body.msg,
+            fit: BoxFit.cover,
+            height: ScreenUtil().setHeight(280),
+          ),
+        );
         break;
       case ContentType.voice:
         break;
@@ -105,7 +109,7 @@ class ChatMessageItem extends ViewModelWidget<ChatScreenViewModel> {
     return styleReceiveText;
   }
 
-  Widget getSentMessageLayout(BuildContext context,ChatScreenViewModel model) {
+  Widget getSentMessageLayout(BuildContext context, ChatScreenViewModel model) {
     return Container(
         alignment: Alignment.centerRight,
         child: Row(
@@ -129,15 +133,17 @@ class ChatMessageItem extends ViewModelWidget<ChatScreenViewModel> {
               padding: const EdgeInsets.only(right: 10.0, left: 5),
               child: CircleAvatar(
                 backgroundImage: CachedNetworkImageProvider(
-                  model.currentUser.avatar,),
-                radius:  ScreenUtil().setWidth(40),
+                  model.currentUser.avatar,
+                ),
+                radius: ScreenUtil().setWidth(40),
               ),
             ),
           ],
         ));
   }
 
-  Widget getReceivedMessageLayout(BuildContext context,ChatScreenViewModel model) {
+  Widget getReceivedMessageLayout(
+      BuildContext context, ChatScreenViewModel model) {
     return Container(
         alignment: Alignment.centerLeft,
         child: Row(
@@ -147,8 +153,8 @@ class ChatMessageItem extends ViewModelWidget<ChatScreenViewModel> {
             Padding(
               padding: const EdgeInsets.only(right: 5.0, left: 10),
               child: CircleAvatar(
-                backgroundImage: CachedNetworkImageProvider(
-                    model.chatUser.avatar),
+                backgroundImage:
+                    CachedNetworkImageProvider(model.chatUser.avatar),
                 radius: ScreenUtil().setWidth(40),
               ),
             ),

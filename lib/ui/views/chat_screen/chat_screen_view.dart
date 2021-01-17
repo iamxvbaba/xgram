@@ -50,6 +50,21 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
     return true;
   }
 
+  Message buildMsgContent(String value, Int64 sender, Int64 receiver,
+      {ContentType type = ContentType.normalText}) {
+    Message message = Message.create();
+    message.senderID = sender;
+    message.userID = receiver;
+    message.body = MessageBody.create();
+
+    message.body.sendTime = Int64(DateTime.now().millisecondsSinceEpoch);
+    message.body.msgID = message.body.sendTime;
+    message.body.contentType = type;
+    message.body.msg = value;
+
+    return message;
+  }
+
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<ChatScreenViewModel>.reactive(
@@ -135,17 +150,11 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
                         model: model,
                         shouldTriggerChange: model.changeNotifier.stream,
                         onSendCallBack: (value) {
-                          Message message = Message.create();
-                          message.senderID = model.currentUser.id;
-                          message.userID = model.chatUser.id;
-                          message.body = MessageBody.create();
-
-                          message.body.sendTime =
-                              Int64(DateTime.now().millisecondsSinceEpoch);
-                          message.body.msgID = message.body.sendTime;
-                          message.body.contentType = ContentType.normalText;
-                          message.body.msg = value;
-                          model.onAddMessage(message, true);
+                          model.onAddMessage(
+                              buildMsgContent(value, model.currentUser.id,
+                                  model.chatUser.id,
+                                  type: ContentType.normalText),
+                              true);
 
                           model.listScrollController.animateTo(0.00,
                               duration: Duration(seconds: 1),
@@ -155,6 +164,16 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
                         },
                         onImageSelectBack: (path) {
                           print('选中图片上传完的网络路径:${path}');
+                          model.onAddMessage(
+                              buildMsgContent(path, model.currentUser.id,
+                                  model.chatUser.id,
+                                  type: ContentType.image),
+                              true);
+
+                          model.listScrollController.animateTo(0.00,
+                              duration: Duration(seconds: 1),
+                              curve: Curves.easeOut);
+                          Future.delayed(Duration(seconds: 1), () {});
                         },
                       )
                     ],
