@@ -20,6 +20,7 @@ const OP$json = const {
     const {'1': 'logout', '2': 9},
     const {'1': 'session', '2': 10},
     const {'1': 'home', '2': 11},
+    const {'1': 'sessionHistory', '2': 14},
     const {'1': 'roomJoin', '2': 12},
     const {'1': 'roomExit', '2': 13},
     const {'1': 'channelReady', '2': -100},

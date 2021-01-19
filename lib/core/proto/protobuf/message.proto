@@ -34,6 +34,8 @@ message Message {
   MessageBody body = 4;
   UserType ut = 5;
   MessageUser eachInfo = 6; // 双方信息
+
+  bool send = 7; // 已发送
 }
 message MessageList {
   repeated Message list = 1;
@@ -54,4 +56,13 @@ message MessageReceiveAckArg {
 }
 message MessageReceiveAckMulArg {
   repeated MessageReceiveAckArg ack = 1;
+}
+
+
+//OP.sessionHistory
+message SessionHistoryArg {
+  int64 userID = 1;
+  int64 sendTime = 2;
+  int32 size=3;
+  bool first = 4; // 进入会话
 }

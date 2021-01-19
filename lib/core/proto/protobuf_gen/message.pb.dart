@@ -123,6 +123,7 @@ class Message extends $pb.GeneratedMessage {
     ..aOM<MessageBody>(4, 'body', subBuilder: MessageBody.create)
     ..e<$0.UserType>(5, 'ut', $pb.PbFieldType.OE, defaultOrMaker: $0.UserType.ut_none, valueOf: $0.UserType.valueOf, enumValues: $0.UserType.values)
     ..aOM<MessageUser>(6, 'eachInfo', protoName: 'eachInfo', subBuilder: MessageUser.create)
+    ..aOB(7, 'send')
     ..hasRequiredFields = false
   ;
 
@@ -198,6 +199,15 @@ class Message extends $pb.GeneratedMessage {
   void clearEachInfo() => clearField(6);
   @$pb.TagNumber(6)
   MessageUser ensureEachInfo() => $_ensure(5);
+
+  @$pb.TagNumber(7)
+  $core.bool get send => $_getBF(6);
+  @$pb.TagNumber(7)
+  set send($core.bool v) { $_setBool(6, v); }
+  @$pb.TagNumber(7)
+  $core.bool hasSend() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearSend() => clearField(7);
 }
 
 class MessageList extends $pb.GeneratedMessage {
@@ -336,5 +346,66 @@ class MessageReceiveAckMulArg extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(1)
   $core.List<MessageReceiveAckArg> get ack => $_getList(0);
+}
+
+class SessionHistoryArg extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('SessionHistoryArg', package: const $pb.PackageName('api'), createEmptyInstance: create)
+    ..aInt64(1, 'userID', protoName: 'userID')
+    ..aInt64(2, 'sendTime', protoName: 'sendTime')
+    ..a<$core.int>(3, 'size', $pb.PbFieldType.O3)
+    ..aOB(4, 'first')
+    ..hasRequiredFields = false
+  ;
+
+  SessionHistoryArg._() : super();
+  factory SessionHistoryArg() => create();
+  factory SessionHistoryArg.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory SessionHistoryArg.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  SessionHistoryArg clone() => SessionHistoryArg()..mergeFromMessage(this);
+  SessionHistoryArg copyWith(void Function(SessionHistoryArg) updates) => super.copyWith((message) => updates(message as SessionHistoryArg));
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static SessionHistoryArg create() => SessionHistoryArg._();
+  SessionHistoryArg createEmptyInstance() => create();
+  static $pb.PbList<SessionHistoryArg> createRepeated() => $pb.PbList<SessionHistoryArg>();
+  @$core.pragma('dart2js:noInline')
+  static SessionHistoryArg getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<SessionHistoryArg>(create);
+  static SessionHistoryArg _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $fixnum.Int64 get userID => $_getI64(0);
+  @$pb.TagNumber(1)
+  set userID($fixnum.Int64 v) { $_setInt64(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasUserID() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearUserID() => clearField(1);
+
+  @$pb.TagNumber(2)
+  $fixnum.Int64 get sendTime => $_getI64(1);
+  @$pb.TagNumber(2)
+  set sendTime($fixnum.Int64 v) { $_setInt64(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasSendTime() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearSendTime() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.int get size => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set size($core.int v) { $_setSignedInt32(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasSize() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearSize() => clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.bool get first => $_getBF(3);
+  @$pb.TagNumber(4)
+  set first($core.bool v) { $_setBool(3, v); }
+  @$pb.TagNumber(4)
+  $core.bool hasFirst() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearFirst() => clearField(4);
 }
 

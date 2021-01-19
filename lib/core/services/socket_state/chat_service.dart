@@ -17,11 +17,13 @@ class ChatStateService {
   final SocketBloc _socket = locator<SocketBloc>();
 
   Function _notify;
+
   void setNotify(Function f) {
     _notify = f;
   }
 
   Function _sessionNotify;
+
   void setSessionNotify(Function f) {
     _sessionNotify = f;
   }
@@ -35,10 +37,11 @@ class ChatStateService {
     _instance ??= ChatStateService._();
     return _instance;
   }
+
   ChatStateService._() {
     _eventBus.eventBus.on<Message>().listen((model) {
       print('接受到消息:$model');
-      sendOrReceiveMessage(model,false);
+      sendOrReceiveMessage(model, false);
       // 回调
       if (_notify != null) {
         _notify();
@@ -47,12 +50,12 @@ class ChatStateService {
   }
 
 
-
   User _chatUser;
   List<Message> _chatUserList;
 
   // 每个会话单独存放
   Map<String, List<Message>> _msgMap = Map<String, List<Message>>();
+  Map<String, bool> _msgNomore = Map<String, bool>(); // 没有更多消息了
 
   User get chatUser => _chatUser;
 
@@ -74,7 +77,7 @@ class ChatStateService {
 
   List<Message> get msg {
     var _msg =
-        _msgMap[_calKey(_authService.currentUser.id, _chatUser.id)];
+    _msgMap[_calKey(_authService.currentUser.id, _chatUser.id)];
     if (_msg == null || _msg.isEmpty) {
       return null;
     } else {
@@ -83,8 +86,68 @@ class ChatStateService {
     }
   }
 
+  //TODO: 向上加载更多消息
+  Future<List<Message>> loadMoreMsg() async {
+    String key = _calKey(_authService.currentUser.id, _chatUser.id);
+    var _msg = _msgMap[key];
+    if (_msg == null) {
+      _msg = List<Message>();
+      _msgMap[key] = _msg;
+    }
+    var no = _msgNomore[key];
+    if (!no) {
+      print('没有更多消息了!!!!');
+      //_msg.sort((x, y) =>y.body.sendTime.compareTo(x.body.sendTime));
+      return _msg;
+    }
+    Int64 sendTime;
+    if (msg != null) {
+      sendTime = msg.first.body.sendTime;
+    } else {
+      sendTime = Int64(DateTime
+          .now()
+          .millisecondsSinceEpoch);
+    }
+    SessionHistoryArg arg = SessionHistoryArg.create();
+    arg.sendTime = sendTime;
+    arg.userID = chatUser.id;
+    arg.size = 20;
+    arg.first = false;
+    MessageList moreMsg = await _socket.send(
+        OP.sessionHistory, arg, _convertMoreMsg);
+    if (moreMsg == null || moreMsg.list.isEmpty) {
+      print('1.没有更多消息了!!!!');
+      _msgNomore[key] = true;
+      return _msg;
+    } else {
+      // 添加到msgMap
+      moreMsg.list.forEach((element) {
+        _msg.insert(0, element);
+      });
+      if (moreMsg.list.length < 20) {
+        print('2.没有更多消息了!!!!');
+        _msgNomore[key] = true;
+      }
+      _msgMap[key] = _msg;
+    }
+    return _msg;
+  }
+
+  MessageList _convertMoreMsg(Response resp) {
+    if (resp.code != 200) {
+      showToast('加载更多消息失败:${resp.msg}');
+      return null;
+    }
+    if (resp.data.isEmpty) {
+      showToast('没有更多消息了');
+      return null;
+    }
+    return MessageList.fromBuffer(resp.data);
+  }
+
+
   void addMessage(Message message) {
-    sendOrReceiveMessage(message,true);
+    sendOrReceiveMessage(message, true);
     _log.fine('add message');
   }
 
@@ -95,12 +158,12 @@ class ChatStateService {
     return senderID.toString() + '_' + userID.toString();
   }
 
-  Future<void> sendOrReceiveMessage(Message model,bool send) async {
+  Future<void> sendOrReceiveMessage(Message model, bool send) async {
     var key = _calKey(model.senderID, model.userID);
     if (_msgMap[key] == null) {
       _msgMap[key] = <Message>[];
     }
-    _msgMap[key].insert(0,model);
+    _msgMap[key].insert(0, model);
     print('添加消息:${model.body.msg}');
     if (send) {
       Response resp = await _socket.send(OP.pushSingle, model, _convertMessage);
@@ -117,7 +180,7 @@ class ChatStateService {
         _sessionMap.list[model.senderID].badge++;
       }
     }
-    if(_sessionNotify != null) {
+    if (_sessionNotify != null) {
       _sessionNotify();
     }
   }
@@ -128,6 +191,7 @@ class ChatStateService {
 
   //==============session==================
   Session _sessionMap;
+
   List<Session_content> get session {
     if (_sessionMap != null && _sessionMap.list.isNotEmpty) {
       return _sessionMap.list.values.toList();
@@ -140,8 +204,8 @@ class ChatStateService {
     var param = Pagination.create();
     param.page = 1;
     param.size = 30;
-    _sessionMap = await _socket.send(OP.session, param,_convertSession).
-    timeout(const Duration(seconds: 7)).catchError((e){
+    _sessionMap = await _socket.send(OP.session, param, _convertSession).
+    timeout(const Duration(seconds: 7)).catchError((e) {
       showToast('刷新session列表 FAILED:$e');
     });
     if (_sessionMap != null && _sessionMap.list.isNotEmpty) {
@@ -154,8 +218,9 @@ class ChatStateService {
     var param = Pagination.create();
     param.page = page;
     param.size = 30;
-    Session _moreSessionMap = await _socket.send(OP.session, param,_convertSession).
-    timeout(const Duration(seconds: 7)).catchError((e){
+    Session _moreSessionMap = await _socket.send(
+        OP.session, param, _convertSession).
+    timeout(const Duration(seconds: 7)).catchError((e) {
       showToast('下滑加载session列表 FAILED:$e');
     });
     if (_moreSessionMap != null && _moreSessionMap.list.isNotEmpty) {
@@ -169,8 +234,8 @@ class ChatStateService {
     var param = Pagination.create();
     param.page = 1;
     param.size = 30;
-    _sessionMap = await _socket.send(OP.session, param,_convertSession).
-    timeout(const Duration(seconds: 5)).catchError((e){
+    _sessionMap = await _socket.send(OP.session, param, _convertSession).
+    timeout(const Duration(seconds: 5)).catchError((e) {
       showToast('初始化session列表 FAILED:$e');
     });
   }

@@ -19,6 +19,8 @@ enum OP {
   session = 10; // 会话列表
   home = 11;
 
+  sessionHistory=14; // 历史记录
+
   roomJoin = 12; // 参数:ID
   roomExit = 13; // 参数:ID
 

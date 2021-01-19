@@ -43,6 +43,7 @@ const Message$json = const {
     const {'1': 'body', '3': 4, '4': 1, '5': 11, '6': '.api.MessageBody', '10': 'body'},
     const {'1': 'ut', '3': 5, '4': 1, '5': 14, '6': '.api.UserType', '10': 'ut'},
     const {'1': 'eachInfo', '3': 6, '4': 1, '5': 11, '6': '.api.MessageUser', '10': 'eachInfo'},
+    const {'1': 'send', '3': 7, '4': 1, '5': 8, '10': 'send'},
   ],
 };
 
@@ -74,6 +75,16 @@ const MessageReceiveAckMulArg$json = const {
   '1': 'MessageReceiveAckMulArg',
   '2': const [
     const {'1': 'ack', '3': 1, '4': 3, '5': 11, '6': '.api.MessageReceiveAckArg', '10': 'ack'},
+  ],
+};
+
+const SessionHistoryArg$json = const {
+  '1': 'SessionHistoryArg',
+  '2': const [
+    const {'1': 'userID', '3': 1, '4': 1, '5': 3, '10': 'userID'},
+    const {'1': 'sendTime', '3': 2, '4': 1, '5': 3, '10': 'sendTime'},
+    const {'1': 'size', '3': 3, '4': 1, '5': 5, '10': 'size'},
+    const {'1': 'first', '3': 4, '4': 1, '5': 8, '10': 'first'},
   ],
 };
 
