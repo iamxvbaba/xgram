@@ -87,50 +87,54 @@ class ChatStateService {
   }
 
   //TODO: 向上加载更多消息
-  Future<List<Message>> loadMoreMsg() async {
-    String key = _calKey(_authService.currentUser.id, _chatUser.id);
-    var _msg = _msgMap[key];
-    if (_msg == null) {
-      _msg = List<Message>();
-      _msgMap[key] = _msg;
-    }
-    var no = _msgNomore[key];
-    if (!no) {
-      print('没有更多消息了!!!!');
-      //_msg.sort((x, y) =>y.body.sendTime.compareTo(x.body.sendTime));
-      return _msg;
-    }
-    Int64 sendTime;
-    if (msg != null) {
-      sendTime = msg.first.body.sendTime;
-    } else {
-      sendTime = Int64(DateTime
-          .now()
-          .millisecondsSinceEpoch);
-    }
-    SessionHistoryArg arg = SessionHistoryArg.create();
-    arg.sendTime = sendTime;
-    arg.userID = chatUser.id;
-    arg.size = 20;
-    arg.first = false;
-    MessageList moreMsg = await _socket.send(
-        OP.sessionHistory, arg, _convertMoreMsg);
-    if (moreMsg == null || moreMsg.list.isEmpty) {
-      print('1.没有更多消息了!!!!');
-      _msgNomore[key] = true;
-      return _msg;
-    } else {
-      // 添加到msgMap
-      moreMsg.list.forEach((element) {
-        _msg.insert(0, element);
-      });
-      if (moreMsg.list.length < 20) {
-        print('2.没有更多消息了!!!!');
-        _msgNomore[key] = true;
+  void loadMoreMsg() async {
+    try {
+      String key = _calKey(_authService.currentUser.id, _chatUser.id);
+      var _msg = _msgMap[key];
+      if (_msg == null) {
+        _msg = List<Message>();
+        _msgMap[key] = _msg;
       }
-      _msgMap[key] = _msg;
+      var no = _msgNomore[key];
+      if (no != null) {
+        print('没有更多消息了!!!!XXX $no');
+        //_msg.sort((x, y) =>y.body.sendTime.compareTo(x.body.sendTime));
+        return null;
+      }
+      Int64 sendTime;
+      if (msg != null) {
+        sendTime = msg.first.body.sendTime;
+      } else {
+        sendTime = Int64(DateTime
+            .now()
+            .millisecondsSinceEpoch);
+      }
+      SessionHistoryArg arg = SessionHistoryArg.create();
+      arg.sendTime = sendTime;
+      arg.userID = chatUser.id;
+      arg.size = 20;
+      arg.first = false;
+      MessageList moreMsg = await _socket.send(
+          OP.sessionHistory, arg, _convertMoreMsg);
+      if (moreMsg == null || moreMsg.list.isEmpty) {
+        print('1.没有更多消息了!!!!');
+        _msgNomore[key] = true;
+        return;
+      } else {
+        print('有请求到消息!!!!!!!!!!!');
+        // 添加到msgMap
+        moreMsg.list.forEach((element) {
+          _msg.add(element);
+        });
+        if (moreMsg.list.length < 20) {
+          print('2.没有更多消息了!!!!');
+          _msgNomore[key] = true;
+        }
+        _msgMap[key] = _msg;
+      }
+    } catch(e) {
+      print('啥错误阿$e');
     }
-    return _msg;
   }
 
   MessageList _convertMoreMsg(Response resp) {

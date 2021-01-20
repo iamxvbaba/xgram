@@ -33,7 +33,7 @@ class ChatScreenViewModel extends BaseViewModel {
   Future<void> init() async {
     isShowLoading = true;
     _chatStateService.setNotify(notifyListeners);
-    setBusy(true);
+    await _chatStateService.loadMoreMsg();
     setBusy(false);
     isShowLoading = false;
   }
