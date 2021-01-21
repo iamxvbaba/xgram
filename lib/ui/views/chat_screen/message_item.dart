@@ -37,10 +37,14 @@ class ChatMessageItem extends ViewModelWidget<ChatScreenViewModel> {
   Widget getItemContent() {
     switch (message.body.contentType) {
       case ContentType.normalText:
-        return Text(
-          '${message.body.msg}',
-          softWrap: true,
-          style: TextStyle(fontSize: 14.0, color: Colors.black),
+        return Bubble(
+          style: getItemBundleStyle(),
+          // child:    Text(  '${(widget.mMessage as HrlTextMessage).text  }',  softWrap: true,style: TextStyle(fontSize: 14.0,color: Colors.black),),
+          child: Text(
+            '${message.body.msg}',
+            softWrap: true,
+            style: TextStyle(fontSize: 14.0, color: Colors.black),
+          ),
         );
         break;
       case ContentType.image:
@@ -48,7 +52,9 @@ class ChatMessageItem extends ViewModelWidget<ChatScreenViewModel> {
           child: CachedNetworkImage(
             imageUrl: message.body.msg,
             fit: BoxFit.cover,
-            height: ScreenUtil().setHeight(280),
+            height: ScreenUtil().setHeight(250),
+            placeholder: (context, url) => CircularProgressIndicator(),
+
           ),
         );
         break;
@@ -120,11 +126,7 @@ class ChatMessageItem extends ViewModelWidget<ChatScreenViewModel> {
               constraints: BoxConstraints(
                 maxWidth: MediaQuery.of(context).size.width * 0.8,
               ),
-              child: Bubble(
-                style: getItemBundleStyle(),
-                // child:    Text(  '${(widget.mMessage as HrlTextMessage).text  }',  softWrap: true,style: TextStyle(fontSize: 14.0,color: Colors.black),),
-                child: getItemContent(),
-              ),
+              child: getItemContent(),
               margin: EdgeInsets.only(
                 bottom: 5.0,
               ),

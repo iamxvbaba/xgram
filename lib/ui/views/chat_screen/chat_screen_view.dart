@@ -5,6 +5,7 @@ import 'dart:ui' as ui show Codec, FrameInfo, Image;
 import 'package:flutter/material.dart';
 import 'package:provider_start/core/proto/protobuf_gen/message.pb.dart';
 import 'package:provider_start/ui/views/chat_screen/chat_screen_view_model.dart';
+import 'package:provider_start/ui/widgets/stateless/loading_animation.dart';
 import 'package:stacked/stacked.dart';
 import 'package:fixnum/fixnum.dart';
 
@@ -125,20 +126,7 @@ class _ChatScreenPageState extends State<ChatScreenPage> {
                                     ),
                                     SliverToBoxAdapter(
                                       child: model.isShowLoading
-                                          ? Container(
-                                              margin: EdgeInsets.only(top: 5),
-                                              height: 50,
-                                              child: Center(
-                                                child: SizedBox(
-                                                  width: 25.0,
-                                                  height: 25.0,
-                                                  child:
-                                                      CircularProgressIndicator(
-                                                    strokeWidth: 3,
-                                                  ),
-                                                ),
-                                              ),
-                                            )
+                                          ? LoadingAnimation()
                                           : Container(),
                                     ),
                                   ],
