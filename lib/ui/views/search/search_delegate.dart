@@ -42,7 +42,7 @@ class DefaultSearchDelegate extends SearchDelegate {
   @override
   Widget buildResults(BuildContext context) {
     debugPrint('buildResults-query' + query);
-    if (query.length > 0) {
+    if (query.isNotEmpty) {
       return SearchResults(keyword: query);
     }
     return SizedBox.shrink();
