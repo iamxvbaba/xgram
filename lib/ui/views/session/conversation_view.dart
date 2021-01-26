@@ -6,9 +6,11 @@ import 'package:provider_start/core/proto/protobuf_gen/session.pb.dart';
 import 'package:provider_start/core/utils/relative_date_format.dart';
 
 class MyConversationView extends StatefulWidget {
-  final Session_content session;
-
-  MyConversationView(this.session);
+  final String title;
+  final String subTitle;
+  final String avatar;
+  final String tag;
+  MyConversationView({this.title,this.subTitle,this.avatar,this.tag});
 
   @override
   _MyConversationViewState createState() => _MyConversationViewState();
@@ -27,13 +29,13 @@ class _MyConversationViewState extends State<MyConversationView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  widget.session.user.nickname ?? '',
+                  widget.title ?? '',
                   style:
                       TextStyle(fontSize: 16.0, fontWeight: FontWeight.normal),
                 ),
                 SizedBox(height: 3.0),
                 Text(
-                  widget.session.msg.body.msg,
+                  widget.subTitle,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
@@ -49,8 +51,7 @@ class _MyConversationViewState extends State<MyConversationView> {
           child: Column(
             children: [
               Text(
-                RelativeDateFormat.format(
-                    widget.session.msg.body.sendTime.toInt()),
+                widget.tag,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -70,8 +71,9 @@ class _MyConversationViewState extends State<MyConversationView> {
           ClipRRect(
             borderRadius: BorderRadius.circular(ScreenUtil().setWidth(10)),
             child: CachedNetworkImage(
-              imageUrl: widget.session.user.avatar,
+              imageUrl: widget.avatar,
               width: ScreenUtil().setWidth(100),
+              height: ScreenUtil().setWidth(100),
               fit: BoxFit.fill,
             ),
           ),

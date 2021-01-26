@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider_start/core/utils/relative_date_format.dart';
 import 'package:provider_start/ui/views/search/search_delegate.dart';
 import 'package:provider_start/ui/views/session/conversation_view.dart';
 import 'package:provider_start/ui/widgets/stateless/loading_animation.dart';
@@ -138,19 +139,29 @@ class _SecondFloorOuter extends StatelessWidget {
     );
   }
 }
+
 class _Item extends ViewModelWidget<SessionViewModel> {
   final int index;
+
   const _Item(this.index);
+
   @override
   Widget build(BuildContext context, SessionViewModel model) {
     return InkWell(
       onTap: () {
         model.pushChatScreen(model.session[index].user);
       },
-      child: MyConversationView(model.session[index]),
+      child: MyConversationView(
+        title: model.session[index].user.nickname,
+        subTitle: model.session[index].msg.body.msg,
+        avatar: model.session[index].user.avatar,
+        tag: RelativeDateFormat.format(
+            model.session[index].msg.body.sendTime.toInt()),
+      ),
     );
   }
 }
+
 class _SessionBody extends ViewModelWidget<SessionViewModel> {
   @override
   Widget build(BuildContext context, SessionViewModel model) {
