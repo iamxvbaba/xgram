@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider_start/core/localization/localization.dart';
 import 'package:provider_start/ui/shared/ui_helper.dart';
 import 'package:provider_start/ui/views/login/login_view_model.dart';
@@ -49,11 +48,9 @@ class _LoginViewState extends State<LoginView> {
             currentFocus.unfocus();
           }
         },
-        child: PlatformScaffold(
-          appBar: PlatformAppBar(
+        child: Scaffold(
+          appBar: AppBar(
             title: Text(local.loginViewTitle),
-            cupertino: (_, __) =>
-                CupertinoNavigationBarData(previousPageTitle: ''),
           ),
           body: Form(
             key: formKey,
@@ -129,13 +126,9 @@ class _SignInButton extends StatelessWidget {
 
     return busy
         ? LoadingAnimation()
-        : PlatformButton(
+        : TextButton(
             child: Text(local.loginButton),
             onPressed: onPressed,
-            material: (_, __) => MaterialRaisedButtonData(
-              textTheme: ButtonTextTheme.primary,
-              color: theme.primaryColor,
-            ),
           );
   }
 }
@@ -156,38 +149,20 @@ class _EmailTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     final local = AppLocalizations.of(context);
 
-    return PlatformWidget(
-      material: (_, __) => TextFormField(
-        controller: controller,
-        validator: validator,
-        onFieldSubmitted: onFieldSubmitted,
-        textInputAction: TextInputAction.next,
-        keyboardType: TextInputType.emailAddress,
-        decoration: InputDecoration(
-          prefixIcon: Icon(Icons.phone),
-          hintText: local.emailHint,
-          contentPadding: const EdgeInsets.all(8),
-          border: OutlineInputBorder(
-            borderRadius: const BorderRadius.all(
-              Radius.circular(12),
-            ),
+    return TextFormField(
+      controller: controller,
+      validator: validator,
+      onFieldSubmitted: onFieldSubmitted,
+      textInputAction: TextInputAction.next,
+      keyboardType: TextInputType.emailAddress,
+      decoration: InputDecoration(
+        prefixIcon: Icon(Icons.phone),
+        hintText: local.emailHint,
+        contentPadding: const EdgeInsets.all(8),
+        border: OutlineInputBorder(
+          borderRadius: const BorderRadius.all(
+            Radius.circular(12),
           ),
-        ),
-      ),
-      cupertino: (_, __) => CupertinoTextFormField(
-        controller: controller,
-        validator: validator,
-        onFieldSubmitted: onFieldSubmitted,
-        placeholder: local.emailHint,
-        textInputAction: TextInputAction.next,
-        keyboardType: TextInputType.emailAddress,
-        prefix: Padding(
-          padding: const EdgeInsets.all(4),
-          child: Icon(CupertinoIcons.phone),
-        ),
-        decoration: BoxDecoration(
-          color: CupertinoColors.systemGrey6,
-          borderRadius: BorderRadius.circular(8),
         ),
       ),
     );
@@ -212,40 +187,21 @@ class _PasswordTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     final local = AppLocalizations.of(context);
 
-    return PlatformWidget(
-      material: (_, __) => TextFormField(
-        controller: controller,
-        validator: validator,
-        focusNode: focusNode,
-        //obscureText: true,
-        textInputAction: TextInputAction.send,
-        onFieldSubmitted: onFieldSubmitted,
-        decoration: InputDecoration(
-          hintText: local.passwordHint,
-          prefixIcon: Icon(Icons.message),
-          contentPadding: const EdgeInsets.all(8),
-          border: OutlineInputBorder(
-            borderRadius: const BorderRadius.all(
-              Radius.circular(12),
-            ),
+    return TextFormField(
+      controller: controller,
+      validator: validator,
+      focusNode: focusNode,
+      //obscureText: true,
+      textInputAction: TextInputAction.send,
+      onFieldSubmitted: onFieldSubmitted,
+      decoration: InputDecoration(
+        hintText: local.passwordHint,
+        prefixIcon: Icon(Icons.message),
+        contentPadding: const EdgeInsets.all(8),
+        border: OutlineInputBorder(
+          borderRadius: const BorderRadius.all(
+            Radius.circular(12),
           ),
-        ),
-      ),
-      cupertino: (_, __) => CupertinoTextFormField(
-        validator: validator,
-        controller: controller,
-        focusNode: focusNode,
-        placeholder: local.passwordHint,
-        //obscureText: true,
-        onFieldSubmitted: onFieldSubmitted,
-        textInputAction: TextInputAction.send,
-        prefix: Padding(
-          padding: const EdgeInsets.all(4),
-          child: Icon(CupertinoIcons.padlock),
-        ),
-        decoration: BoxDecoration(
-          color: CupertinoColors.systemGrey6,
-          borderRadius: BorderRadius.circular(8),
         ),
       ),
     );

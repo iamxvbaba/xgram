@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:provider_start/core/localization/localization.dart';
 import 'package:provider_start/ui/views/settings/settings_view_model.dart';
 import 'package:stacked/stacked.dart';
@@ -15,12 +14,9 @@ class SettingsView extends StatelessWidget {
     return ViewModelBuilder<SettingsViewModel>.nonReactive(
       viewModelBuilder: () => SettingsViewModel(),
       onModelReady: (model) => model.init(),
-      builder: (context, model, child) => PlatformScaffold(
-        appBar: PlatformAppBar(
+      builder: (context, model, child) => Scaffold(
+        appBar: AppBar(
           title: Text(local.settingsViewTitle),
-          cupertino: (_, __) => CupertinoNavigationBarData(
-            transitionBetweenRoutes: false,
-          ),
         ),
         body: ListView(
           children: <Widget>[
@@ -42,32 +38,11 @@ class _AppSettingsListTile extends ViewModelWidget<SettingsViewModel> {
   Widget build(BuildContext context, SettingsViewModel model) {
     final local = AppLocalizations.of(context);
 
-    return PlatformWidget(
-      material: (_, __) => ListTile(
-        title: Text(local.settingsViewAppSettings),
-        subtitle: Text(local.settingsViewAppSettingsDesc),
-        trailing: PlatformWidget(
-          material: (_, __) => Icon(Icons.launch),
-          cupertino: (_, __) => Icon(CupertinoIcons.share_up),
-        ),
-        onTap: model.openAppSettings,
-      ),
-      cupertino: (_, __) => CupertinoButton(
-        onPressed: model.openAppSettings,
-        child: Row(
-          children: <Widget>[
-            Text(
-              local.settingsViewAppSettings,
-              style: CupertinoTheme.of(context).textTheme.textStyle,
-            ),
-            Spacer(),
-            PlatformWidget(
-              material: (_, __) => Icon(Icons.launch),
-              cupertino: (_, __) => Icon(CupertinoIcons.share_up),
-            ),
-          ],
-        ),
-      ),
+    return ListTile(
+      title: Text(local.settingsViewAppSettings),
+      subtitle: Text(local.settingsViewAppSettingsDesc),
+      trailing: Icon(Icons.launch),
+      onTap: model.openAppSettings,
     );
   }
 }
@@ -79,31 +54,13 @@ class _NotificationsListTile extends ViewModelWidget<SettingsViewModel> {
   Widget build(BuildContext context, SettingsViewModel model) {
     final local = AppLocalizations.of(context);
 
-    return PlatformWidget(
-      material: (_, __) => ListTile(
-        onTap: model.toggleNotificationsEnabled,
-        title: Text(local.settingsViewNotifications),
-        subtitle: Text(local.settingsViewNotificationsDesc),
-        trailing: Switch.adaptive(
-          value: model.notificationsEnabled,
-          onChanged: (_) => model.toggleNotificationsEnabled(),
-        ),
-      ),
-      cupertino: (_, __) => Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          children: <Widget>[
-            Text(
-              local.settingsViewNotifications,
-              style: CupertinoTheme.of(context).textTheme.textStyle,
-            ),
-            Spacer(),
-            Switch.adaptive(
-              value: model.notificationsEnabled,
-              onChanged: (_) => model.toggleNotificationsEnabled(),
-            ),
-          ],
-        ),
+    return ListTile(
+      onTap: model.toggleNotificationsEnabled,
+      title: Text(local.settingsViewNotifications),
+      subtitle: Text(local.settingsViewNotificationsDesc),
+      trailing: Switch.adaptive(
+        value: model.notificationsEnabled,
+        onChanged: (_) => model.toggleNotificationsEnabled(),
       ),
     );
   }
@@ -116,32 +73,11 @@ class _SignOutListTile extends ViewModelWidget<SettingsViewModel> {
   Widget build(BuildContext context, SettingsViewModel model) {
     final local = AppLocalizations.of(context);
 
-    return PlatformWidget(
-      material: (_, __) => ListTile(
-        title: Text(local.settingsViewSignOut),
-        subtitle: Text(local.settingsViewSignOutDesc),
-        trailing: PlatformWidget(
-          material: (_, __) => Icon(Icons.exit_to_app),
-          cupertino: (_, __) => Icon(CupertinoIcons.right_chevron),
-        ),
-        onTap: model.signOut,
-      ),
-      cupertino: (_, __) => CupertinoButton(
-        onPressed: model.signOut,
-        child: Row(
-          children: <Widget>[
-            Text(
-              local.settingsViewSignOut,
-              style: CupertinoTheme.of(context).textTheme.textStyle,
-            ),
-            Spacer(),
-            PlatformWidget(
-              material: (_, __) => Icon(Icons.exit_to_app),
-              cupertino: (_, __) => Icon(CupertinoIcons.right_chevron),
-            ),
-          ],
-        ),
-      ),
+    return ListTile(
+      title: Text(local.settingsViewSignOut),
+      subtitle: Text(local.settingsViewSignOutDesc),
+      trailing: Icon(Icons.exit_to_app),
+      onTap: model.signOut,
     );
   }
 }
@@ -153,26 +89,11 @@ class _ShowSnackBarListTile extends ViewModelWidget<SettingsViewModel> {
   Widget build(BuildContext context, SettingsViewModel model) {
     final local = AppLocalizations.of(context);
 
-    return PlatformWidget(
-      material: (_, __) => ListTile(
-        title: Text(local.settingsViewSnackBar),
-        subtitle: Text(local.settingsViewSnackBarDesc),
-        trailing: Icon(Icons.announcement),
-        onTap: model.showSnackbar,
-      ),
-      cupertino: (_, __) => CupertinoButton(
-        onPressed: model.showSnackbar,
-        child: Row(
-          children: <Widget>[
-            Text(
-              local.settingsViewSnackBar,
-              style: CupertinoTheme.of(context).textTheme.textStyle,
-            ),
-            Spacer(),
-            Icon(CupertinoIcons.conversation_bubble),
-          ],
-        ),
-      ),
+    return ListTile(
+      title: Text(local.settingsViewSnackBar),
+      subtitle: Text(local.settingsViewSnackBarDesc),
+      trailing: Icon(Icons.announcement),
+      onTap: model.showSnackbar,
     );
   }
 }
