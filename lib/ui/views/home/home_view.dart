@@ -13,8 +13,7 @@ class HomeView extends StatelessWidget {
     var bannerHeight = ScreenUtil().setHeight(280);
     return ViewModelBuilder<HomeViewModel>.reactive(
       // 使用PrimaryScrollController保留iOS点击状态栏回到顶部的功能
-      viewModelBuilder: () => HomeViewModel(PrimaryScrollController.of(context),
-          height: bannerHeight - kToolbarHeight),
+      viewModelBuilder: () => HomeViewModel(),
       onModelReady: (model) => model.init(),
       builder: (context, model, child) => Scaffold(
           body: model.isBusy
