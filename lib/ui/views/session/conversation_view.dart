@@ -4,13 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screenutil.dart';
 import 'package:provider_start/core/proto/protobuf_gen/session.pb.dart';
 import 'package:provider_start/core/utils/relative_date_format.dart';
+import 'package:provider_start/ui/widgets/stateless/avatar.dart';
 
 class MyConversationView extends StatefulWidget {
   final String title;
   final String subTitle;
   final String avatar;
   final String tag;
-  MyConversationView({this.title,this.subTitle,this.avatar,this.tag});
+
+  MyConversationView({this.title, this.subTitle, this.avatar, this.tag});
 
   @override
   _MyConversationViewState createState() => _MyConversationViewState();
@@ -22,7 +24,7 @@ class _MyConversationViewState extends State<MyConversationView> {
     var row = Row(
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.only(left: ScreenUtil().setWidth(10) ),
+          padding: EdgeInsets.only(left: ScreenUtil().setWidth(10)),
           child: Container(
             width: ScreenUtil().setWidth(490),
             child: Column(
@@ -68,14 +70,8 @@ class _MyConversationViewState extends State<MyConversationView> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(ScreenUtil().setWidth(10)),
-            child: CachedNetworkImage(
-              imageUrl: widget.avatar,
-              width: ScreenUtil().setWidth(100),
-              height: ScreenUtil().setWidth(100),
-              fit: BoxFit.fill,
-            ),
+          Avatar(
+            avatar: widget.avatar,
           ),
           Container(
             padding: EdgeInsets.only(
