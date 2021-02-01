@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screenutil.dart';
 import 'package:provider_start/ui/views/home/home_item.dart';
 import 'package:provider_start/ui/views/home/home_view_model.dart';
+import 'package:provider_start/ui/views/search/search_delegate.dart';
 import 'package:provider_start/ui/widgets/stateless/loading_animation.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:stacked/stacked.dart';
@@ -17,6 +18,14 @@ class HomeView extends StatelessWidget {
       viewModelBuilder: () => HomeViewModel(),
       onModelReady: (model) => model.init(),
       builder: (context, model, child) => Scaffold(
+          appBar: AppBar(title: Text('动态'), elevation: 0, actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.add),
+              onPressed: () {
+                showSearch(context: context, delegate: DefaultSearchDelegate());
+              },
+            ),
+          ]),
           body: model.isBusy
               ? Center(
                   child: LoadingAnimation(),
